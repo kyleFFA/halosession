@@ -2,7 +2,7 @@
 
 Session is a focused Windows practice overlay for Halo: The Master Chief Collection, based on Poorboys Checkpoint Manager and Halo Checkpoint Manager.
 
-This is the **developer source tree**, prepared for [kyleFFA/halosession](https://github.com/kyleFFA/halosession). It is not a runnable player download. Nothing has been pushed or released during this preparation.
+This is the **developer source tree** for [kyleFFA/halosession](https://github.com/kyleFFA/halosession). It is not a runnable player download. The source has been uploaded; no player release has been published.
 
 ## Selected baseline
 
@@ -26,9 +26,9 @@ A player download should be a separate, complete ZIP with the launcher, overlay,
 
 The original [MIT license](LICENSE), [third-party notices](THIRD-PARTY-LICENSES.md) and source copyright notices are retained. Additional vendored notices are listed in [LICENSE-AUDIT.md](docs/LICENSE-AUDIT.md). The manager's MIT license alone does not establish redistribution terms for every external physics/helper component.
 
-One inherited collision-viewer header still contains a private-branch warning even though its upstream version is publicly available in Harc's MIT-licensed repository. It is retained and flagged for review before public publication. No private research directories, captured game memory or game binaries are included.
+One inherited collision-viewer header still contains a private-branch warning even though its upstream version is publicly available in Harc's MIT-licensed repository. The comment and public MIT provenance are documented in the license audit. No private research directories, captured game memory or game binaries are included.
 
-The local repository is staged for review, without a new commit or push. Repository-local author name is `KyleFFA`; the account-provided GitHub no-reply email has been verified and configured locally. Write authentication has not been tested. No collaborator has been invited, access granted or visibility changed.
+The developer source was uploaded with the repository owner's authorization. No collaborator has been invited, access granted or visibility changed as part of this upload. Contributors should configure their own Git author identity before committing.
 
 ## Credits
 
