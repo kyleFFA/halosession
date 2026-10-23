@@ -24,7 +24,9 @@ for oid in requests:
 if git('diff','--name-only').strip():raise SystemExit('Unstaged edits exist; review and stage them before auditing the upload set.')
 forbidden={'.exe','.dll','.pyd','.lib','.obj','.o','.a','.pdb','.exp','.idb','.ilk','.iobj','.ipdb','.pch','.res','.zip','.7z','.msi','.bin','.dmp','.mdmp','.log','.etl','.pyc','.lnk','.pem','.pfx','.p12','.key'}
 runtime_names={'HCMInternalConfig.xml','HCMHotkeyConfig.xml','SessionQuickMenu.xml','h3sb_helpers.stop'}
-assets={'HCMInternal/Assets/session-ring.png','HCMInternal/Assets/session-clouds.png'}
+assets={'HCMInternal/Assets/session-ring.png','HCMInternal/Assets/session-clouds.png',
+        'HCMInternal/Assets/session-ring-circular.png','HCMInternal/Assets/session-ringworld-round.png',
+        *{f'skins/{skin}/{layer}.png' for skin in ['garden','aurora','autumn'] for layer in ['ring','clouds']}}
 patterns={
     'personal_path':re.compile(rb'(?i)[a-z]:[\\/](?:users|steamlibrary)[\\/]|/(?:Users|home)/[^\s"\']+'),
     'github_token':re.compile(rb'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})'),

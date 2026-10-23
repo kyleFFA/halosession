@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a selectable skin. Supply finished PNGs, measure their opening, then rename this file to skin.xml in your own folder. -->
+<SessionSkin version="1" name="Your skin name">
+  <!-- ring/clouds required; node/plaque optional. Omit optional attributes to retain the vector navigation button artwork. -->
+  <Textures ring="ring.png" clouds="clouds.png" />
+  <!-- All coordinates/radii normalized to the complete ring PNG. Example values below describe Session V1 only. -->
+  <Opening centerX="0.500179154" centerY="0.475353879" radius="0.311131824" wheelInsetRatio="0.071134" />
+</SessionSkin>

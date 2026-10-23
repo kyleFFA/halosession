@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SessionSkin version="1" name="Aurora">
+  <Textures ring="ring.png" clouds="clouds.png" />
+  <Clouds rimOpacity="0.96" />
+  <Opening centerX="0.499256263" centerY="0.487133506" radius="0.327980050" wheelInsetRatio="0.075000" />
+</SessionSkin>

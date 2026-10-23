@@ -1,0 +1,13 @@
+Session circular GUI preview — October 22, 2026
+Mode: built-in image_gen, transparent_background=true; no CLI/API fallback.
+Edit target: the original session-ring.png. New sibling asset: session-ring-circular.png.
+The output was copied into this isolated preview without changing its generated pixels or alpha.
+Original ring and cloud files are retained; the cloud asset is used byte-for-byte.
+
+Final prompt:
+Use case: precise-object-edit. Edit target: attached Session ring artwork. Create a refined production transparent foreground asset for this same in-game UI. Make the ring truly CIRCULAR and viewed directly from the front, centered exactly at the center of a SQUARE canvas. The circular outer silhouette must not be oval or tilted. Preserve the exquisite graphite architectural linework, pale silver metallic material, delicate cyan edge light, white and powder-blue watercolor clouds wrapping around parts of the rim. More clearly readable metallic rim and inner curved surface: a narrow silver annular face, bevels, engraved structural panels, slight inward depth visible equally around the circular opening, not a thick chunky generic portal. Preserve graceful atmospheric Session identity. Geometry: outer metallic radius exactly about 0.42 canvas width, inner empty opening radius about 0.35; center exactly (0.5,0.5). Clouds may softly feather to radius .49 but do not cover central opening radius .30. Entire central opening EMPTY AND TRULY TRANSPARENT. Exterior TRULY TRANSPARENT alpha, no background, no painted checkerboard. Ring complete with comfortable padding. NO text, no controls, no labels, no title, no UI, no symbols, no scenery, no added objects. Square 1:1 composition. This is a reusable ring artwork asset, not a mockup.
+
+Validation:
+Generated RGBA PNG: 1254 x 1254; center alpha 0; sampled corner alpha 1/255 (trace feathering).
+The existing clouds remain RGBA 1122 x 1402, center alpha 252, sampled corner alpha 0.
+No controls or text are painted into either asset. Native DLL resources are byte-equal to these source PNGs.

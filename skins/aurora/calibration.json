@@ -1,0 +1,35 @@
+{
+  "asset": "ring.png",
+  "sha256": "EF09901DA2C36D848FE7CECDDB67153DCF9D51305F82520408211FC483F73865",
+  "size": [
+    1254,
+    1254
+  ],
+  "method": "Cyan inner-edge saturation maxima along radial probes; robust least-squares circle; no cloud alpha bounds",
+  "raw_samples": 360,
+  "retained_samples": 360,
+  "center_pixels": [
+    626.0673538131064,
+    610.8654162142857
+  ],
+  "center_normalized": [
+    0.4992562630088567,
+    0.4871335057530189
+  ],
+  "radius_pixels": 411.28698274005086,
+  "radius_normalized": 0.3279800500319385,
+  "radius_p05_normalized": 0.3256259380975173,
+  "radius_p95_normalized": 0.3318226064445028,
+  "inner_bounds_normalized": [
+    0.17127621297691828,
+    0.15915345572108042,
+    0.8272363130407953,
+    0.8151135557849574
+  ],
+  "wheel_inset_ratio": 0.075,
+  "wheel_radius_normalized": 0.3033815462795431,
+  "wheel_inset_at_940px_p05_p95": [
+    20.909728308895712,
+    26.734596555062094
+  ]
+}

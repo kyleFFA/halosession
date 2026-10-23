@@ -4,13 +4,13 @@ Session is a focused Windows practice overlay for Halo: The Master Chief Collect
 
 This is the **developer source tree** for [kyleFFA/halosession](https://github.com/kyleFFA/halosession). It is not a runnable player download. The source has been uploaded; no player release has been published.
 
-## Selected baseline
+## Current beta
 
-The source is the **original Quick Menu beta**, which the user reports working successfully with a PS5 controller through **XInput slot 0**. Controller brand does not determine the input API: mapped PlayStation controllers use the XInput option. Native DirectInput remains unverified. This report is not a test of every title, connection method or checklist case.
+The accepted Quick Menu input/action baseline now has a circular ringworld, floating navigation, compact centered pages, configurable wheel colors/opacity, and replaceable artwork. Garden, Aurora and Autumn skins are included alongside embedded Session V1. See [skin authoring](skins/README.md).
 
-The newer controller-detection candidate is **not included**. It passed offline checks but has not been user-tested. It adds route discovery/setup guidance, diagnostics and a guard against acting while the game controller read is blocked. See [baseline and provenance](docs/BASELINE.md).
+The user reports that the seasonal GUI is cohesive and the wheel works excellently. Startup appearance uses the captured live palette, placement and size, with the requested **50% background opacity** and **1.10x gentle cloud drift speed**. Travel amplitude is unchanged. Appearance edits and skin selection remain local to the loaded instance; see [defaults and validation](docs/APPEARANCE-DEFAULTS.md).
 
-Future skin refinements are [parked in the backlog](docs/BACKLOG.md); none are implemented in this source preparation.
+The user previously accepted PS5 operation through **XInput slot 0**. Xbox XInput and mapped PlayStation controllers use that input route; native DirectInput remains unverified. The separate controller-detection candidate is excluded. Gameplay actions, binding logic and session safeguards retain the accepted baseline. See [provenance](docs/BASELINE.md).
 
 ## Developers
 
@@ -20,7 +20,7 @@ The repository includes the native launcher, **injector/bridge source**, overlay
 
 ## Players
 
-A player download should be a separate, complete ZIP with the launcher, overlay, injector/bridge, speedhack, required physics DLL/helper bundle, static runtime data and notices. It should omit development files, debug symbols, logs, crash dumps, recordings and personal settings. **No new public download has been created.** See the [player release plan](docs/PLAYER-RELEASE.md).
+A player download should be a separate, complete ZIP with the launcher, overlay, injector/bridge, speedhack, required physics DLL/helper bundle, static runtime data and notices. It should omit development files, debug symbols, logs, crash dumps, recordings and personal settings. **No new public download has been created.** Release is held for contributor changes/feedback and subsequent owner approval. See the [player release plan](docs/PLAYER-RELEASE.md).
 
 ## Licenses and publication review
 

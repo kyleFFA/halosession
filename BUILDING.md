@@ -32,7 +32,7 @@ Their source is supplied, but newly rebuilt support DLLs have not been demonstra
 
 If vcpkg is elsewhere, supply `-VcpkgRoot <path>`. Use `-Rebuild` only when needed. The script writes ignored build logs and products locally. Existing project files retain the historical output directory `HCMExternal/bin/x64/Release/net7.0-windows`; this directory name does not mean the managed application is required.
 
-The original developer build passed before source preparation. This cleaned tree has been checked for source fidelity, project/resource closure and script syntax; it has **not** been rebuilt merely to prepare Git. First-build toolchain/dependency reproducibility still needs a fresh-machine test by the two developers.
+The appearance-defaults overlay and launcher built successfully with the installed pinned dependencies. The focused defaults fixture passed compiled palette checks, actual 50% WARP blending, placement/responsive fitting and drift speed/amplitude checks. The local build reused the installed dependency cache; the published wrapper restores dependencies. Fresh-machine reproducibility remains to be checked by contributors.
 
 ## Runtime dependencies
 
@@ -67,4 +67,10 @@ The automatic legacy scripts that tried reading a running game are not included.
 
 ## Collaborating
 
-After publication is separately authorized, each developer should clone this repository, use the same baseline/dependency hashes, work on a branch and review changes through pull requests. No contributor account or access level has been selected or invited during this preparation. Player ZIPs and development symbols should remain separate artifacts.
+Each developer should clone this repository, use the same baseline/dependency hashes, work on a branch and review changes through pull requests. No contributor account or access level has been selected or invited during this preparation. Player ZIPs and development symbols should remain separate artifacts.
+
+## Appearance and skin fixtures
+
+Run `cmd /c tools\test-appearance-defaults.cmd` for the current focused defaults check. `test-skin-loading.cmd` and `test-seasonal-skins.cmd` cover skin validation/fallback and production rendering. `test-circular-skin.cmd` measures isolated rendering cost; those measurements are not in-game performance promises. Tests use the installed dependency path configured by the native project under `%LOCALAPPDATA%/HaloPracticeBuild/HCMInternal/x64-windows-static`.
+
+Before the defaults change, the seasonal renderer, loader, controller hook/core and solo-H2 pause fixtures passed. Those broader checks were not repeated for this appearance-only update. Some older UI fixtures encode the earlier startup appearance; explicitly select a fixture appearance when comparing historical output. No additional in-game acceptance cycle was required for this update.

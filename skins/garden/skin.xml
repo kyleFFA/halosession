@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SessionSkin version="1" name="Garden">
+  <Textures ring="ring.png" clouds="clouds.png" />
+  <Clouds rimOpacity="0.96" />
+  <Opening centerX="0.500599452" centerY="0.487478952" radius="0.329054762" wheelInsetRatio="0.075000" />
+</SessionSkin>

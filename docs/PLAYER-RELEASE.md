@@ -1,5 +1,7 @@
 # Separate player release plan
 
+Release remains held until the contributor has time to change/commit and provide feedback, followed by explicit owner approval. Local test candidates are not public player releases.
+
 Developers need source, tests and build instructions. Players need a complete runnable download. Keep those deliverables separate.
 
 ## Complete runtime package

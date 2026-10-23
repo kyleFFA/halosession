@@ -115,5 +115,5 @@ END
 #endif    // not APSTUDIO_INVOKED
 
 
-6001 RCDATA "Assets\\session-ring.png"
+6001 RCDATA "Assets\\session-ringworld-round.png"
 6002 RCDATA "Assets\\session-clouds.png"

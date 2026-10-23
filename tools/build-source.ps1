@@ -22,7 +22,7 @@ $taskPreviousVs = $env:VSDIR
 try {
     foreach ($taskProject in $taskProjects) {
         $taskArgs = @("$taskProject/$taskProject.vcxproj", $taskAction, '/m', '/p:Configuration=Release', '/p:Platform=x64',
-            "/p:SolutionDir=$taskRoot/", '/p:PracticeBuildId=quick-menu-source', '/p:VcpkgManifestInstall=true',
+            "/p:SolutionDir=$taskRoot/", '/p:PracticeBuildId=appearance-defaults', '/p:VcpkgManifestInstall=true',
             "/p:VcpkgRoot=$VcpkgRoot/", "/p:ForceImportBeforeCppTargets=$taskTargets", '/verbosity:minimal', '/nologo',
             '/fl', "/flp:logfile=build-$taskProject.log;verbosity=normal")
         if ($taskProject -eq 'HCMSpeedhack') { $taskArgs += '/p:TargetName=PCMSpeedhack' }
@@ -33,7 +33,12 @@ try {
     & cmd /c tools\build-launcher.cmd
     if ($LASTEXITCODE -ne 0) { throw 'Launcher build failed.' }
     $taskOutput = Join-Path $taskRoot 'HCMExternal/bin/x64/Release/net7.0-windows'
-    Copy-Item -LiteralPath (Join-Path $taskRoot 'HCMInternal/InternalPointerData.xml') -Destination $taskOutput
+    $taskPointerData = Join-Path $taskRoot 'HCMInternal/InternalPointerData.xml'
+    if (Test-Path -LiteralPath $taskPointerData) {
+        Copy-Item -LiteralPath $taskPointerData -Destination $taskOutput
+    } else {
+        Write-Output 'Pointer XML is supplied separately with the compatible runtime; native compilation does not require it.'
+    }
     Write-Output 'Source build completed. Session has not been launched. A complete player package still needs its compatible external runtime.'
 } finally {
     $env:VSDIR = $taskPreviousVs

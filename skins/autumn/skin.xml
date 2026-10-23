@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SessionSkin version="1" name="Autumn">
+  <Textures ring="ring.png" clouds="clouds.png" />
+  <Clouds rimOpacity="0.96" />
+  <Opening centerX="0.506693340" centerY="0.482314278" radius="0.324444527" wheelInsetRatio="0.075000" />
+</SessionSkin>

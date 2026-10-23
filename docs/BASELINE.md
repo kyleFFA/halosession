@@ -1,6 +1,6 @@
 # Baseline and provenance
 
-Selected source: original Session Quick Menu beta, prepared October 22, 2026. The user reports successful PS5/XInput operation, including attempts to break the menu. This is user-reported live acceptance for that setup; native DirectInput, every game title and every transport are not thereby validated.
+Historical import: original Session Quick Menu beta, prepared October 22, 2026. The user reports successful PS5/XInput operation, including attempts to break the menu. This is user-reported live acceptance for that setup; native DirectInput, every game title and every transport are not thereby validated.
 
 Upstream bases:
 
@@ -16,7 +16,7 @@ The upstream Poorboy history contains 909 commits and historical compiled files,
 
 This repository therefore starts a new sanitized source history. [The upstream contributor/commit ledger](upstream/history.tsv), exact base IDs, original licenses, per-file hashes and [the original upstream README](upstream/Poorboys-README.md) preserve attribution and traceability. The ledger omits author email addresses. It is provenance metadata, not a claim that the new repository retains Git ancestry. The upstream repositories remain the authoritative history.
 
-## Preparation-only changes
+## Original import preparation changes
 
 - Kept runtime C/C++ and shader code from the tested baseline, including existing physics, controller selection/action, identity/authority, pause and hook-retirement logic.
 - Redacted personal paths from comments in three collision-viewer headers; executable code is unchanged. The inherited private-branch warning is retained.
@@ -27,3 +27,9 @@ This repository therefore starts a new sanitized source history. [The upstream c
 - Git normalizes text line endings; the local preparation comparison accounts for that without changing C/C++ logic.
 
 Exact source hashes and the proposed file list are recorded in the local preparation report outside the Git payload.
+
+## Subsequent GUI update
+
+The accepted Quick Menu input/action source is retained. GUI changes add shared measured circular geometry, floating navigation, compact pages, artwork loading and Garden/Aurora/Autumn assets. The user accepted the seasonal GUI and wheel in a live session. Current defaults capture that instance's appearance, overriding background opacity to 50% and scaling gentle drift speed by 1.10. No controller-detection candidate, physics/action changes or ripple effect is included. See [validation](APPEARANCE-DEFAULTS.md).
+
+`source-provenance.json` records the original sanitized import hashes, not hashes of subsequent commits. The original upstream ledger and notices remain unchanged. Artwork prompt records retain intermediate generation history; the unused intermediate `session-ringworld.png` is not distributed. The selected corrected ringworld and the circular fixture asset are included unchanged.
