@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMInternal", "HCMInternal\HCMInternal.vcxproj", "{6041871F-23AE-4C0E-811E-496F959A6C1F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMInterproc", "HCMInterproc\HCMInterproc.vcxproj", "{9D798DF1-8077-405E-A9F8-615105425E87}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMSpeedhack", "HCMSpeedhack\HCMSpeedhack.vcxproj", "{BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}"
+EndProject
+Global
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Release|x64 = Release|x64
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {6041871F-23AE-4C0E-811E-496F959A6C1F}.Release|x64.ActiveCfg = Release|x64
+        {6041871F-23AE-4C0E-811E-496F959A6C1F}.Release|x64.Build.0 = Release|x64
+        {9D798DF1-8077-405E-A9F8-615105425E87}.Release|x64.ActiveCfg = Release|x64
+        {9D798DF1-8077-405E-A9F8-615105425E87}.Release|x64.Build.0 = Release|x64
+        {BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}.Release|x64.ActiveCfg = Release|x64
+        {BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}.Release|x64.Build.0 = Release|x64
+    EndGlobalSection
+EndGlobal

@@ -1,0 +1,827 @@
+#include "pch.h"
+#include "PoorboyWorldLines.h"
+#include "MCCState.h"
+#include "SettingsStateAndEvents.h"
+#include "h3sb_api.h"
+#include "imgui.h"
+
+using namespace worldlines;
+
+namespace
+{
+	// where each game keeps the render camera and the loaded map's name (RVAs of the MCC build the mod supports; another
+	// build is not drawn). Camera layout: WorldLinesScene.h. Map name: Halo 3 / ODST map header +0xC0; Reach: the last
+	// part of the scenario path ("haloreach\maps\50_panopticon"), as the mod names its world file. From re\mccgame.py.
+	struct GameInfo
+	{
+		GameState::Value game;
+		const wchar_t* module;
+		const char* title;
+		uint32_t stamp;                 // PE timestamp of the build
+		uintptr_t camera;
+		uintptr_t mapHeader;            // 0 = none (Reach)
+		uintptr_t levelPath;            // 0 = none
+	};
+	constexpr GameInfo kGames[] = {
+		{ GameState::Value::Halo3, L"halo3.dll", "Halo 3", 0x68A0EDFC, 0x2D2F688, 0x20A9058, 0 },
+		{ GameState::Value::Halo3ODST, L"halo3odst.dll", "Halo 3: ODST", 0x68A0F232, 0x2D73598, 0x20EF068, 0 },
+		{ GameState::Value::HaloReach, L"haloreach.dll", "Halo: Reach", 0x68A0EFE1, 0xC9FAE0, 0, 0x2A1F517 },
+	};
+
+	// the game's dll may be unloaded at any moment (between games): every read of its memory is guarded. Pages that are
+	// no longer mapped are skipped without a fault (the Halo 2 physics mod's crash notes log every fault in the process)
+	bool mapped(const void* src, size_t n)
+	{
+		MEMORY_BASIC_INFORMATION mbi{};
+		if (!VirtualQuery(src, &mbi, sizeof(mbi)) || mbi.State != MEM_COMMIT || (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD))) return false;
+		return (const char*)src + n <= (const char*)mbi.BaseAddress + mbi.RegionSize;
+	}
+
+	bool safeCopy(void* dst, const void* src, size_t n)
+	{
+		if (!mapped(src, n)) return false;
+		__try
+		{
+			memcpy(dst, src, n);
+			return true;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			return false;
+		}
+	}
+
+	// base of the game's dll if it is loaded and the supported build, else 0 (stampOut = the build found, 0 none)
+	uintptr_t gameBase(const GameInfo& g, uint32_t* stampOut = nullptr)
+	{
+		const HMODULE m = GetModuleHandleW(g.module);
+		uint32_t pe = 0, stamp = 0;
+		if (!m || !safeCopy(&pe, (const char*)m + 0x3C, 4) || pe > 0x1000 || !safeCopy(&stamp, (const char*)m + pe + 8, 4)) return 0;
+		if (stampOut) *stampOut = stamp;
+		return stamp == g.stamp ? (uintptr_t)m : 0;
+	}
+
+	bool readCamera(uintptr_t at, Camera& cam)
+	{
+		uint8_t raw[kCameraBytes];
+		return at && safeCopy(raw, (const void*)at, sizeof(raw)) && cameraFromRecord(raw, cam);
+	}
+
+	std::string mapName(const GameInfo& g, uintptr_t base)
+	{
+		char raw[129] = {};
+		std::string name;
+		if (g.levelPath)
+		{
+			if (!safeCopy(raw, (const void*)(base + g.levelPath), 128)) return "";
+			std::string path(raw);
+			const size_t cut = path.find_last_of("\\/");
+			name = cut == std::string::npos ? path : path.substr(cut + 1);
+		}
+		else
+		{
+			if (!safeCopy(raw, (const void*)(base + g.mapHeader + 0xC0), 32)) return "";
+			raw[32] = 0;
+			name = raw;
+		}
+		for (char& c : name)
+		{
+			if ((unsigned char)c < 0x20 || (unsigned char)c > 0x7E) return "";       // not a name (memory being changed)
+			c = (char)std::tolower((unsigned char)c);
+		}
+		return name;
+	}
+
+	// ---- the game's own depth buffer: the frame path keeps its lines off the first-person gun and arms ----------------
+	// Each game's rasterizer keeps its render targets and depth buffers in a table of surfaces. set_depth_stencil_surface
+	// (Halo 3 0x27632C, ODST 0x2A35E0, Reach 0x2743A4) picks a surface's buffer: the surface's own index (when a flag
+	// says it has one), twice that when its buffers come in pairs (Reach), and for a surface with a set per split-screen
+	// view: the view being rendered + 4 x that. A buffer's first field is its ID3D11DepthStencilView. The main depth is
+	// the surface the first-person view is drawn into: Halo 3 3 (0x2835D4, and the view render 0x285378 ends on it), ODST
+	// 3 (0x2AC2E4), Reach 9 (0x26EA78). Halo 3 draws its transparents with 7 in place of 3 and 6 (flag reset at
+	// 0x2A91F8). The camera record's clip planes: +0x64 near, +0x68 far (Halo 3 render_camera_build_projection 0x2A6980
+	// is given the record itself, at 0x24CC43; ODST 0x2CB1C4; Reach's depth constants 0x261920).
+	struct DepthGame
+	{
+		GameState::Value game;
+		uint32_t stamp;
+		uintptr_t table;                    // the surface table
+		uint32_t stride, flagsAt;           // a surface's size, where its flags are (u32)
+		uint32_t ownFlag, ownAt;            // the surface has its own buffer index (int at ownAt); 0 = never
+		uint32_t pairFlag;                  // its buffers come in pairs; 0 = never
+		uint32_t viewFlag;                  // one set per split-screen view
+		uintptr_t viewIndex;                // int: the view being rendered
+		uint32_t buffersAt, bufferStride;   // its buffers (pointer), each this big
+		int surface;                        // the main depth
+		uintptr_t swapFlag;                 // Halo 3: int, while set surfaces 3 and 6 are 7; 0 = none
+	};
+	constexpr DepthGame kDepthGames[] = {
+		{ GameState::Value::Halo3, 0x68A0EDFC, 0xA65A80, 0x58, 0, 0, 0, 0, 0x20, 0x46BB868, 0x50, 0xA8, 3, 0x46BB8DC },
+		{ GameState::Value::Halo3ODST, 0x68A0F232, 0xAC80A0, 0x60, 0, 0x400, 0x58, 0, 0x20, 0x46E5B90, 0x50, 0xA8, 3, 0 },
+		{ GameState::Value::HaloReach, 0x68A0EFE1, 0xC8E4B0, 0x70, 0x10, 0x100, 0x68, 8, 0x20, 0x4E38A08, 0x60, 0x88, 9, 0 },
+	};
+	constexpr uintptr_t kCameraClip = 0x64;     // near, far (floats)
+
+	// the main depth buffer's view (an ID3D11DepthStencilView of the game's), 0 = not found
+	uintptr_t depthViewOf(const DepthGame& g, uintptr_t base)
+	{
+		int s = g.surface, swapped = 0;
+		if (g.swapFlag && safeCopy(&swapped, (const void*)(base + g.swapFlag), 4) && swapped && (s == 3 || s == 6)) s = 7;
+		const uintptr_t entry = base + g.table + (uintptr_t)s * g.stride;
+		uint32_t flags = 0;
+		uintptr_t buffers = 0, view = 0;
+		if (!safeCopy(&flags, (const void*)(entry + g.flagsAt), 4) || !safeCopy(&buffers, (const void*)(entry + g.buffersAt), 8) || !buffers) return 0;
+		int index = 0, viewNow = 0;
+		if (g.ownFlag && (flags & g.ownFlag) && !safeCopy(&index, (const void*)(entry + g.ownAt), 4)) return 0;
+		if (g.pairFlag && (flags & g.pairFlag)) index *= 2;
+		if (flags & g.viewFlag)
+		{
+			if (!safeCopy(&viewNow, (const void*)(base + g.viewIndex), 4)) return 0;
+			index = viewNow + index * 4;
+		}
+		if (index < 0 || index >= 64 || !safeCopy(&view, (const void*)(buffers + (uintptr_t)index * g.bufferStride), 8)) return 0;
+		return view;
+	}
+
+	// the texture behind a depth view of the game's (one reference for the caller), when it is a depth view of this
+	// device; null if not. The pointer comes from the game's memory: its object and vtable must be mapped first
+	ID3D11Texture2D* depthTexture(uintptr_t view, ID3D11Device* device)
+	{
+		uintptr_t vtable = 0;
+		if (!view || !safeCopy(&vtable, (const void*)view, 8) || !mapped((const void*)vtable, 16 * 8)) return nullptr;
+		ID3D11Texture2D* tex = nullptr;
+		__try
+		{
+			ID3D11DepthStencilView* dsv = nullptr;
+			if (SUCCEEDED(((IUnknown*)view)->QueryInterface(__uuidof(ID3D11DepthStencilView), (void**)&dsv)) && dsv)
+			{
+				ID3D11Device* owner = nullptr;
+				dsv->GetDevice(&owner);
+				ID3D11Resource* res = nullptr;
+				if (owner == device) dsv->GetResource(&res);
+				if (owner) owner->Release();
+				dsv->Release();
+				if (res)
+				{
+					if (FAILED(res->QueryInterface(__uuidof(ID3D11Texture2D), (void**)&tex))) tex = nullptr;
+					res->Release();
+				}
+			}
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			tex = nullptr;
+		}
+		return tex;
+	}
+
+	ImU32 rgb(int r, int g, int b) { return IM_COL32(r, g, b, 255); }
+
+	// why a frame drew no grid over it, for the status line
+	enum FrameSkip { kDrew = 0, kNoScene, kNoCamera, kBadTarget, kDrawFailed };
+	const char* frameSkipText(int why)
+	{
+		switch (why)
+		{
+		case kNoScene: return "no map file loaded";
+		case kNoCamera: return "the camera is not readable";
+		case kBadTarget: return "the frame's target has no usable size";
+		case kDrawFailed: return "the draw failed";
+		default: return "";
+		}
+	}
+
+	// the frame's own size, from the texture behind its render target. HCM's screen size is the swap chain's at
+	// start-up or the size given to the last ResizeBuffers, which is 0 x 0 when the game asks for "the window's size";
+	// a depth buffer of any other size than the target is refused by OMSetRenderTargets and nothing is drawn.
+	bool targetSize(ID3D11RenderTargetView* rtv, UINT& w, UINT& h)
+	{
+		w = h = 0;
+		ID3D11Resource* res = nullptr;
+		rtv->GetResource(&res);
+		if (!res) return false;
+		ID3D11Texture2D* tex = nullptr;
+		if (SUCCEEDED(res->QueryInterface(__uuidof(ID3D11Texture2D), (void**)&tex)) && tex)
+		{
+			D3D11_TEXTURE2D_DESC d;
+			tex->GetDesc(&d);
+			w = d.Width, h = d.Height;
+			tex->Release();
+		}
+		res->Release();
+		return w > 0 && h > 0;
+	}
+
+	// ---- Halo 3: the game's own view render (Jagged's H3 Collision Viewer, Overlay\Engine.h + dllmain.cpp) ----------
+	// c_player_view::x_global_player_views[4] sit back to back (0x2820 each) in halo3.dll's writable data and share one
+	// read-only vtable whose 4 slots (render, render_setup, compute_visibility, render_submit_visibility) point into code;
+	// slot 0 is swapped for ours. c_rasterizer's debug path: set_explicit_shaders, set_z_buffer_mode, draw_primitive_up,
+	// and the cull mode globals. c_view::m_render_camera at +0x158 (render_camera: position, forward, up, vertical field
+	// of view +0x28, +0x2C, render_pixel_bounds +0x44 s16 top, left, bottom, right). The same build only (PE stamp).
+	struct EngineGame
+	{
+		GameState::Value game;
+		uint32_t stamp;
+		uintptr_t viewSize, setExplicitShaders, setZBufferMode, drawPrimitiveUp, cullMode, cullModeChanged, viewCamera;
+		uintptr_t context;      // ID3D11DeviceContext* the rasterizer draws with (draw_primitive_up: Map, Unmap, Draw on it)
+	};
+	constexpr EngineGame kEngineGames[] = {
+		{ GameState::Value::Halo3, 0x68A0EDFC, 0x2820, 0x278C34, 0x277F90, 0x2A32B4, 0x968DC0, 0x8AC580, 0x158, 0x46BB828 },
+	};
+
+	using ViewRender = void (*)(void*, void*, void*, void*);
+	std::atomic<PoorboyWorldLines*> gViewOwner = nullptr;
+	std::atomic<ViewRender> gViewOriginal = nullptr;
+	std::atomic<int> gViewInside = 0;
+	std::atomic<int> gViewFaults = 0;
+
+	void guardedViewRendered(PoorboyWorldLines* owner, void* view)
+	{
+		__try
+		{
+			owner->onViewRendered(view);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			gViewFaults++;
+		}
+	}
+
+	// all four integer argument registers go to the game's own render untouched, then the grid is drawn
+	void hookedViewRender(void* self, void* a, void* b, void* c)
+	{
+		gViewInside++;
+		if (ViewRender original = gViewOriginal.load()) original(self, a, b, c);
+		static thread_local bool busy = false;
+		if (!busy)
+		{
+			busy = true;
+			if (PoorboyWorldLines* owner = gViewOwner.load()) guardedViewRendered(owner, self);
+			busy = false;
+		}
+		gViewInside--;
+	}
+
+	struct Range
+	{
+		uintptr_t lo, hi;
+	};
+
+	// the vtable shared by 4 consecutive objects of viewSize in the module's writable data, its 4 slots in code
+	// (Jagged's FindPlayerViewVtable: the first match is c_player_view's on 1.3528); 0 = none
+	uintptr_t findViewVtable(uintptr_t base, uintptr_t viewSize, uintptr_t& imageEnd, Range& code)
+	{
+		__try
+		{
+			auto dos = (IMAGE_DOS_HEADER*)base;
+			auto nt = (IMAGE_NT_HEADERS64*)(base + dos->e_lfanew);
+			imageEnd = base + nt->OptionalHeader.SizeOfImage;
+			auto sec = IMAGE_FIRST_SECTION(nt);
+			Range text[16], rdata[16], data[16];
+			int nt_ = 0, nr = 0, nd = 0;
+			for (int i = 0; i < nt->FileHeader.NumberOfSections; i++)
+			{
+				const DWORD ch = sec[i].Characteristics;
+				const uintptr_t lo = base + sec[i].VirtualAddress, hi = lo + sec[i].Misc.VirtualSize;
+				if (!sec[i].Misc.VirtualSize || (ch & IMAGE_SCN_MEM_DISCARDABLE)) continue;
+				if (ch & IMAGE_SCN_MEM_EXECUTE) { if (nt_ < 16) text[nt_++] = { lo, hi }; }
+				else if (ch & IMAGE_SCN_MEM_WRITE) { if (nd < 16) data[nd++] = { lo, hi }; }
+				else if (ch & IMAGE_SCN_MEM_READ) { if (nr < 16) rdata[nr++] = { lo, hi }; }
+			}
+			auto in = [](const Range* r, int n, uintptr_t v) {
+				for (int i = 0; i < n; i++)
+					if (v >= r[i].lo && v < r[i].hi) return true;
+				return false;
+				};
+			code = nt_ ? text[0] : Range{ 0, 0 };
+			for (int d = 0; d < nd; d++)
+			{
+				const uintptr_t start = (data[d].lo + 7) & ~(uintptr_t)7;
+				if (data[d].hi < start + 4 * viewSize) continue;
+				const uintptr_t end = data[d].hi - 4 * viewSize;
+				for (uintptr_t p = start; p <= end; p += 8)
+				{
+					const uintptr_t v = *(uintptr_t*)p;
+					if (!in(rdata, nr, v)) continue;
+					if (*(uintptr_t*)(p + viewSize) != v || *(uintptr_t*)(p + 2 * viewSize) != v || *(uintptr_t*)(p + 3 * viewSize) != v) continue;
+					if (p >= data[d].lo + viewSize && *(uintptr_t*)(p - viewSize) == v) continue;
+					bool slots = true;
+					for (int s = 0; s < 4 && slots; s++)
+					{
+						const uintptr_t fn = *(uintptr_t*)(v + s * 8);
+						// slot 0 may already be someone's hook (outside the module): the caller decides
+						if (!in(text, nt_, fn) && !(s == 0 && (fn < base || fn >= imageEnd))) slots = false;
+					}
+					if (slots) return v;
+				}
+			}
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+		}
+		return 0;
+	}
+
+	bool writeSlot(void** slot, void* value)
+	{
+		DWORD old = 0, unused = 0;
+		__try
+		{
+			if (!VirtualProtect(slot, sizeof(void*), PAGE_READWRITE, &old)) return false;
+			*slot = value;
+			VirtualProtect(slot, sizeof(void*), old, &unused);
+			return true;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			return false;
+		}
+	}
+
+	// c_view::m_render_camera as the emitter's camera (read under the hook's guard: the view is the game's own object)
+	bool viewCamera(const uint8_t* cam, EmitCamera& out)
+	{
+		float f[12];
+		std::memcpy(f, cam, sizeof(f));
+		for (float x : f)
+			if (!std::isfinite(x)) return false;
+		int16_t bounds[4];
+		std::memcpy(bounds, cam + 0x44, sizeof(bounds));
+		out.pos = { f[0], f[1], f[2] };
+		out.fwd = { f[3], f[4], f[5] };
+		out.up = { f[6], f[7], f[8] };
+		out.vfov = f[10];
+		out.hfov = f[11];
+		const float fl = length(out.fwd), ul = length(out.up);
+		if (fl < 0.5f || fl > 1.5f || ul < 0.5f || ul > 1.5f || !(out.vfov > 0.05f && out.vfov < 3.1f)) return false;
+		out.fwd = out.fwd * (1.f / fl);
+		out.up = out.up * (1.f / ul);
+		V3 left = cross(out.up, out.fwd);
+		const float ll = length(left);
+		if (ll < 1e-4f) return false;
+		out.left = left * (1.f / ll);
+		const float h = (float)(bounds[2] - bounds[0]), w = (float)(bounds[3] - bounds[1]);
+		out.heightPx = h > 16.f ? h : 1080.f;
+		out.aspect = h > 16.f && w > 16.f ? w / h : 16.f / 9.f;
+		if (!(out.hfov > 0.05f && out.hfov < 3.1f)) out.hfov = 2.f * std::atan(std::tan(out.vfov * 0.5f) * out.aspect);
+		return true;
+	}
+}
+
+PoorboyWorldLines::PoorboyWorldLines(std::shared_ptr<IMCCStateHook> mccState, std::shared_ptr<DirectXRenderEvent> renderEvent,
+	std::shared_ptr<SettingsStateAndEvents> settings, const std::string& pcmDir)
+	: mccStateHook(mccState), mSettings(settings), mDir(std::filesystem::path(pcmDir) / L"h3sb"),
+	mRenderCallback(renderEvent, [this](ID3D11Device* d, ID3D11DeviceContext* c, SimpleMath::Vector2 size, ID3D11RenderTargetView* t) { onRender(d, c, size, t); })
+{
+	mWorker = std::thread([this]() { work(); });
+}
+
+PoorboyWorldLines::~PoorboyWorldLines()
+{
+	mRenderCallback.removeCallback();
+	mStop = true;
+	if (mWorker.joinable()) mWorker.join();
+	// the game's view render back to its own, then no call of ours may still be running
+	unhookView();
+	gViewOwner = nullptr;
+	for (int i = 0; i < 200 && gViewInside.load() > 0; i++) Sleep(10);
+	{
+		std::unique_lock<std::mutex> lock(mDestructionGuard); // a render in progress finishes first
+		mGpu.release();
+		mEngine.release();
+		if (mGameDepth) mGameDepth->Release();
+		mGameDepth = nullptr;
+	}
+}
+
+// worker thread: the game's view render hooked for kGames[game] at base (once per module load)
+void PoorboyWorldLines::hookView(int game, uintptr_t base)
+{
+	const EngineGame* eg = nullptr;
+	for (const EngineGame& e : kEngineGames)
+		if (e.game == kGames[game].game && e.stamp == kGames[game].stamp) eg = &e;
+	if (!eg) return;
+	uintptr_t imageEnd = 0;
+	Range code{};
+	const uintptr_t vtable = findViewVtable(base, eg->viewSize, imageEnd, code);
+	void** slot = (void**)vtable;
+	void* current = vtable ? *slot : nullptr;
+	if (!vtable || !current)
+	{
+		mHookRefusedBase = base, mHookRefusedMs = GetTickCount64();
+		PLOG_ERROR << "Map grid: " << kGames[game].title << "'s view render was not found; the grid is drawn over the frame instead";
+		return;
+	}
+	if (current != (void*)&hookedViewRender && ((uintptr_t)current < base || (uintptr_t)current >= imageEnd))
+	{
+		// another tool hooks it already (Jagged's H3 Collision Viewer does): two hooks re-installing over each other
+		// would call each other for ever, so this one stays out
+		mHookRefusedBase = base, mHookRefusedMs = GetTickCount64();
+		PLOG_INFO << "Map grid: another tool already hooks " << kGames[game].title << "'s view render; the grid is drawn over the frame instead";
+		return;
+	}
+	if (current != (void*)&hookedViewRender) gViewOriginal = (ViewRender)current;
+	mFns.setExplicitShaders = (decltype(mFns.setExplicitShaders))(base + eg->setExplicitShaders);
+	mFns.setZBufferMode = (decltype(mFns.setZBufferMode))(base + eg->setZBufferMode);
+	mFns.drawPrimitiveUp = (decltype(mFns.drawPrimitiveUp))(base + eg->drawPrimitiveUp);
+	mFns.cullMode = (int*)(base + eg->cullMode);
+	mFns.cullModeChanged = (int*)(base + eg->cullModeChanged);
+	mFns.context = (ID3D11DeviceContext* const*)(base + eg->context);
+	mViewCamera = eg->viewCamera;
+	gViewOwner = this;
+	if (current != (void*)&hookedViewRender && !writeSlot(slot, (void*)&hookedViewRender))
+	{
+		mHookRefusedBase = base, mHookRefusedMs = GetTickCount64();
+		PLOG_ERROR << "Map grid: could not hook " << kGames[game].title << "'s view render; the grid is drawn over the frame instead";
+		return;
+	}
+	mHookSlot = slot;
+	mHookBase = base;
+	mEngineGame = game;
+	mEngineReady = true;
+	PLOG_INFO << "Map grid: drawn inside " << kGames[game].title << "'s own view render (vtable " << std::hex << (vtable - base) << ")";
+}
+
+// worker thread / destructor: the slot back to the game's own render, if the module it is in is still the one hooked
+void PoorboyWorldLines::unhookView()
+{
+	mEngineReady = false;
+	if (!mHookSlot) return;
+	const int game = mEngineGame.load();
+	if (game >= 0 && (uintptr_t)GetModuleHandleW(kGames[game].module) == mHookBase)
+	{
+		void* now = nullptr;
+		safeCopy(&now, mHookSlot, sizeof(now));
+		if (now == (void*)&hookedViewRender) writeSlot(mHookSlot, (void*)gViewOriginal.load());
+	}
+	mHookSlot = nullptr;
+	mHookBase = 0;
+}
+
+// the game's render thread, after it rendered a player view (Halo 3)
+void PoorboyWorldLines::onViewRendered(void* view)
+{
+	if (!mEngineReady || gViewFaults.load() > 0) return;
+	// "Grid without bloom": the game's drawer stands aside, the frame path below draws (after the game's bloom)
+	if (mSettings->wireViewToggle->GetValue() || mSettings->h2pGridNoBloomToggle->GetValue() || mSettings->h2pGridXray->GetValue()) return;
+	const int game = mGame.load();
+	if (game < 0 || game != mEngineGame.load()) return;
+	const bool grid = mSettings->h2pWorldLinesToggle->GetValue(), spots = mSettings->h2pJumpSpotsToggle->GetValue();
+	// the game's own context: its view's drawing is on it (it may not be the frame's immediate context)
+	ID3D11DeviceContext* ctx = mFns.context ? *mFns.context : nullptr;
+	if ((!grid && !spots) || !ctx || !view) return;
+	if (!mEngineContextLogged)
+	{
+		mEngineContextLogged = true;
+		ID3D11RenderTargetView* rtv = nullptr;
+		ID3D11DepthStencilView* dsv = nullptr;
+		ctx->OMGetRenderTargets(1, &rtv, &dsv);
+		PLOG_INFO << "Map grid: the game's context " << (void*)ctx << " (" << (ctx->GetType() == D3D11_DEVICE_CONTEXT_DEFERRED ? "deferred" : "immediate")
+			<< ", the frame's " << (void*)mContext.load() << "), target " << (void*)rtv << ", depth " << (void*)dsv;
+		if (rtv) rtv->Release();
+		if (dsv) dsv->Release();
+	}
+	std::shared_ptr<const Scene> scene;
+	std::shared_ptr<const EdgeCells> cells;
+	{
+		std::scoped_lock l(mPublishedMutex);
+		scene = mPublished.scene;
+		cells = mPublished.cells;
+	}
+	if (!scene) return;
+	EmitCamera cam;
+	if (!viewCamera((const uint8_t*)view + mViewCamera, cam)) return;
+	EmitOptions opt;
+	const auto structureColor = mSettings->h2pGridStructureColor->GetValue();
+	const auto instanceColor = mSettings->h2pGridInstanceColor->GetValue();
+	opt.structure[0] = structureColor.x; opt.structure[1] = structureColor.y; opt.structure[2] = structureColor.z;
+	opt.instance[0] = instanceColor.x; opt.instance[1] = instanceColor.y; opt.instance[2] = instanceColor.z;
+	opt.grid = grid;
+	opt.showStructure = mSettings->h2pGridShowStructure->GetValue();
+	opt.showInstances = mSettings->h2pGridShowInstances->GetValue();
+	opt.spots = spots;
+	opt.gridWidth = mSettings->h2pGridWidth->GetValue();
+	opt.gridOpacity = mSettings->h2pGridOpacity->GetValue();
+	if (mEngine.draw(ctx, mFns, scene, cells, cam, opt))
+	{
+		mEngineDrawnMs = GetTickCount64();
+		mEngineDraws++;
+	}
+	else if (!mEngineErrorLogged)
+	{
+		mEngineErrorLogged = true;
+		PLOG_ERROR << "Map grid: the game's drawer: " << mEngine.lastError() << "; the grid is drawn over the frame instead";
+	}
+}
+
+void PoorboyWorldLines::publish(Published p)
+{
+	std::scoped_lock lock(mPublishedMutex);
+	mPublished = std::move(p);
+}
+
+void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* context, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* target)
+{
+	std::unique_lock<std::mutex> lock(mDestructionGuard);
+	if (context) mContext = context;                     // the game's own view render (Halo 3) draws with it
+	const bool wireView = mSettings->wireViewToggle->GetValue();
+	const bool grid = wireView || mSettings->h2pWorldLinesToggle->GetValue(), spots = !wireView && mSettings->h2pJumpSpotsToggle->GetValue();
+	int game = -1;
+	if (grid || spots)
+	{
+		const MCCState& state = mccStateHook->getCurrentMCCState();
+		const GameState::Value now = state.currentGameState;
+		if (state.currentPlayState == PlayState::Ingame)
+			for (int i = 0; i < (int)std::size(kGames); i++)
+				if (kGames[i].game == now) game = i;
+	}
+	mGame = game;
+	mWantSpots = spots;
+	if (game < 0 || mGpuFailed || !device || !context || !target) return;
+	UINT frameW = 0, frameH = 0;
+	if (!targetSize(target, frameW, frameH) || frameW < 64 || frameH < 64)
+	{
+		mFrameSkip = kBadTarget;
+		return;
+	}
+	// the labels go through ImGui, in its own display size (HCM's screen size can be stale, see targetSize)
+	const ImVec2 display = ImGui::GetIO().DisplaySize;
+	const float labelW = display.x >= 64 ? display.x : screenSize.x >= 64 ? screenSize.x : (float)frameW;
+	const float labelH = display.y >= 64 ? display.y : screenSize.y >= 64 ? screenSize.y : (float)frameH;
+	Published p;
+	{
+		std::scoped_lock l(mPublishedMutex);
+		p = mPublished;
+	}
+	Camera cam;
+	if (!p.scene || !readCamera(p.camera, cam))      // the newest camera: the lines stay put while you turn
+	{
+		mFrameSkip = p.scene ? kNoCamera : kNoScene;
+		return;
+	}
+
+	// Halo 3 with the view render hooked: the game's drawer drew the lines this frame; only the labels are left
+	const bool engineLive = !wireView && !mSettings->h2pGridNoBloomToggle->GetValue() && !mSettings->h2pGridXray->GetValue()
+		&& mEngineReady && GetTickCount64() - mEngineDrawnMs.load() < 300;
+	if (!engineLive && !mGpu.init(device))
+	{
+		mGpuFailed = true;                                   // logged once; the rest of the overlay carries on
+		PLOG_ERROR << "Map grid: " << mGpu.lastError();
+		return;
+	}
+	if (!engineLive && mGpu.scene() != p.scene) mGpu.setScene(p.scene);
+	DrawOptions opt;
+	opt.blackBackground = wireView;
+	const auto background = mSettings->wireViewBackgroundColor->GetValue();
+	opt.background = { background.x, background.y, background.z, 1.f };
+	opt.xray = (wireView ? mSettings->wireViewXray->GetValue() : mSettings->h2pGridXray->GetValue());
+	const auto structureColor = (wireView ? mSettings->wireViewStructureColor->GetValue() : mSettings->h2pGridStructureColor->GetValue());
+	const auto instanceColor = (wireView ? mSettings->wireViewInstanceColor->GetValue() : mSettings->h2pGridInstanceColor->GetValue());
+	opt.structure = { structureColor.x, structureColor.y, structureColor.z, 1.f };
+	opt.instance = { instanceColor.x, instanceColor.y, instanceColor.z, 1.f };
+	opt.grid = grid;
+	opt.showStructure = (wireView ? mSettings->wireViewShowStructure->GetValue() : mSettings->h2pGridShowStructure->GetValue());
+	opt.showInstances = (wireView ? mSettings->wireViewShowInstances->GetValue() : mSettings->h2pGridShowInstances->GetValue());
+	opt.spots = spots;
+	opt.lineScale = (float)frameH / 1080.f;
+	opt.gridWidth = (wireView ? mSettings->wireViewWidth->GetValue() : mSettings->h2pGridWidth->GetValue());
+	opt.gridOpacity = (wireView ? mSettings->wireViewOpacity->GetValue() : mSettings->h2pGridOpacity->GetValue());
+	if (!engineLive)
+	{
+		if (!wireView) players(cam);
+		opt.blockers = wireView ? nullptr : &mBlockers;
+		const char* depthMissing = wireView ? "masked by grid-only view" : gameDepth(game, device, p.camera, opt);
+		if (!mGpu.draw(context, target, (float)frameW, (float)frameH, cam, opt))
+		{
+			mFrameSkip = kDrawFailed;
+			return;
+		}
+		mFrameDraws++;
+		mFrameSkip = kDrew;
+		// how the gun and arms are kept clear (logged when it changes)
+		std::string note;
+		if (mGpu.sceneUsed())
+		{
+			D3D11_TEXTURE2D_DESC d;
+			opt.sceneDepth->GetDesc(&d);
+			note = std::format("kept off your first-person gun and arms by the game's own depth ({} x {}, format {}; clip planes {:g} .. {:g})", d.Width,
+				d.Height, (int)d.Format, opt.sceneNear, opt.sceneFar);
+		}
+		else
+			note = std::string("drawn over your first-person gun: the game's own depth ") +
+			(opt.sceneDepth ? std::string("cannot be used: ") + mGpu.sceneProblem() : std::string(depthMissing));
+		if (note != mGameDepthNote) PLOG_INFO << "Map grid on " << kGames[game].title << ": " << note;
+		mGameDepthNote = note;
+	}
+
+	if (spots && !mSettings->hideHUDToggle->GetValue())      // the labels are text: Hide HUD hides them
+	{
+		ImDrawList* dl = ImGui::GetBackgroundDrawList();
+		for (const Label& l : p.labels)
+		{
+			float x, y;
+			if (toScreen(cam, l.at, labelW, labelH, x, y) && x >= 0 && x < labelW && y >= 0 && y < labelH)
+				dl->AddText(ImGui::GetFont(), 18.f * (std::max)(1.f, labelH / 1080.f), ImVec2(x + 6, y - 9),
+					rgb(kTakeOffRgb[0], kTakeOffRgb[1], kTakeOffRgb[2]), l.text.c_str());
+		}
+	}
+}
+
+// The game's main depth buffer (kDepthGames) and its camera's clip planes into opt. The buffer is looked up in the game's
+// surface table every half second (a resize or a reloaded module makes new ones) and kept with one reference between;
+// the clip planes are read every frame. Anything not found: no depth given, the lines are drawn as before.
+const char* PoorboyWorldLines::gameDepth(int game, ID3D11Device* device, uintptr_t camera, DrawOptions& opt)
+{
+	const uint64_t now = GetTickCount64();
+	if (now - mGameDepthMs >= 500)
+	{
+		mGameDepthMs = now;
+		if (mGameDepth) mGameDepth->Release();
+		mGameDepth = nullptr;
+		for (const DepthGame& d : kDepthGames)
+			if (d.game == kGames[game].game && d.stamp == kGames[game].stamp)
+				if (const uintptr_t base = gameBase(kGames[game])) mGameDepth = depthTexture(depthViewOf(d, base), device);
+	}
+	if (!mGameDepth) return "was not found in its surface table";
+	float clip[2] = {};
+	if (!camera || !safeCopy(clip, (const void*)(camera + kCameraClip), sizeof(clip)) || !(clip[0] > 1e-5f && clip[0] < 1.f))
+		return "has no readable near plane in the camera";
+	opt.sceneDepth = mGameDepth;
+	opt.sceneNear = clip[0];
+	opt.sceneFar = std::isfinite(clip[1]) && clip[1] > clip[0] ? clip[1] : 0.f;
+	return "";
+}
+
+// Every biped of the game (players, AI) as a capsule standing on its feet, carried forward by its velocity to now: a
+// Spartan is ~0.7 units tall, an Elite ~0.85; one size for all, a little tall. Your own is left out while the camera is in
+// it (first person); in third person, Theatre or a free camera it is kept clear like the others. The mod's list is read
+// each frame (seqlock, no waiting); without the mod (or an older build) nothing is kept clear.
+void PoorboyWorldLines::players(const Camera& cam)
+{
+	constexpr float kRadius = 0.27f, kStand = 0.86f, kCrouch = 0.62f;
+	mBlockers.clear();
+	HMODULE pinned = nullptr;
+	if (!GetModuleHandleExW(0, L"h3sb.dll", &pinned) || !pinned) return;
+	H3sbBiped list[64];
+	int n = 0;
+	if (auto fn = (int (*)(H3sbBiped*, int))GetProcAddress(pinned, "h3sb_bipeds")) n = fn(list, (int)std::size(list));
+	FreeLibrary(pinned);
+	for (int i = 0; i < n && i < (int)std::size(list); i++)
+	{
+		const H3sbBiped& b = list[i];
+		const float ahead = std::clamp(b.age, 0.f, 0.1f);
+		const V3 feet{ b.feet[0] + b.velocity[0] * ahead, b.feet[1] + b.velocity[1] * ahead, b.feet[2] + b.velocity[2] * ahead };
+		const float height = kStand + (kCrouch - kStand) * std::clamp(b.crouch, 0.f, 1.f);
+		const Capsule c{ feet + V3{ 0, 0, kRadius }, feet + V3{ 0, 0, height - kRadius }, kRadius };
+		if (b.local)
+		{
+			// the camera's distance from the capsule's axis
+			const V3 ab = c.b - c.a, ap = cam.pos - c.a;
+			const float t = std::clamp(dot(ap, ab) / (std::max)(dot(ab, ab), 1e-6f), 0.f, 1.f);
+			if (length(ap - ab * t) < kRadius + 0.2f) continue;
+		}
+		mBlockers.push_back(c);
+	}
+}
+
+// the worker: which map, its geometry (loaded once per map, again when the mod rewrites the file: a campaign level
+// loading its next part, Reach Forge changes), and with jump spots on the labels in sight (~30 times a second)
+void PoorboyWorldLines::work()
+{
+	SetThreadDescription(GetCurrentThread(), L"PCM map grid");
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+	using clock = std::chrono::steady_clock;
+	std::shared_ptr<Scene> scene;
+	std::shared_ptr<EdgeCells> cells;
+	int gameNow = -1;
+	auto nextStatus = clock::now() + std::chrono::seconds(10);
+	std::string lastStatus;
+	uintptr_t baseNow = 0;
+	std::string wantedMap, lastProblem;
+	auto nextCheck = clock::now();
+	auto note = [&](const std::string& problem) {           // logged once until it changes
+		if (problem != lastProblem) PLOG_INFO << "Map grid: " << problem;
+		lastProblem = problem;
+		};
+
+	while (!mStop)
+	{
+		try
+		{
+			const int game = mGame.load();
+			if (game < 0)
+			{
+				publish({});
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				continue;
+			}
+			const GameInfo& g = kGames[game];
+			const auto now = clock::now();
+			if (now >= nextCheck || game != gameNow)
+			{
+				nextCheck = now + std::chrono::milliseconds(500);
+				uint32_t stamp = 0;
+				const uintptr_t base = gameBase(g, &stamp);
+				if (!base)
+				{
+					if (stamp) note(std::format("{} is a build the map grid does not know ({:#x}); nothing drawn", g.title, stamp));
+					publish({});
+					gameNow = -1;
+					std::this_thread::sleep_for(std::chrono::milliseconds(500));
+					continue;
+				}
+				if (game != gameNow || base != baseNow)
+				{
+					gameNow = game;
+					baseNow = base;
+					scene.reset(), cells.reset();
+				}
+				// Halo 3: the game's own view render, hooked once per module load. A module loaded again at the same
+				// address (MCC does that between maps) has a fresh vtable without the hook: hooked again
+				if (mEngineReady && mHookSlot)
+				{
+					void* inSlot = nullptr;
+					if (!safeCopy(&inSlot, mHookSlot, sizeof(inSlot)) || inSlot != (void*)&hookedViewRender)
+					{
+						PLOG_INFO << "Map grid: " << g.title << " was loaded again; hooking its view render again";
+						mEngineReady = false;
+						mHookSlot = nullptr;
+						mHookBase = 0;
+					}
+				}
+				if (mHookBase && mHookBase != base) unhookView();
+				if (!mEngineReady && (base != mHookRefusedBase || GetTickCount64() - mHookRefusedMs > 30000)) hookView(game, base);
+				const std::string name = mapName(g, base);
+				if (!name.empty())
+				{
+					if (name != wantedMap)
+					{
+						wantedMap = name;
+						scene.reset(), cells.reset();              // the last map's lines are never drawn on this one
+					}
+					const auto file = mDir / std::filesystem::path("h3sb_world_" + name + ".bin");
+					std::error_code ec;
+					const auto time = std::filesystem::last_write_time(file, ec);
+					if (!scene || (!ec && time != scene->worldTime))
+					{
+						try
+						{
+							const auto t0 = clock::now();
+							auto s = Scene::load(file, mDir / L"spots", name);
+							const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - t0).count();
+							note(std::format("{} {}: {} polygons, {} map edges + {} instanced-geometry edges; {} jump-spot edges, {} take-off marks ({} ms)",
+								scene ? "reloaded" : "loaded", name, s->polygons, s->edgeIndex[kStructure].size() / 2,
+								s->edgeIndex[kInstance].size() / 2, s->green.size(), s->rings.size(), ms));
+							auto c = std::make_shared<EdgeCells>();
+							c->build(*s);
+							scene = std::move(s);
+							cells = std::move(c);
+						}
+						catch (const std::exception& e)
+						{
+							note(std::format("{}: {}", name, e.what()));      // tried again in half a second (old lines kept on a reload)
+						}
+					}
+				}
+			}
+			if (clock::now() >= nextStatus)
+			{
+				// how the grid was drawn in the last 10 s (the game's renderer, or over the frame): logged when it changes
+				nextStatus = clock::now() + std::chrono::seconds(10);
+				void* inSlot = nullptr;
+				const bool hooked = mEngineReady && mHookSlot && safeCopy(&inSlot, mHookSlot, sizeof(inSlot)) && inSlot == (void*)&hookedViewRender;
+				const int engine = mEngineDraws.exchange(0), frame = mFrameDraws.exchange(0), skip = mFrameSkip.load();
+				const std::string status = std::string(engine > 0 ? "drawn by the game's renderer" : frame > 0 ? "drawn over the frame" : "not drawn") +
+					(engine == 0 && frame == 0 && skip != kDrew ? std::string(" (") + frameSkipText(skip) + ")" : std::string()) +
+					"; hook " + (hooked ? "in place" : "not in place") + ", faults " + std::to_string(gViewFaults.load());
+				if (status != lastStatus)
+					PLOG_INFO << "Map grid on " << (scene ? scene->map : std::string("(no map yet)")) << ": " << status << " (" << engine << " views, " << frame
+					<< " frames in the last 10 s)";
+				lastStatus = status;
+			}
+			Published p;
+			p.scene = scene;
+			p.cells = cells;
+			p.camera = baseNow + g.camera;
+			Camera cam;
+			if (scene && mWantSpots && !scene->rings.empty() && readCamera(p.camera, cam)) p.labels = visibleLabels(*scene, cam);
+			publish(std::move(p));
+		}
+		catch (const std::exception& e)
+		{
+			note(std::string("stopped by an error: ") + e.what());
+			publish({});
+			scene.reset(), cells.reset();
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+		}
+		catch (...)
+		{
+			note("stopped by an unknown error");
+			publish({});
+			scene.reset(), cells.reset();
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(33));
+	}
+	publish({});
+}

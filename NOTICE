@@ -1,0 +1,9 @@
+Session is derived from Poorboys Checkpoint Manager and Halo Checkpoint Manager.
+Original copyright and license notices remain in LICENSE, THIRD-PARTY-LICENSES.md,
+the vendored licenses and source headers.
+
+Preparation changes are documented in docs/BASELINE.md. No third-party authorship
+is claimed for Session. External runtime redistribution is reviewed separately.
+
+Credits: Poorboy; Burnt-o (Maurice Dix); Harc; Jagged; third-party authors listed
+in their retained notices; KyleFFA (badstrafe).

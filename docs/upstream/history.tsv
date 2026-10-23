@@ -1,0 +1,910 @@
+commit	author_date	author	subject
+0c1a55230b333d229ccd08ef48854f8250f23449	2026-10-20T06:33:20-07:00	PoorboyTTV	Poorboys Checkpoint Manager 1.4.1: Theatre bounces, Reach kill walls and shields
+52a939324d8dd32016e792239951c6c473ce43ba	2026-10-19T21:19:27-07:00	PoorboyTTV	Poorboys Checkpoint Manager 1.4.0: settings carry over, grid behind the gun, version in the title
+762f1b96dad051bed08ccfe3fd6a00bab32a4922	2026-10-18T04:34:51-07:00	PoorboyTTV	Poorboys Checkpoint Manager 1.3.0: grid in Halo 3's own render, double shot, lifts
+add67f49c13c82a140eb322fa8af94f2cf45d491	2026-10-17T21:39:07-07:00	PoorboyTTV	Poorboys Checkpoint Manager 1.2.0: map grid, green radar dot, hold to fly
+7c3c7f07d62a16e009d89287fbaaf8928996033c	2026-10-17T10:04:06-07:00	PoorboyTTV	Poorboys Checkpoint Manager 1.1.0: README and HOW TO USE for Reach
+033c8f6806a22e16a0eb320900e49d2eb71ebc79	2026-10-17T10:04:06-07:00	PoorboyTTV	Disable AI, Forge bounces, and combos + bottomless clip in Reach
+b9b142e5b6830dc4bc7df8c173e9c9545b189867	2026-10-16T11:13:01-07:00	PoorboyTTV	Reach: barriers, no falling deaths, fly, save spot and the logo
+3d2979addd4b059c92718a98d84492b12f6f0fd1	2026-10-16T10:24:34-07:00	PoorboyTTV	Line helper buttons in Halo: Reach (the helper draws Reach's floor seams)
+aec57076aa8585216508db095076be2f57301500	2026-10-16T10:04:41-07:00	PoorboyTTV	Poorboy's Mods section listed for Halo: Reach too
+4b114c2dde89cbe8864e6b3f1426f34965473cef	2026-10-16T09:53:04-07:00	PoorboyTTV	Halo 2 physics switches in Halo: Reach (physics, status, arm, 30 tick)
+632c2ddcd35c93126c871decb18112cc473eecee	2026-10-16T07:50:58-07:00	PoorboyTTV	Poorboy's logo see-through (35%) so it stays out of the way
+2f72291110f151fd2ce58e1f5ac7344c4fe3cf3b	2026-10-16T07:41:41-07:00	PoorboyTTV	Poorboy's logo left of the grenade counts in Halo 3 and ODST
+e815ce9e4271ed644fd71c729068e446355e7771	2026-10-16T07:09:22-07:00	PoorboyTTV	Online docs: same version for everyone, 30 tick on for superbounces
+90b636cd880b70ee41310c1c3dc7122752c87918	2026-10-16T06:33:58-07:00	PoorboyTTV	Poorboy's Mods: all our features together at the top of the overlay
+7d4b6f8fac224489f9fbe841e46490616e7c9667	2026-10-16T04:15:15-07:00	PoorboyTTV	Bottomless Clip: grenades never run out in Halo 3 / ODST too
+74e99339b2601ead3b7b3b70ff0db7fa4bbddf5d	2026-10-15T23:16:50-07:00	PoorboyTTV	30 / 60 tick switches the Halo 2 physics too
+9282eae5a9f2aeb5d9f4564d35f46ef284dad142	2026-10-15T23:11:29-07:00	PoorboyTTV	Bottomless Clip for Halo 3 / ODST, spot keeps the view, double grenade docs
+cfcd30434fe46a9d185a09bbfb788ea76482b684	2026-10-15T21:49:23-07:00	PoorboyTTV	Helper missing: say the antivirus removed it and how to get it back
+2022cb834a3a661d08834b58300c1b520e5c86a1	2026-10-15T05:13:25-07:00	PoorboyTTV	Save spot / Back to spot: online-safe way to retry a jump
+82f73061f96197959dc1b58095b0de4814e8b682	2026-10-15T02:47:49-07:00	PoorboyTTV	Fly: the player flies where it looks (Halo 3, ODST)
+801598ff54751b9949dfa9b3fc3d7b9380db18cf	2026-10-15T02:16:58-07:00	PoorboyTTV	README: download and online sections
+8ac62ac3da2d867b2a257b61830023249692d5b6	2026-10-15T02:14:34-07:00	PoorboyTTV	Poorboys Checkpoint Manager 1.0.1: Halo 2 physics for Halo 3 and ODST
+c5f4069a9e79060d0eeb85105636fe17b6b77563	2025-09-29T17:48:47+09:30	Burnt	S5 ODST skull pointer
+1fdf0b63201ca97e1ffd933b313d8e8928ea7821	2025-09-26T15:57:45+09:30	Burnt	unremove 3495 sha/bsp/preservelocation data
+9882f52df680c21cbf2735de0781961dc1366737	2025-09-26T14:45:13+09:30	Burnt	unremove 3495 checkpoint metadata from ExternalPointerData
+327ceda043ec1edd5c34527f767109e0bdd5170b	2025-09-24T22:37:32+09:30	Burnt	Update hardcoded WinStore FVI for Sep 2025 patch
+2eaa90caff1f7322f52fa54b19a3df86358d8918	2025-09-19T17:44:14+09:30	Burnt	Update for Sep 2025 patch
+233b8eff25324483f4f29175ad84fe5f4ef0cdac	2025-09-12T20:48:22+09:30	Burnt	revert unneeded h3 cp injection stuff
+d79e039372416371b715e3fb7b6adfbc92232fb3	2025-09-12T20:45:44+09:30	Burnt	odst s5 save management implementation
+df6ce79f1da1b46b8d44ff3fd087e2091a8a6bd9	2025-08-25T20:02:19+09:30	Burnt	h3 2645 cp injection fix
+6037f4c4cc6b129607072033556071d895fc32ed	2025-08-12T22:34:09+09:30	Burnt	Fix h2 s7 trigger overlay
+926430f3342c43c45a35ef6051cdabdb795a7dcf	2025-08-11T20:33:09+09:30	Burnt	Fix h2 s7 freecam
+5edbec08bd0496f793ab6eb8cb5bcead8c8088d7	2025-08-10T00:32:44+09:30	Burnt	Fix h2 s7 tickcounter
+1b2dfd97725c56bb22648082fcb03dd4347263de	2025-08-06T23:11:42+09:30	Burnt	Fix HReach checkpoint sharing on current patch
+fa3ff19c33ef2344e8b6f5f1de768582b02793b5	2025-07-31T19:24:13+09:30	Burnt	season 5 ControlServiceContainer pointerdata
+ff7d751780d904df31d5bea832d29e888b41956e	2025-07-14T18:42:18+09:30	Burnt	2094 base mcc support
+000e76a0a848e970ab1d94a85956746ee32238f8	2025-06-29T15:36:45+09:30	Burnt	Fixed bad h3 havok component meta table pointer on current patch
+7d38e379313824db7f396019b31d8812a20224a6	2025-06-29T15:29:36+09:30	Burnt	Fix h3 swapped cp locations in downpatch (<= 3073)
+ac78630b912e670bfb83089fe22f33bb4fe677f1	2025-06-23T21:05:45+09:30	Burnt	Fix h4 third-person-rendering (freecam) issue
+21db8e1b699fca29f0d527a6f65a5d2345598efc	2025-06-23T20:56:17+09:30	Burnt	Fix HR/H4 natural-checkpoint-disabling
+0a6fef506bb80bf59d22b169c45563520aa55a4d	2025-06-23T17:46:18+09:30	Burnt	Fix potential race condition in SharedRequestTokenProvider
+12a8b2cb9d5d32d1f454016f85f897eaeffe195f	2025-06-23T17:43:51+09:30	Burnt	Improved logging for SharedRequestProviders
+9b8d015fed9aa67b69e546d961e46f0636bee7c8	2025-03-07T02:53:43+10:30	Burnt	Fix h3 scenarioDatum pointer (off by 4 bytes)
+8e038b22f3889fd7031edf08b8404ea20e1ab309	2025-03-06T21:21:38+10:30	Burnt	ver bump -> 3.1.9
+b83f58fd8b00c47541f23f2c2f8f325addd285c7	2025-03-06T21:05:48+10:30	Burnt	3495 checkpoint metadata
+096cb6f0bf10791c337acdac651142c3964e59d3	2025-03-06T19:12:48+10:30	Burnt	remove trap
+0d0e3e7bb7c06f5f683156f009e5699b11c471dd	2025-03-06T19:12:32+10:30	Burnt	binary initialisation flags
+79990d147693d505ee6ad4e18cc48f9f2844a5f9	2025-03-06T19:07:02+10:30	Burnt	3495 (3498?!) WinStore offsets
+6e10782a5b2d2b8750dacaf9b934a59b487db441	2025-03-06T18:53:26+10:30	Burnt	winstore hardcoded version info: swap build <-> minor
+6d08e403b41e8b30e67f2e035b43b21c7305376c	2025-03-06T18:49:59+10:30	Burnt	hard code WinStore mcc VersionInfo
+d3b1d9af13c4c767dd5d0d5b0f1eae40a4338e33	2025-03-04T23:11:05+10:30	Burnt	Fix BlockPlayerCharacterInputFunction - was actually causing game pause instead
+95e465b25c4286cb9d35380ddc368a98aa884363	2025-03-04T01:00:39+10:30	Burnt	3495 h4 pointers
+5d2e572c1a24cf34225080a24989dec79fe4933d	2025-03-03T17:05:56+10:30	Burnt	3495 reach pointers
+7d997b36a1fae61b68ae765262946ae4123dd2ab	2025-03-03T01:24:31+10:30	Burnt	3495 present hook fix (tentative)
+84cbb2373f73776ffb9f81d3265ae0dc3ead5936	2025-03-03T00:45:29+10:30	Burnt	3495 odst pointers
+a3debfdebdd86fca17150a29d2e77015f5604468	2025-03-02T23:47:10+10:30	Burnt	3495 h3 pointers
+dad7249bfe4f38762f40f1a0733af3f9b3c88e52	2025-03-02T21:52:52+10:30	Burnt	todo: fix up mcc init for latest patch
+9eb2e0c2d1fbf39e0ce50cadcf71aac69e184eb6	2025-03-02T21:52:20+10:30	Burnt	todo: fix up mcc init for latest patch
+1d9947bf96d52e3b8898bf883ec6a1bba9f43a02	2025-03-02T02:49:07+10:30	Burnt	3495 h2 pointers
+d431c0283dbdc6c9882953d460b6ff7c4fcf83ce	2025-03-02T01:32:52+10:30	Burnt	3495 h1 pointers (unchanged)
+f37b3f94e40a02d717c10eeadfc36ad6f76968b2	2025-03-01T23:11:56+10:30	Burnt	steam base binary offsets
+07423e5331c5606d63ff894264b807dcb5350b96	2025-02-21T02:15:25+10:30	Burnt	ver bump -> 3.1.8
+44895cb70547ae165c7bdac1910683a7d3320078	2025-02-21T02:14:56+10:30	Burnt	Assume ProjectCartographer pointer data won't change between versions (it did not change from 0.7.0.3 -> 0.7.1.2)
+b46e9a522306591fbdefc9afa6290b226edcfd9f	2025-02-21T01:35:57+10:30	Burnt	Fix a few bugs with LastSelected[Thing] (de)serialisation not working properly: * Properties.Settings.Default.Save() was not being called on property changing * Checkpoint deserilaisation was using bad path (missing slash and .bin) * load lastSelectedCheckpoint var before FileViewModel can fuck with it * for some reason the LastSelectedCheckpoint behaviour STILL isn't working, ugh
+5dc2c45f1f8b9af37996b9ce50779c3ea1004cc0	2025-02-21T00:44:26+10:30	Burnt	Add 2904 reach control (pause/blockinput/freecursor) pointerdata
+2639051394b0723bc494c9e62d2e8909dadbae64	2025-02-21T00:03:01+10:30	Burnt	forgot to push with last commit
+b2754cca0fcb11284eca27d18f93addc41c0a3ae	2025-02-21T00:02:43+10:30	Burnt	Fix some annoying pointer parsing error handling when dealing with MultilevelPointer::Derived's with a Version="All" but no matching base entry.
+b302b489f563c1901cfdfbb36f4743202bc47370	2025-02-20T23:30:38+10:30	Burnt	Fix 2904 mcc init check
+f8bfba07e6260fe51612e0b4d58c923bbe649087	2025-02-20T23:23:29+10:30	Burnt	2904 save management support
+951f567ef92dfd121a2c498882b496d20428f15a	2025-02-20T22:14:42+10:30	Burnt	print out idxgi pointers with dummy swapchain when building in debug mode
+fd5d9a95b0869e3310a795c5399a743761b59220	2025-02-20T22:13:40+10:30	Burnt	fixed unexpected.value() dereference when missing MCCInitialisationFlag pointer
+4108fceb75b9fdf1154901ea23d35409651bd7f4	2025-02-20T21:30:19+10:30	Burnt	fix new subpixel operator float() infinite recursion bug
+14f8c9f8b9e5a217f16f771365d56cc0a27ad7f8	2025-02-16T22:37:24+10:30	Burnt	Fixed subpixel ui issues
+b64a8f768a05eadfd5192f3e293587938231f26f	2025-01-31T22:13:05+10:30	Burnt	update git submodules to latest safetyhook (personal fork) commit
+5fa6bbb71b6fab2b558a991c4aeb3a39e6aac016	2025-01-31T22:06:55+10:30	Burnt	Fix cartographer PreserveLocations
+423282a01a8ccc38b138f2c76848294b7a2bb155	2025-01-27T17:45:28+10:30	Burnt	Add host check for cartographer process
+4bed71f852c408e87cafe7836052b9dbe7edefe8	2025-01-27T17:05:40+10:30	Burnt	Account for multiple cartographer processes. Inject/dump very broken though.
+93f214fe266a1ea7d63e63a690347fe0cf37feba	2025-01-25T21:12:56+10:30	Burnt	Fix view angle not preserving on cartographer checkpoint injection
+af5e7359d105a95d0d09fe289c25a7f212abb73f	2025-01-24T19:40:53+10:30	Burnt	Added folder explorer tree dragdrop functionality to move checkpoint to different folder
+3219541dd306222c10a5a9819ad47adad8173fd9	2025-01-24T19:21:11+10:30	Burnt	remove debug commands from context menu
+105e9bd4d57e0abd24f1cf4cc3a2ffec5d7e588f	2025-01-24T19:19:48+10:30	Burnt	Fix and hookup CheckpointBeforeDump and RevertAfterInject settings for cartographer
+031979b63211841820177dec1a767ee94aa199d8	2025-01-24T18:28:10+10:30	Burnt	Fix UpdateCheckpoint/SaveFolderCollection not firing on ui thread
+511d5b262e0d132485e62df52b74eb83c401d5c0	2025-01-24T18:22:05+10:30	Burnt	re-add implementation of ShowErrorEvent
+13b20749823631486b08ec1a25a17cd48160657d	2025-01-24T18:07:49+10:30	Burnt	Fix errofile.png not found due to not being flagged as Resource
+b851ea45de0f941cae15e8015283c90ba365ba1a	2025-01-24T17:51:33+10:30	Burnt	Fix several BindingExpression errors due to bad paths
+c8f3cb16278a1c6051b257e9cebf45febc519119	2025-01-24T14:53:33+10:30	Burnt	Merge branch 'master' of https://github.com/Burnt-o/HaloCheckpointManager
+a2c2ecb21fd86ffde91d1276628373f89ae92381	2025-01-24T14:53:18+10:30	Burnt	Fix hooking LoadLibraryExW
+9f79762c600de688fcdf7aff6498911bbc7188d3	2025-01-23T19:22:29+10:30	Burnt-o	Fix markddown formatting in THIRD-PARTY-LICENSES.md
+21eb2391d587850aaa8126aaeeafbc67f875223c	2025-01-23T19:19:26+10:30	Burnt-o	Create LICENSE (MIT)
+d96d6832a372ce94a874fd7a81ae65b3f0e9226d	2025-01-23T19:12:45+10:30	Burnt	Add THIRD-PARTY-LICENSES.md
+8e2495c629c81ad2cf260af6d217ff7a8d5af140	2025-01-23T18:57:33+10:30	Burnt	Update to latest version of safetyhook, fix build issues. Use safetyhook::VMT hook in D3D11Hook instead of custom solution.
+9dc29c68d96fb7ba1b9c27663686600d95905684	2025-01-23T14:21:30+10:30	Burnt	gitmodules: Add safetyhook/type_safe/ImGuiColorTextEdit
+53dd6d03719e9f3c713ea1b8d36fd8238cfb308b	2025-01-23T14:19:20+10:30	Burnt	Uncopypaste safetyhook/type_safe/ImGuiColorTextEdit
+a383a7b4b2f07d19336e6d1b2b6480316b623a66	2025-01-23T14:14:57+10:30	Burnt	Remove unused HCM2.0 HCMInternal folder
+ab8c38e1c2f9f79bbdaf106f8c591c2d5095808e	2025-01-22T03:40:12+10:30	Burnt	todo: licensing
+2889bb451406c2587d03402b1a7007e3f917dcf0	2025-01-21T00:51:23+10:30	Burnt	Don't overwrite saves when dumping.
+b5860f4ad417ea0a2791b3521d497f13c0dcc1da	2025-01-21T00:45:44+10:30	Burnt	fixed init crash when ProjCart is saved as last selected tab
+02791330f652dfd80afca3a2bcdde018925347ae	2025-01-21T00:45:37+10:30	Burnt	External hotkey (de)serialisation
+c9e627b76c2010961849f1268290b761024769a7	2025-01-13T00:37:17+10:30	Burnt	View and Hotkeys for external service (project cartographer). Still a few bugs to fix and features to impl.
+9e8ae4cb2e5479b9b098ed0352bcaa81c24d2452	2025-01-10T23:02:28+10:30	Burnt	Fix stale pointer in cartographer checkpoint data
+914a7dcaf46829196a1104774d2f2067682ef0d4	2025-01-10T20:49:07+10:30	Burnt	Cartographer save management FULLY OPERATIONAL
+b6783c640df90efc37001b830f8418ee272d7c83	2025-01-10T01:46:10+10:30	Burnt	Partial impl of Cartographer checkpoint injection
+7a42158e291d25cc233059ed9f66a71d359e4436	2025-01-10T01:38:33+10:30	Burnt	Partial impl of Cartographer checkpoint dumping by duplicating save file handles + mapping into HCMExternal address space .
+cbabca8731c3d8713fb7e71277f9f42b2ace0b1d	2025-01-05T20:26:52+10:30	Burnt	Partially impl PCartographer dump/inject (injection causes a fatal error because I haven't impl BSPLoad flag setting & PreserveLocations yet)
+c77efc7d4d95f4d9303b5f435d254c811cf81a49	2025-01-05T19:05:33+10:30	Burnt	Impl PCartographer ForceRevert/ForceDoubleRevert
+ecca60ffa4d909a1a7273d141e823b82af04ab8a	2025-01-05T19:05:06+10:30	Burnt	Added debug-only options to checkpoint list context menu to invoke the external save management commands (will make the proper UI for them later)
+5eb8a51990249d2abbf28144b8cd0885e48ecd8b	2025-01-05T18:47:56+10:30	Burnt	Fix shield input printer gui message bug
+c55eaadd606624e5db6533e1d9ff8c82a0f7dcfd	2025-01-05T18:29:55+10:30	Burnt	update TODO
+ffd8ac5b7461f798f89a1cc6744599d220921d86	2025-01-05T01:27:42+10:30	Burnt	ExternalService now working enough to force a checkpoint in project cartographer
+9804de8034e9f16230adeccc06403ed4470d9603	2025-01-04T01:40:09+10:30	Burnt	Significant refactor/code-cleanup of HCMExternal
+d6183fc1958dc835a21f90c840839095ffdeb898	2025-01-01T15:07:18+10:30	Burnt	Add natural checkpoint disable for odst s7 @trouble
+c53c5ec6a1e6dad67a293f18217ce6a05c5e5b57	2024-12-26T12:35:25+10:30	Burnt	ver bump -> 3.0.7
+51c9c73107a28f909454e954108a8661e6aa26c7	2024-12-19T23:29:53+10:30	Burnt	shield input printer to release build
+352e0c9d2dd8b371eba38c49e5f981549474ebe1	2024-12-13T23:37:44+10:30	Burnt	ver bump -> 3.1.6
+618212105bb6c83782065e388426732c8424483c	2024-12-13T20:28:42+10:30	Burnt	View Angle Overlay. Refactored SubpixelID stuff.
+a1d97a920e1bd49fa007310a8d98c4b500868706	2024-12-13T15:09:21+10:30	Burnt	Proof of concept for view angle overlay
+a40014450f05fa76e80c3ece70d18d9a6d8a3df1	2024-12-13T15:03:24+10:30	Burnt	Fix issue with 0th subpixel
+9e9315a1e3d5b61829834b8277f7b8231b1297dc	2024-12-12T23:26:38+10:30	Burnt	Add EditPlayerViewAngleID for subpixel editting to go along with EditPlayerViewAngle
+a6453ae1a50b2c348f85275118c5d45f0bfb0589	2024-12-12T19:10:45+10:30	Burnt	Added subpixel id option/logic to display player info
+f7ec6ab409070ef0f814a981577758f7cf1aa6ff	2024-12-12T18:20:49+10:30	Burnt	add option and logic for counting clockwise turns in drift overlay
+4e9bd4f1ae87677070903f826f351f1ef2784522	2024-12-12T18:20:31+10:30	Burnt	fix interproc include issue
+c8c88c98e91e6e6dcce9db0a28f15cacff67195a	2024-12-07T00:34:48+10:30	Burnt	ver bump -> 3.1.5
+7a45c52d88626c86ff246e63315d359d7332fa32	2024-12-06T23:20:40+10:30	Burnt	Checkpoint Injection log also to logs folder
+e8f24e0ac85db65d6bdda71adf207d6c7c5112ba	2024-12-06T21:03:02+10:30	Burnt	Fix debug build failing to init in s7/s8 due to skull derived pointer error
+1555f2d361cf6c11bce548a9bc3f3e841ec8340d	2024-12-06T20:07:11+10:30	Burnt	Rework engine commands to fix up mission restarting for all games.
+8b2c14d66cfdc2766fc5839e46dae075c897466f	2024-12-06T19:59:23+10:30	Burnt	crashdumps now go into log folder
+4a4fb5f68c386324e9fdadf628e8ae8be8dd4912	2024-12-05T17:39:45+10:30	Burnt	Updated TODO
+85cdabe5248fe7857a10528d0d4013684498b384	2024-12-02T00:41:08+10:30	Burnt	Sens overlay: fix some floating point errors
+f330e8bd61b16470b048a5bc9b372567b268d175	2024-12-01T20:20:37+10:30	Burnt	forgot to commit this to last
+0edf8351b04f0174e0cf2f4d28d5292b42f7a5cd	2024-12-01T17:42:38+10:30	Burnt	Added force mission restart feature (h1, h2, h3, od)
+d7bc3e946ae10933210d9ca2014ca9689beca857	2024-12-01T16:15:10+10:30	Burnt	Add option (disabled by default) to render subpixel drift in scientific notation
+44c109682e36607b34d61f9ce851aa6896b6318c	2024-12-01T16:01:51+10:30	Burnt	Improved accuracy of subpixel drift measurement at 2pi wraparound and very small values (there's still a slightly inaccuracy but it's very very close)
+b01cff485ba90c86da38d02c70e9a3ecbf6dd08f	2024-12-01T14:15:16+10:30	Burnt	Sens Overlay: Don't spam log messages every frame
+0af8d69ffb0cc7ac95c1dec7947fd922e9592c21	2024-11-29T19:54:12+10:30	Burnt	Hotkeys now save to file every time they are changed (instead of only on HCM shutdown)
+0f26a0c1880718b02559047b807cb38201be634c	2024-11-29T19:44:02+10:30	Burnt	Log files to seperate folder
+62cb2b456239c7b470a39b9a6b80d94f76e2ac4e	2024-11-29T19:27:24+10:30	Burnt	winstore support for sens drift overlay
+ab108676ad2783540b8280aeb43a8b2e77299a46	2024-11-29T19:27:01+10:30	Burnt	add hotkey to sens drift overlay
+61e3cd9161e5749b4a1461641070771261cbec66	2024-11-29T17:31:04+10:30	Burnt	reset sens counts on toggle
+ec5667962e32ccfd3abbcad2ea5e1e813763e981	2024-11-29T17:11:36+10:30	Burnt	Revert hook
+0ef4b6cc5f7478b8c0c7dc7a830f376e260e3cf0	2024-11-29T16:39:21+10:30	Burnt	Added annoying beep to sens drift overlay
+1f1b04f3a59018e9296b42b6394fdaaf29ca9f8b	2024-11-27T01:05:35+10:30	Burnt	add type safety library
+69d0e59231aec0a706e96b30324aa0621b8ec87a	2024-11-26T22:13:30+10:30	Burnt	fix HCMInternal dependency list
+512b5cacda3fa686773c5898f8dd7541aa6d3879	2024-11-26T22:12:44+10:30	Burnt	Fix vcpkg lib search path
+e4ade3cfe7bc3d313dbee2649734efc0b8cc394d	2024-11-26T22:00:40+10:30	Burnt	Update ImGuiColorTextEdit for new imgui ver
+d2295a02b0435f38d985785e269d1bb9b077a990	2024-11-26T20:06:16+10:30	Burnt	Now use vcpkg manifest system
+3a76e84474401fb9fcee2e3d603cf699ca18fe07	2024-11-26T18:55:20+10:30	Burnt	Sens Drift: no longer counts if game is paused or input blocked
+97424c4acb2b8e272e57c155f7b305a6aaf9ca75	2024-11-26T18:14:17+10:30	Burnt	Overhaul sens drift detector into sens drift overlay. Mostly functional, just needs a couple more fixes (sound implementation + disable while input is ignored by the game)
+c328ae040826c1fa5bae717830891a80fac54014	2024-11-26T18:13:28+10:30	Burnt	MidhookContext now supports XMM flags
+5e50c06600ca8acdc902a1fbce7abaf20c778033	2024-11-26T18:13:06+10:30	Burnt	update modulehooks to work with new safetyhook (had to expose safethooks thread freezing)
+a1388e485289eed58002ac1b2b90ab4ebfec782f	2024-11-26T14:50:59+10:30	Burnt	bump safetyhook -> 0.4.1
+525fc73c8ecd26981ad2d4d8ba15850aabe205ef	2024-10-23T18:31:30+10:30	Burnt	Fix null datum exception when player dies while shield input printing
+53418a0447e323fea5fc4b3a692071b56ce6a9c4	2024-10-21T12:49:45+10:30	Burnt	Re-enabled external log interval flushing
+125de72171b2d221ab1499aa76b40204ef895ac4	2024-10-20T21:46:21+10:30	Burnt	ver bump -> 3.1.4. Also disabled external log interval flushing.
+1a0fd0ca4230bf8b446266c00ad66df5f9bf8a9f	2024-10-20T21:21:30+10:30	Burnt	Fixed version self-determination
+704eb5a5071c73436239aeec8ece85fec89f09d7	2024-10-15T02:36:18+10:30	Burnt	Moved HCM update check to internal instead of external, this should prevent AV-sandboxes from flagging internet access as a behaviour. Reorganised PointerDataParser code a bunch (functionally should still be the same).
+a792d928f77ab80069c4c34480758c70a85607d0	2024-10-01T23:17:42+09:30	Burnt	fixed missing "s" in "Assassins" skull toggler
+ec3ade357e5e864453a3093af61d4e347c31be30	2024-09-28T21:14:22+09:30	Burnt	ver bump -> 3.1.3
+4479b8a7dd02171d7d45d1352fd458938467b572	2024-09-28T21:00:42+09:30	Burnt	Fix externalpointerdata get crashing if offline
+6f391ed3025b22061c28c9338010662d854fdd5f	2024-09-27T23:43:19+09:30	Burnt	ExternalPointerData pulled from git again but without writing file - uses HTTPClient instead of deprecated webclient
+a0b0295e403efd5215c0871aedefbf8d9e116106	2024-09-27T21:02:57+09:30	Burnt	0 gameticks is a valid gameTime for checkpoints
+82217757203209a94ad8371a32347916d64629fb	2024-09-27T20:53:16+09:30	Burnt	Anti-anti-virus patch. Moved mcc hook state machine code to HCMInterproc. Now uses FindWindow to find MCC proc instead of enumerating all processes. No longer pulls ExternalPointerData from git, now just embedded resource. MCC initialisation check deferred to HCMInternal dllmain.
+85ee77c4567b4bae79a04d3a6197bb2229f4a714	2024-09-20T19:57:30+09:30	Burnt	Clean up some interproc library use
+d85eaa47f28f17a5160d3bf59293de806d4a7211	2024-09-20T19:11:14+09:30	Burnt	Disable windows debug output in release build
+c76a117c6368e3decf4733f73aa5fd5d891f8fec	2024-09-20T18:41:30+09:30	Burnt	Ran automated code cleanup on HCMExternal
+49cd6950a903e1d01045849d1982b1d74682c1c1	2024-09-12T20:04:58+09:30	Burnt	Added trigger filter option for partial match of trigger name to filter string (former contains later)
+0bcf8351356989fadbcb21d118e3d0d4bdae7879	2024-09-12T19:36:21+09:30	Burnt	Fix for hotkey deserialisation reverting to default binding when encountering empty binding
+dcd497ebe250f2cc6312243da94e6dec5fe41bf8	2024-09-12T18:14:51+09:30	Burnt	Fix incorrect level ids in internal pointer data for trigger filter lists
+1851792aac738866cd80cf2071ad9ffa7be16505	2024-09-04T23:15:05+09:30	Burnt	Fix typo in last commit
+5796b55241782f2a5d5ae2ec0bf4925e3f3425fd	2024-09-04T22:19:12+09:30	Burnt-o	Merge pull request #14 from Advay-BM/master
+230e8d54a6899b3a2ac5e0ef2add10331870711f	2024-09-01T10:36:02+05:30	Advay-BM	Added trigger presets for all halo 1 levels
+6d1a9deb28e4cfcfdd497b691a1b74e72ab4609d	2024-08-20T20:37:41+09:30	Burnt	Fix console init crash
+09844c4c83a597e015268890b6cfbbef8a50bcd9	2024-08-20T18:18:31+09:30	Burnt	ver bump -> 3.1.2
+5bf4f0b104ac3ea7722d1e91c7ff9c4dc95ab085	2024-08-20T18:06:12+09:30	Burnt	added hotkey for ability meter
+9fcc9b4e3d1cbfdd6dde9e8f9c6ba8c601b51a8b	2024-08-20T17:58:08+09:30	Burnt	Fix h1 fog disable
+fbf336971d5c33d0e6c6f1eca9552af6aa946e95	2024-08-20T17:19:49+09:30	Burnt	Added DisableFog feature (all games)
+3a34702bbc5cf9eb9c83c7302c903a44dee7425b	2024-08-20T13:59:08+09:30	Burnt	Added feature to change oob void background colour for h3
+edc38350f4777c48a7281458d2dc037e2506293b	2024-08-19T23:53:25+09:30	Burnt	Made BlockPlayerInput/DisableScreenEffects/ThirdPersonRendering into scoped services. Fixed some issues with HCM shutdown while freecam running.
+28acc23362d544b38d58fe542543f221316ab81b	2024-08-19T23:09:22+09:30	Burnt	Divided non-linear FOV functionality into high and low FOV
+ccfa7b772c8805b986b6838f332fba070bf110c1	2024-08-18T23:11:27+09:30	Burnt	Freecam: Nonlinear FOV. Rotatation sensitivity proportional to FOV.
+3a8c8a8fafb51e07568e3dc4cfc72e5499728067	2024-08-18T01:03:48+09:30	Burnt	halo4 freecam
+a298ccfa6397a1d6303fe692c407db50c6784478	2024-08-16T21:28:30+09:30	Burnt	h1 sound gain adjuster feature
+2dc3bbeacf693fb47a12e2530342e0c3942c2af5	2024-08-16T17:34:59+09:30	Burnt	h3/hr/h4 black-screen ending on checkpoint injection fix for all versions
+0a44bbec854c9e18ed6add9866b8ce025253b630	2024-08-16T14:17:39+09:30	Burnt	h3 curr patch black screen cp injection fix
+1f59a20215a5f97c2221062334e35db36896f11f	2024-08-15T22:11:41+09:30	Burnt	Fix h4 checkpoint injection glitching out level restart
+bd53112fdb381c2f168463e27bb80c3c3f1b4262	2024-08-15T21:11:42+09:30	Burnt	Fixed downpatched ODST checkpoint BSP cache pointers being the wrong way around
+7999d4d5b8ff9337500a053d42148583b6884e72	2024-08-15T18:06:28+09:30	Burnt	only apply winstore version detection fallback if GetVersionInfo failed
+ab839d5795dcc9d1f3934761d4675eb6c6872fce	2024-08-15T18:05:26+09:30	Burnt	Added MCC init safety check to prevent injection crashes. Slightly refactored how HCMExternal detects MCC version to handle WinStore case better.
+bc156a0b9af39aa6ca1c4946713ced29dbe971e9	2024-08-11T22:04:37+09:30	Burnt	Fix h3 s7/s8 having wrong checkpoint meta offset for levelcode
+97fad5ef33137ed0bf1f56f1e63c4e4a0d2698c5	2024-08-09T23:45:02+09:30	Burnt	Refactored ObservedEvents to just be a wrapper for an event + TokenSharedRequestProvider
+9999aab1148dc6cba445db95b83dd25a1cb8af02	2024-08-09T21:43:56+09:30	Burnt	command console now doesn't require output event to work. added s7 h1 command console support.
+6485637933037f8eeda7a1f22433cf29b0bbdbda	2024-08-09T18:22:26+09:30	Burnt	Fix s7 od/reach/h4 checkpoint injection not working
+a34fa0c4325c429290880141af3685a06ca10245	2024-08-08T19:44:26+09:30	Burnt	Fix small bug with expiring SharedRequestProviders
+9e45e4879a35f479f06f6b866ae2ceb383f44bc0	2024-08-08T18:08:26+09:30	Burnt	Renamed ScopedRequestToken -> SharedRequestToken
+c2cadc603b141175926fbce84e1e4da37a6e1ec7	2024-08-08T18:01:58+09:30	Burnt	Cleaned up ScopedCallback code
+06943be0eb4d9ac60d45dc4037dc6735a210d660	2024-08-08T01:29:08+09:30	Burnt	DynamicStructs now store field offsets in array instead of unordered_map for significant speed boost (6x faster field access)
+7e358f114bd2729b6d6f4089549cd641fa0c1952	2024-07-31T00:01:29+09:30	Burnt	Slightly refactored D3D11Hook destruction
+c445277b96c63a5b519152d014c6da7b3a01b1ca	2024-07-30T21:55:28+09:30	Burnt	Refactored ScopedServiceRequest into ScopedRequestToken, now using shared_ptr deleter to handle callback to service no longer being requested.
+7956c0fabae024e2a37ec9183136cf8eb22e0049	2024-07-26T19:39:44+09:30	Burnt	Added freecam option to teleport player BEHIND the camera
+0487f7a3818c812244e92a069be9846977f08785	2024-07-26T18:50:25+09:30	Burnt	Fix freeCam teleportToCam and gameInputDisable hotkeys being reversed
+306751cb71b1c2f6329850d1189ff18c052ebebf	2024-07-26T17:46:31+09:30	Burnt	UpdateTriggerLastChecked now a scoped service provider instead of subscribing to settings callbacks
+4ad87c8c3d07a2bf5400ba9957080da6ef5c966c	2024-07-25T02:38:07+09:30	Burnt	trigger presets for TnR & SC (credit: Sarin)
+ae1069cf6ca15c122918a9d79c02768e2a19e03d	2024-07-25T02:31:37+09:30	Burnt	HaloReach FreeCam
+13610870d73da0747e31b78c33ab94a7aeb42bf9	2024-07-24T23:50:03+09:30	Burnt	AbilityMeterOverlay (hr/h4) and GetTagAddressPresenter (all games). Anchor-to-corner-enum renamed for reuse by Ability Meter settings.
+9760fc1aaee8a6888c6231db05556b848daad3bc	2024-07-22T23:20:16+09:30	Burnt	Fixed HR/H4 trigger overlay crash (fastcall instead of stdcall)
+34766f6c255834649fcd3f235e9c736b8469f5f7	2024-07-20T17:52:51+09:30	Burnt	Added 3D render range option
+6db7056266941dc21882a5903e23e719f0632f0a	2024-07-19T23:37:11+09:30	Burnt	Added trigger presets for AotCR and Keyes (credit: Sarin)
+d0b438e481f796cd90be614e969ef15931198964	2024-07-19T23:24:51+09:30	Burnt	ver bump -> 3.1.1
+0691c82918e7c8477d911e6ebded1ff49587d0f2	2024-07-19T23:14:21+09:30	Burnt	FreeCam inc/dec translation speed only functions when FreeCAm is active now
+55bb0e562350a4ee2e07ad14c329f03c9bd44731	2024-07-19T23:06:19+09:30	Burnt	Ignore glitched keybindings when deserialising
+8c38d9d862dfff07bbc2d5f13e9347ce183e61ee	2024-07-19T22:53:32+09:30	Burnt	Fixed awful hotkey rebind bug
+91b8ac5446bfd9a6d695e8979bb4f641cdd365e6	2024-07-19T22:45:59+09:30	Burnt	Fix weird freecam crash
+0d9f37a7e567cfa68624e95b67dc1a07b2e97f47	2024-07-19T22:45:37+09:30	Burnt	fix third-gen freeCam fov input scaling with fps
+d89543586620305f846c35f667941e0274857380	2024-07-19T20:48:22+09:30	Burnt	ODST freecam support. moved "freeCamExtraHook" to FreeCameraFOVOverride service.
+432cd60e97761893bdebdc36fcd79aaaa74f484f	2024-07-19T20:40:54+09:30	Burnt	Fixed OBS bypass
+5cb407eb4cf233ebdf4d7bfc5c43e1f96a9491dd	2024-07-19T15:45:15+09:30	Burnt	update TODO
+7ab74ffd7accc0c6b7f01365515c8ca5427d655e	2024-07-19T15:33:44+09:30	Burnt	Simplified HideHUD impls to share same code
+a47e63d39a0bf1667c65350e69cd4e35a3bb28e9	2024-07-19T15:29:45+09:30	Burnt	User can now click a button to open console instead of needing a hotkey
+3589d1c3babb3fbb0d8fcb30f3d61d333e1cd7e1	2024-07-19T15:26:43+09:30	Burnt	Refactored Hotkey rebind dialog
+7e6f26ef0dc8042ed98d61cf645ff03e1c5f047a	2024-07-19T13:24:47+09:30	Burnt	Fix camera translation speed scaling weird with frame rate (h3 behaving weird)
+a451005efd3728f4087d235b5ecd0945c73dc518	2024-07-19T02:28:28+09:30	Burnt	update TODO
+69b078039ec50e5305ae011b0d4694847928882c	2024-07-19T01:32:46+09:30	Burnt	getPlayerDatumPresenter, debug subheading now in release build
+686d66072b39687c2f98ccc01a8a7c2576ba7b71	2024-07-19T00:26:17+09:30	Burnt	Fixed freecam 3d input normalisation
+c40816d880e490e450278fa97ba6257e8bfe334b	2024-07-19T00:11:30+09:30	Burnt	halo 3 freecam impls/data
+f13babf4ca1a0926674d043d37ebd8b15c0eb706	2024-07-19T00:11:14+09:30	Burnt	freeCam can handle zero-value frameDeltas, added halo3extra hook so FOV works
+cf0f295a0252dc55f07079f3658be88808cbfa5c	2024-07-19T00:10:29+09:30	Burnt	Fixed fov range to 0 to 180 (not inclusive).
+091d4fb3e40aff3d5933453e2873af6efe73aef9	2024-07-18T22:28:09+09:30	Burnt	Fix MagicString string constructor putting chars in backwards
+195329c90cac7e0b1a018c327129856e9f85873c	2024-07-18T22:27:45+09:30	Burnt	Fix issue where free camera translation speed scaled with framerate
+9165a3e23b9832dd40a820acf7fdcdf324601d33	2024-07-16T14:57:34+09:30	Burnt	ver bump -> 3.1.0
+90ef37cf78958f32cb42d3d8f7c35700b3453cea	2024-07-16T14:42:20+09:30	Burnt	Moved haloscript docs to seperate foler
+0c24c43a39c64f63c8da1cb634b7dac74944ca8c	2024-07-16T14:02:28+09:30	Burnt	update HaloScript docs
+a27fb727b746e117662b374f5f5bb5e03e78bd58	2024-07-16T02:16:48+09:30	Burnt	Removed some commands from console, fixed minor typo
+5b15f792ba951c46e4997e6fcb96bfd10bc401ab	2024-07-16T02:04:32+09:30	Burnt	including reach
+d37b50727cc9d3b743fc181ab038c2bb0ee3df40	2024-07-16T02:04:17+09:30	Burnt	Added documentation on available script commands
+a9dd23a3563f61ef67177946841b622c6cda978b	2024-07-16T01:59:41+09:30	Burnt	~ScopedCallback no longer stacktraces in release when error state, should significantly improve performance
+af461b7908bc84e05740fc7d9e6a951d76d071d6	2024-07-16T01:55:24+09:30	Burnt	Fixed h4 console commands constantly crashing
+fd5a5d68a06c062ec721dc514903d8c278944e6a	2024-07-16T00:06:45+09:30	Burnt	Serialise console settings
+6930f03b8b01e47d347462a2eedb3a80969b4886	2024-07-16T00:04:35+09:30	Burnt	Added destruction guard to CommandConsoleGUI
+3c3157e604c327cf74258d5fdd921d8b7b222323	2024-07-16T00:00:56+09:30	Burnt	Removed MCCStateHook from TrackTriggerEnterExit
+131b5fb74cbf99741a4743053788c628999bc391	2024-07-15T23:53:19+09:30	Burnt	GetSoftCeilingData now a scoped service so that the BSP hooks aren't always enabled
+04179d76d0d7ebac1a07acc4e1a54a7f9dc20f00	2024-07-15T22:05:49+09:30	Burnt	Observified Render3DEvent
+0ffd5441bb371eefe4550e56a063a570859fcbcf	2024-07-15T21:41:28+09:30	Burnt	Observified GameTickEventHook
+795463530feaa59889e072882ce99bc114009031	2024-07-15T21:19:34+09:30	Burnt	Added hotkey for barrier overlay
+46c0e08721ea4c21311ac1c3923658c0a0c8c79b	2024-07-15T21:15:47+09:30	Burnt	Added DisableBarriers feature
+6f3a346281b05ffa5f18bfd3d0332d1a6e35f76a	2024-07-15T20:22:33+09:30	Burnt	Fixed bug where ObservedScopedCallback destructor wasn't being called
+4566a02e5f1ac081f124635c02369711055c5e88	2024-07-15T19:41:07+09:30	Burnt	added h4 hardcoded trigger names
+dcd8795fa7c94d2bfb99869aebdec960a5344118	2024-07-15T17:36:07+09:30	Burnt	Reworked engine output to capture some stuff better for h1
+54ef21dff04aa891ba2ad14d280a3124a86174dd	2024-07-14T23:25:58+09:30	Burnt	Refactored ConsoleGUI more for working command history, right-click-to-paste, and to fix some weird cursor position issues when buffer was replaced.
+a0e357faa87cd606907d88e0dd4785518b87f84d	2024-07-13T23:51:43+09:30	Burnt	Hooked up engine command error events, refactored console gui a little
+e0c8c06d621a531e4a6e789bfe2316c32f24054a	2024-07-13T18:58:42+09:30	Burnt	Draft console GUI, hooked ObservedEvent up to bunch of stuff, deleted move constructors on ScopedCallbacks, added hotkeyDisabler to ControlServiceContainer, added ignoresHotkeyDisabler flag to rebindableHotkeys (only used by console command hotkey atm),
+373f3013acbd370bfa0acf8ca1d2f45a783e4a06	2024-07-13T17:13:40+09:30	Burnt	Added ObservedEvent class that fires an onCallbackListChangedEvent when the main event is (un)subscribed to/from.
+332f37b7dd3bbc73714046a79b4c5b3e5a9c885a	2024-07-11T20:00:30+09:30	Burnt	Added option to render front/back/both of barrier overlay
+0d82a5137fa520ecbfa31eaa028e67ca26a2b045	2024-07-11T19:49:35+09:30	Burnt	Renamed ConsoleCommand->EngineCommand
+22b99858b1b96ac3d30ee03ae4433ef517c21fba	2024-07-11T19:02:00+09:30	Burnt	Fix hr/h4 crashing on parsing command output
+21e724c8ee33973a13b709e18548e6e38e481c35	2024-07-11T18:40:19+09:30	Burnt	engine commands now print output
+08d970ca38606b32677f9f5b1a80d8d5b5869952	2024-07-11T03:01:21+09:30	Burnt	engine commands impl all games, no longer debug only.
+800390c387691292bb9efc03de1548584a13eada	2024-07-09T20:19:22+09:30	Burnt	Fix duplicate setting name
+617c7c69721ea259f8159630551f6e81fa19e8fb	2024-07-09T19:50:45+09:30	Burnt	storing corner and center in TriggerModel
+83001740fa29e490414b4df84d1836865d1ba71f	2024-07-09T19:49:53+09:30	Burnt	Fix h2 trigger hit vertex
+8ae2a6bef993f52e6afe8c254caa351cf7440833	2024-07-09T19:14:23+09:30	Burnt	Refactored rendering to support sector type triggers: * 3D render directly renders tri/edge vertex/index collections with primitive batch. * Cleaned up SpriteResource into TextureResource, LoadTexture into TextureFactory
+140191c7485612612d55df754e14ad967998eff8	2024-07-06T19:31:01+09:30	Burnt	TriggerFilter can now handle duplicate trigger names
+f24b50bbcdf0aa072b9796758be36d0f680a4a19	2024-07-06T19:15:41+09:30	Burnt	Added overlay toggle messages
+63d6fc5036566b159fc1870bc9fe1cda939b09a7	2024-07-06T19:10:18+09:30	Burnt	Added bspSet to display2dInfo
+e15c07cebf0069d957cd7cae2ba4cd33875992ce	2024-07-06T17:01:37+09:30	Burnt	Refactored rendering slightly to fix some issues with barrier overlay
+41759fc94fea1b8c027da1c984fcefd0ccf6910c	2024-07-06T00:29:55+09:30	Burnt	H4 trigger/barrier overlay. Fixed bug with empty tagBlocks w/ TagBlockReader. Added scenario tag datum safety check to TagTableRange.
+4694977d3fb6382b8e2985b0f07e74f3c6580d8e	2024-07-05T20:12:56+09:30	Burnt	Added Sector colorization to SectorType triggers (only found in ODST, reach, and h4)
+469171e355208777e174e06121e51dcba257372a	2024-07-05T19:32:39+09:30	Burnt	HReach triggerOverlay/BarrierOverlay
+0b5b69f6e02ac1cb0eb693bba15ed443d0500aaf	2024-07-05T14:42:35+09:30	Burnt	Add tagRef null check, fixed console trying to print garbage uint8_t chars, getActiveStructureDesignTags now returns set instead of vec to prevent duplicates
+f6574d256394160c723ee55a7730dd561b47c917	2024-07-04T21:01:25+09:30	Burnt	GetSoftCeilings now dynamically loads sddt tags depending on BSPset: * Added TagReferenceReader * Soft Ceiling colour caching now handled by GetSoftCeilingData instead of SoftCeilingOverlay * Added BSP(Set)/ZoneSet change hooks * Fixed a bug in TagTableRange getTagByIndex
+82f0a8e0030494372d81c2cece7a0c3fd0c6d61c	2024-07-04T16:49:58+09:30	Burnt	Split BSP services into BSP (h1/h2) and BSPSet (third gen) services
+de353fd1aeeab886b0eae4fd05b7ee4a8f7c1e08	2024-07-02T14:11:12+09:30	Burnt	odst softCeilingOverlay ptr data
+f613cc5779c247de3680d16b42dde1273418610a	2024-07-02T14:10:42+09:30	Burnt	Fixed bitmask for SoftCeilingIgnoresObjectType
+a322d73221f0ecc98a1f140c4392f07f1f2b1261	2024-07-01T23:51:48+09:30	Burnt	Fix ODST trigger hit position
+110b53488ceab6003371022697fd47fb6b3734d8	2024-07-01T23:46:58+09:30	Burnt	setting deserialiser yeets more informative error message when it can't find a particular setting name, and also now won't cause all subsequent settings to not get deserialised after the first error.
+f47b3193ed2be60711b3d6646d0cfc0c2f1ddce2	2024-07-01T22:58:46+09:30	Burnt	Fixed triggerHitVertex for h3
+ac5a79adee8d17f55eb8074b6928c8380a13c922	2024-07-01T22:58:13+09:30	Burnt	Fixed h2 trigger name resolver
+126c0e4c6d46c7bfb15fa78eee813b999a5b106d	2024-06-30T22:50:22+09:30	Burnt	Fix crash caused by GameTickEventHook
+81320417c4208734a5515744878b5acc2fa6de2f	2024-06-30T20:46:00+09:30	Burnt	Fixed weird crash when using std::expected<Void, T> (only crashes in release build for some reason lmao)
+63bc495deffff75c2c234b44b20dfb8c344e4df5	2024-06-30T20:45:37+09:30	Burnt	PointerDataParser no longer throws on duplicate entry in release. Now throws on Invalid PointerDataType in debug.
+508ad8fa575fc6f123d5934b4588cd4cb59b3162	2024-06-30T18:24:33+09:30	Burnt	Refactored fonts, GUI slider inputs: * User can now adjust messagesGUI font size and scale * Refactored ScopedImFontScaler to use rescaleableMonoSpacedFont, and to do the 16.f division. * Added Clamped Slider inputs for all font size options (6 .. 120) * '' for all free camera interpolators (0 .. 1) (logarithmic) * '' for free camera fov (0 .. 360) * '' for free camera rotation (+/- pi, +/- half pi, +/- half pi) * " for all decimal precision settings (0 .. 10) * " for all transparency multipliers * " for edit view angle (0 .. 2pi, -1/2pi .. 1/2pi) * " for display 2d info corner offset (NOT clamped!) * Refactored RenderTextHelper to automatically calculate outline colour w/ appropiate opacity (this fixes bug where lowering DisplayInfo2D opacity would just leave full opacity black outline) * RenderTextHelper now measures outlinePixels in pixels instead of relative to font scale (values above 2 look terrible still) * Replaced all references to directX pi constants with std::numbers
+a9f07caf10a4ded6d51f68caf4dce37c47bed68e	2024-06-30T12:53:39+09:30	Burnt	Fix duplicate poitner entry
+c8f262bc24e3e6d5b2217d04db1f2656a0a357b8	2024-06-29T21:23:55+09:30	Burnt	Presets for trigger filter now loaded dynamically from pointer data
+201ffa75353c05b1f1d26f39f9bfdb7cfc2d2440	2024-06-29T20:38:25+09:30	Burnt	Added load-all-triggers button to filter dialog
+01cb4025ab2655d126a32559ac2f170f69a85267	2024-06-29T20:12:17+09:30	Burnt	Removed renderange for softCeiling overlay, renamed softCeilingRenderTypes for clarity, added forgotten stuff to serialised settings
+0b470c0645aec0fc5cc488b12ff161c5a748e80e	2024-06-29T19:23:30+09:30	Burnt	Impl config for softCeiling overlay
+fa606e137ffe5e4a5c6ac19f529b31a54abc2895	2024-06-29T17:55:29+09:30	Burnt	Added option to render sphere at players trigger hit position
+e4127d8eb06c026e8cad74af5e1d6235ddbf4a12	2024-06-29T17:12:31+09:30	Burnt	Fixed depth rendering issues
+7c10cb7512c4bf45119135db2e72658fbf63f6ce	2024-06-29T13:41:43+09:30	Burnt	Impl patterned textures for trigger interiors
+947358330bcbcf67406b0c857a481a4f50b79151	2024-06-29T13:37:45+09:30	Burnt	fix h1 trigger name string derefence error
+6fe5046b102a0ee4d3dae36f5e84070a297f74b6	2024-06-29T13:36:59+09:30	Burnt	Fixed TagBlocks not reading properly for h1
+a89d40a7dbbb1c1e888977c4731d0a0f85fcfa91	2024-06-29T13:36:32+09:30	Burnt	Fixed bug where trigger bounding box incorrectly calculated
+ba4e0b7c09a650d46a367fa2ba8a65a7f59dbb82	2024-06-28T22:18:31+09:30	Burnt	big un': SoftCeilingOverlay, primitive rendering: * Added SoftCeilingOverlay and associated helpers. Only impl for h3 rn. Still needs some gui stuff. * Refactored primitive rendering. * Trigger wireframe rendering now actually works. * Added opacity multiplier for trigger wireframe. * Added "None" option for rendering trigger volumes.
+73591c36a80b79bf3c577b03f4fae02f0ba05cc4	2024-06-27T13:41:15+09:30	Burnt	odst triggerOverlay
+f806719cce22016b26aa8983234dd4db48264803	2024-06-27T00:25:17+09:30	Burnt	Adjusted trigger colour rendering, allowing user to set alpha of each trigger type individually in addition to global alpha multiplier. Also fixed transitioning colours alpha bugging out.
+1bb23e697afca3a1186073c23f5f47fd9322043f	2024-06-27T00:24:03+09:30	Burnt	TrackTriggerEnterExit no longer spouts errors if player is dead
+7c863ab96a4e2efc092a03fb911aa056202e4ab8	2024-06-27T00:23:27+09:30	Burnt	Fixed trigger filter desync
+2f5cf63d7197e00c649bc2d6a60eb3816f3a7f42	2024-06-26T23:36:55+09:30	Burnt	h3 triggerOverlay
+9f437d7491eaa754c0dfffe1d2d3a6fe8903ddf7	2024-06-20T22:48:42+09:30	Burnt	h2 triggerOverlay
+7637fe6b6bf2fb4813feca5cf1ace3f6259c2fd1	2024-06-20T15:58:19+09:30	Burnt	update TODO
+0c614b041875e639a8d8678745d527606699969c	2024-06-20T15:29:54+09:30	Burnt	ShieldInputPrinter self-disables less often (ie bsp load etc)
+730714a15302490113559e1aca17ca9d34d65000	2024-06-20T14:51:31+09:30	Burnt	Fixed triggerData thread-safety issues by adding csLibGuarded so that I don't have to think about things too hard
+c695be4d3b93548bee2ff019c81fbe9019cea98b	2024-06-13T17:09:04+09:30	Burnt	TriggerFilter modal dialog. Also triggerOverlayToggle hotkey and some misc trigger gui wiring
+357499c1014360cfe61c0b4885578440b30f6789	2024-06-13T00:05:34+09:30	Burnt	Sens drift detector
+290078d909f1dc3ce8a7905b5dfe5eadeda026cf	2024-06-12T00:14:03+09:30	Burnt	ShieldInputPrinter
+64a42f99675ed82c3d5e7687e5dfb8d927cb9038	2024-06-10T20:44:35+09:30	Burnt	Impl printing on trigger hit/enter/exit
+5873b99bcfaef8501e945dd6c22f3dfed52215d8	2024-06-03T00:08:29+09:30	Burnt	Switched trigger-last-checking to tick-based system so it can handle pause/speedhack properly. Added a couple more trigger gui buttons and renamed a bunch for consistency
+b78535946b4453f775e116742a4c3d0c11aa36b9	2024-06-02T02:59:26+09:30	Burnt	Implemented Trigger Check hook system. Redid how trigger alpha setting works.
+c4281ff9d9086c2acc5f5708c54a590c60d47aeb	2024-06-01T21:09:42+09:30	Burnt	Fixed OBB rotation to corner pivot point, fixed TriggerData thread-safety issue.
+182e61925494c891a5743ebc4daf4e6af8ccef4d	2024-06-01T01:29:39+09:30	Burnt	Trigger filtering. Tried to thread-safetify TriggerData but not quite there yet.
+8f3931a5dde353098839805218197f37faff8e79	2024-05-31T00:22:49+09:30	Burnt	Setup GUIElements and hooked some of them up. Fixed some (some) rendering issues. Fixed issue where black-outlined text wasn't getting any outline at all. Added a few new kinds of GUI elements that Trigger Overlay Settings will use. Had to divide up GUIElementEnum since the macro was getting too long to compile.
+1c82ae34036706fb3abad052a248186fb16efc13	2024-05-30T15:56:16+09:30	Burnt	Fixed GetTriggerData indexing past array, fixed trigger render position/rotation
+e0ce896c8ce906b4a4b79b9398a3d4f691bc33bd	2024-05-30T01:36:26+09:30	Burnt	Added GetTagAddress and fleshed out GetTriggerData a bit more. Minor adjusted to trigger rendering (still not.. ideal)
+022750fd2b3862af0e2530b9d138a47858a714f2	2024-05-29T00:31:14+09:30	Burnt	Refactored Settings enums so they are actually stored as enums instead of ints. Added a bunch of settings for TriggerOverlay. Rejigged Trigger rendering a lil to account for the settings I want it to have (wireframe vs solid, etc)
+ba94e1213230b8e8f709952eae839cf176d97c1b	2024-05-27T01:38:58+09:30	Burnt	Actually working geometricPrimitive rendering thanks to dxtk
+65606b0fa30065a4736c7d8468f56246bc0de8a3	2024-05-26T21:55:05+09:30	Burnt	Added unhandled exception handler to HCMExternal
+bd6227a04d241d0cb89e951b7248d68f941e97a6	2024-05-26T00:50:21+09:30	Burnt	Added button to copy player position to the clipboard. Vectors now (de)serialise to the minimum length string that can exactly represent them. Protected some previously impl methods of messagesGUI/mccstatehook.
+1db1c7165a0b166adadfd197bb4166eee41dd376	2024-05-25T21:38:23+09:30	Burnt	HideWatermark/messages now available anytime, not just during freecam
+51e38c553278756a0ad74ddacf3c00bb67c4cc1a	2024-05-25T19:39:23+09:30	Burnt	Bypassed boost preprocesser limit on OptionalCheatEnum size, added ObjectTableRange service that gives user a vector of every single object in the object table
+af1b8111c18e3cbd72d6d8b8a96577c70bd26dba	2024-05-25T19:31:15+09:30	Burnt	Added a new constructor for ModulePatch to simplify nopping function calls
+5455256b399b5a937a920ea8723f9716e9ebb9ee	2024-05-25T19:30:30+09:30	Burnt	Heartbeat timer thread less likely to significantly outlive every other thread on shutdown (10ms loop instead of 1000ms)
+c23dddd29855ed2f6ef454ec1271debb6dd24b7f	2024-04-01T22:29:23+10:30	Burnt	clipLineSegmentToFrustum now a lot closer to correct. Now the only glitchyness that remains happens when a segment end is clipped off both vertically AND horizontally (ie diagonal corner of the screen).
+f91249c4f96dd32ac86f8118123333f8253f7b93	2024-04-01T18:57:08+10:30	Burnt	Closer to working. Much debugging.
+a879ec6acd3ba7e64426df63347d0143d2dd657d	2024-04-01T13:59:39+10:30	Burnt	More 3D math that should work but inexplicably doesn't
+ad2313ac12d1b0ca95ed9cf6d6ed7bcc7698b811	2024-03-31T22:49:29+10:30	Burnt	My math for clipping faces/linesegments is totally wrong, but atleast I tried. Also fixed an issue where TriggerModels face and edge views would become invalidated on copy/move.
+e3770434e1cb587389aa0a42b688348bdc3bda8d	2024-03-31T20:34:39+10:30	Burnt	Okay nearly there, just gotta figure out how to clip a face/line to the frustum.
+13dfb131ba68c3547c5d1d26f5c7a44c2886c6b7	2024-03-31T17:07:01+10:30	Burnt	Okay actually fixed clamping with relatively simple math. Added a debug-only method for rendering a trigger model with different colours on each face to help me figure out the remaining issues (with have to do with world-to-screen wraparound of coordinates in the reverse-frustum)
+1c728edfe5a1649c3f079ee132077284b20092cd	2024-03-31T01:08:04+10:30	Burnt	Math is hard. I attempted to fix the worldToScreen clamping math. Originally it was projecting a line from the worldPoint to the camera and finding the point where that intersects with the frustum, but uh that is not correct. Now it *attempts* to find the closest point on the frustum side faces to the worldpoint using real math. But I fucked up the math and it doesn't work, ugh.
+87ad24bdb56544728e9ea5228a0bc101a1956b65	2024-03-30T21:55:24+10:30	Burnt	Refactored 3D rendering and triggerModel stuff a bunch
+a3578796856f4b676a3dadd9bf63791bba4dc956	2024-03-29T23:44:53+10:30	Burnt	TriggerModel now uses BoundingOrientedBox internally. Now actually renders the box, though it's a little g̵̲̈l̶̤̑i̸͉̐ẗ̶̪́c̶̺͊h̸̙͋y̴͙̔
+9bd629c6c6f95d3a79b3ae3c27c6ac059623c5db	2024-03-29T22:11:49+10:30	Burnt	boilerplate for TriggerOverlay
+c76d4eb2aee63c92754b5e135016c1b74edff3aa	2024-03-29T15:29:34+10:30	Burnt	Fixed some incorrect h1 skull offsets
+0bb48da2053e411b8af0bbbbc9aecdb6ca2837be	2024-03-29T15:23:26+10:30	Burnt	Added H1 Acrophobia skull pointer data (I had just forgotten it amongst all the others lol)
+0a8bdf080304de70b5660795ef0811431e8ee90d	2024-03-29T14:50:50+10:30	Burnt	Refactored HCMExternal MCCHookService to use NtApiDotNet instead of System.Diagnostics for process handles. This lets us find the correct MCC using less permissiosn (ie even if HCM is usermode and MCC is admin) and add lots of extra debugging info at the external level.
+8342e778d3df407c87329a6b3a3674c6f7ba99e7	2024-03-27T13:35:49+10:30	Burnt	MCCHook grabs newest mcc process to prevent hooking on zombie processes
+ce8850d58fda18368de45236f6196ba36577afff	2024-03-26T13:00:57+10:30	Burnt	ver bump -> 3.0.9
+7e540e94c9bf7bff5ffaceaeca8694c9d036f100	2024-03-26T12:42:06+10:30	Burnt	Finished tooltips for waypoint gui
+bbadc482494ca54c747ffe1872af0878b79d28a6	2024-03-26T12:17:45+10:30	Burnt	Added fix for teleport/launch radio buttons being in invalid state
+3d68d6f24334c5069514ae927d1ca70bc2cf5e99	2024-03-26T12:06:25+10:30	Burnt	Improved launch/teleport error message (thanks harc)
+88e5bb1dc9a171a662958b648f87bb823018b69a	2024-03-26T12:01:33+10:30	Burnt	Fixed interproc missing rights (process handle strip) check
+ab5b9185caa101a94e7fc0803f025cca9b61e00a	2024-03-26T01:34:00+10:30	Burnt	Added copy/paste waypoint list buttons
+0932f40521686eaa9d2cb1e0611ba7760835ba4a	2024-03-26T00:52:48+10:30	Burnt	Improved dll injection logging: * VirtualAllocEx retries with PROCESS_ALL_ACCESS if it fails the first time. * Exceptions have added info on whether OpenProcess access rights were granted properly. * Exceptions have added info on what the security privilege of HCM/MCC is.
+20284e107015bf1dd1ac4899ecc09c4cc9a9ef6f	2024-03-25T13:50:25+10:30	Burnt	full h2 s7 support
+2adaf2fc089f3f87f3567be98fc9d5c4c28ff68b	2024-03-24T18:56:34+10:30	Burnt	Fixed bad velocity math in Display 2D info
+c3bba030362926940662d4fee4d5b0461b2a30e8	2024-03-24T18:28:07+10:30	Burnt	Refactored 3D code to add frustum culling and redo screenEdgeClamping to use closest intersection of frustum
+cee8eed6f7766ed514375b410a8f18bf83b68be9	2024-03-21T22:39:44+10:30	Burnt	Added ability to teleport player to camera
+a12dd5eedb0229e77eed5dbece1daa4b88701705	2024-03-21T22:16:11+10:30	Burnt	h4 camera data
+eafc60451ba0c07275ff7bfa980567b3fdce1911	2024-03-21T22:01:54+10:30	Burnt	reach camera data
+3fcb42496dc2dbeb8a3cf0199130985dcf2dd74a	2024-03-21T21:38:10+10:30	Burnt	odst camera data
+c1dc9328c0983af01f879b94bd39f592ffe4c771	2024-03-21T20:41:28+10:30	Burnt	Fixed h2 skull pointer offsets
+4e17a66f2a04a3ae9b3a9326ee79022bcfe3a351	2024-03-21T20:12:48+10:30	Burnt	Improved waypoint gui to look nicer, fixed copy/paste waypoint buttons
+f93c95759237011c1b1e9bbbb12ff3fd771fd92e	2024-03-21T17:19:16+10:30	Burnt	waypoint (de)serialisation. Some dumb stupid code here tbh, pugi::xml is being weird about escape chars
+1dfaf968227bb042a3aeafeee393e2ed3c141ff9	2024-03-21T14:19:57+10:30	Burnt	Clamped waypoints remder at half transparency
+615dea75464032411c429a33bd1d5ac1cac52dac	2024-03-20T13:14:11+10:30	Burnt	Added h3 camera data
+9d50952fff5ed57cf7ad39f02468001c871782fa	2024-03-20T12:23:22+10:30	Burnt	Added rest of the skull data all games, and verticalFOV pointer for h1/h2
+19b46bd17ecae249f8436fae0936c6464c415fca	2024-03-19T12:10:13+10:30	Burnt	Added game impl safety check to render3DEvent
+58ee50abbff8f3478c5de20e37d6faaef679d3ff	2024-03-19T11:56:36+10:30	Burnt	Rehooked up showGUIFailures button
+fb0c6dc55b20a5b345cbd2bbe7fbc644138994da	2024-03-18T16:05:41+10:30	Burnt	Stringified interproc error codes
+d8e83f58fbef34641a347ef75e0db6ae45ee535a	2024-03-18T13:46:49+10:30	Burnt	Fixed some annoying crashes if user quits to main menu while waypoint3D running. Render3DImpl now directly pulls the verticalFOV from the game if it can, otherwise it fallsback to the funky math
+2ae0efbf098948c7af7bc338eba57122d90603b3	2024-03-18T00:42:37+10:30	Burnt	Fixed clamped waypoint being vertically flipped when behind camera
+0bf71a7d06472ac94a70a4f2117b70591c67975f	2024-03-18T00:22:40+10:30	Burnt	"Fixed" 3d vertical FOV calc for h1 & h2. Still not quite perfect but pretty close.
+52acb61f4fa152ea50d581cf43e03425db3a63e4	2024-03-17T20:39:28+10:30	Burnt	Added waypoint clamping to edge of screen
+c2d0b24a548c5aa67946c91739cde4eb63ec8bf1	2024-03-17T18:45:46+10:30	Burnt	Added "measure horizontal only" option to waypoint3d distance measure
+74642545ba15a80fc2a165645ba107ae5b7a19e7	2024-03-17T18:23:20+10:30	Burnt	Finished Skull GUI and hooked up skull hotkeys
+8f971db88c61c4229621a48e6238996bd7746d90	2024-03-15T21:12:32+10:30	Burnt	Split PointerManager into PointerDataStore, PointerDataGetter, and PointerDataParser. Refactored a bit of the parsing to be simpler.
+2134aa142e24049baf611e15b05cd7df844caf3c	2024-03-15T16:46:22+10:30	Burnt	Added xml entry type for deriving one multilevelpointer from another (ie adjust the last offset). Useful for pointers to stuff that maintains relative cohesion across game versions - eg skull flags
+6ffae402a54ef38d75b63508c31fe7f0424536e6	2024-03-12T13:00:31+10:30	Burnt	Ditched PointerSetting, redid skull toggles as an optionalCheat with bitbools mediated by SettingsStateAndEvents
+f58a94cd41756979319696ad6b4687b11b316465	2024-03-11T11:54:36+10:30	Burnt	Finished up PoitnerSetting, added BitBool class for dealing with h3+ skull flags
+652cfc66f4590ecd8f6e56d9e45377a8e10eaa00	2024-03-11T11:53:55+10:30	Burnt	Fixed HCMExternal trying to inject into closed MCC processes
+6aace869ed8b92c29ee1d08391514c79ed38fa24	2024-03-06T17:26:27+10:30	Burnt	Added PointerSetting for syncing GUI inputs to game memory
+824aea419c1a3698a254bff9e06621d481382a50	2024-03-06T15:02:05+10:30	Burnt	update TODO with skull stuff
+8e33e97a4e667500a3e9476c91920cef5099be16	2024-03-06T01:16:54+10:30	Burnt	Added tonnes of ways to customize Custom Waypoint system
+e2fc73d4d2da51cda3a871faaa30d1701f78f447	2024-03-05T16:02:12+10:30	Burnt	Fixed odst cp injection current patch
+1718142233cede75c2107323a84b14f9781213b7	2024-03-05T14:41:18+10:30	Burnt	update TODO
+d0cc8487d48abc8c137b3bdc7d88b8de1426d80a	2024-03-05T13:58:22+10:30	Burnt	3D Waypoint GUI & refactor: * Renamed Setting to BinarySetting for clarity. * Added UnarySetting class that doesn't do input validation (for WaypointList) * Heavily, heaviliy refactored the ModalDialogRenderer (and IModalDialog) so that it no longer knows about the concrete dialog classes. Neither do the clients - they just use free functions in ModalDialogFactory. * Implemented GUIWaypointList. * Implmeneted AddOrEditWaypointDialog. * Added atomic bool to WaypointList for read/write safety between UI, Modal, and 3DRender threads.
+7bde6b61636069b4f81f974037c2377731d37371	2024-03-04T11:43:46+10:30	Burnt	Fix HR/H4 cp injection current patch
+67cd8661f5ac6f5215519a12917ac6f6d0f0793c	2024-03-03T21:24:16+10:30	Burnt	ver bump -> 3.0.8
+9263f879ad31e27705c3c716522317940dee481b	2024-03-03T21:06:30+10:30	Burnt	Fix for HCM trying to re-attach to an exiting MCC process
+18c8a19183ce1385e7b66b277d94199613974fdc	2024-03-03T20:24:56+10:30	Burnt	Updated build events and build instructions in readme
+e097a6c5ec858073c2035ac59325ef20b05776d9	2024-03-03T18:02:28+10:30	Burnt	Improved setting serialisation logging
+439558d3dd3b94656f0d9aa36cee8adcbaa028c3	2024-03-03T15:02:32+10:30	Burnt	Removed rpclib dependency
+a627d7d40f01045e3224ba821369beec3720cd97	2024-03-03T14:49:51+10:30	Burnt	Fixed h2 s7 cp injection
+25fbabf4b9cc5c4f152559c33a8e324d1e318607	2024-03-03T12:51:57+10:30	Burnt	h2 current patch injection fix AGAIN
+3bad7cd30a21916b0b9736d48d30e2a591542bfa	2024-03-02T23:25:23+10:30	Burnt	Oops probably should remove the fake testing error.
+7fd997e2d236621534a5b7ef9d7a0e9ee703ac03	2024-03-02T23:25:00+10:30	Burnt	Fancified the HCMExternal error dialog (custom form)
+211592422238f4d582f8a6816947aac442db5276	2024-03-01T23:28:48+10:30	Burnt	Fix for h1 workshop maps cp injection (ty Cambid)
+cbc2ebfb03d158af11f1ec3611022e921247f04f	2024-03-01T23:13:36+10:30	Burnt	Added checkpoint inject ignore checksum data for h1 & h2 (so all games now). "Fixed" h2 inject bug for current patch (?)
+79726bc5bf7fde82d6f2dc2d7eda223a696cfc12	2024-03-01T20:30:23+10:30	Burnt	No longer shows error status on MCC shutdown
+ca05c174ed86b39af21d58b971858b50fc693e4e	2024-03-01T19:50:31+10:30	Burnt	Refactored HCMExternal MCCHooking, StatusBar. Internal now reports back successful initialisation via shared memory.
+3a754ddb4fe7387a9fb50173c400767bcd6c258c	2024-02-27T15:46:04+10:30	Burnt	User can now click "Show" button when external status bar in error state to reshow injection-error/retry-dialog
+63a1329074ee0766a4f4ed02c0bdc2076d4b1805	2024-02-26T01:06:23+10:30	Burnt	Added internal-status-bar to HCMExternal & option to give up retrying injection on error.
+53db9f88d3f0a659cdc15a4361d262462c17be95	2024-02-25T22:18:17+10:30	Burnt	Internal inject now shows meaningful error message on failure
+26986c837e86ed4b09108c363364ba893bb3beba	2024-02-25T20:10:36+10:30	Burnt	Improved hotkey (de)serialisation logging
+30d5d1a7b495820075154bf8682810faaef3b408	2024-02-23T15:35:29+10:30	Burnt	Refactored 3D rendering some more, can now draw sprites! Added reticle to 3D-Waypoint system.
+d01fa740ba2a6e424a545a7e23d19fb3a97b6a08	2024-02-23T14:37:13+10:30	Burnt	Upgraded freecam diagonal movement fix for all 3 dimensions instead of just two
+f60c2c485673867741d6891d103eb3007148c32d	2024-02-21T13:38:24+10:30	Burnt	Fixed winstore menu/level-indicator pointers for 3385
+f01c9037b912b1cd8330595cfd0af8374516e727	2024-02-20T01:19:46+10:30	Burnt	Updated Waypoint3D service and misc
+d70b5cd000ef20dde686e853cae9586a8c346d73	2024-02-20T01:19:30+10:30	Burnt	DisplayPlayerInfo uses new render2DHelpers
+22f16865e1f3ad95ac20d5ceee8192b49769c80e	2024-02-20T01:15:37+10:30	Burnt	Added cameraDistanceToWorldPosition to 3d renderer.
+c874bd4de43c0c473dc928534c636f7e5953f401	2024-02-20T01:14:39+10:30	Burnt	Moved text rendering out to seperate Render2DHelpers namespace, added options for centered and outlined text, while returning RECT of text position/bounds.
+9792de8ca59dcf51e2f3df39055f86b6793f234d	2024-02-20T01:13:04+10:30	Burnt	Added MeasurePlayerDistanceToObject service
+e8451832a89dda7af0a28427029b9e137cd2a89b	2024-02-17T11:21:27+10:30	Burnt	Added 3D rendering service and the skeleton of a Custom-3D-Waypoint feature
+2db89cc91eac01bfc07fa44a69c004ae9a4eb9dc	2024-02-16T15:42:49+10:30	Burnt	Normalised freecam horizontal movement
+179206512f95a81cbf234bc3d20a43642848d836	2024-02-15T20:10:36+10:30	Burnt	v3385 h4 support (6/6) + winstore support, all tests passing
+63d43f291fd611ce67af0e62ba632ed3d75c03b6	2024-02-15T19:26:35+10:30	Burnt	v3385 reach support (5/6)
+16c884b9491d44c8492f9746f0cd9b314e8aabd8	2024-02-15T19:05:27+10:30	Burnt	 v3385 ODST support (4/6)
+35847510fc1a53d23d14ad581860da9e23c00b44	2024-02-15T18:47:59+10:30	Burnt	v3385 halo 3 support (3/6)
+f756db237e8cd20240d128c315e4bd0c8c0bba78	2024-02-15T18:09:27+10:30	Burnt	v3385 halo 2 support (2/6)
+4ca05ef34eeb55477c842ce1260b99a1c567d680	2024-02-15T17:16:26+10:30	Burnt	v3385 halo 1 support (1/6)
+9e593516e7b5b06bbeb69a69c401733939e63fb7	2024-02-15T17:15:56+10:30	Burnt	"fixed" rare rivatuner-related crash when releasing dummy swap chain during init
+6e2998196d4ba267f5103c5dbcc6d6027875a56d	2024-02-15T13:05:28+10:30	Burnt	Updated unit tests to remove some old unimplemented free-camera features (v3385 tests all failing obviously)
+10845fa92da9024e2c2a44629575c53a39167eba	2024-02-15T11:28:17+10:30	Burnt	External (checkpoint meta) pointer data update for mcc patch 3385
+ac07a36a1d3de2ca14b626084b427ec7f33ce7c6	2024-02-08T19:26:05+10:30	Burnt	ver bump -> 3.0.7
+d79d560c742980ed1bde942699a6d758d9713d02	2024-02-08T19:13:23+10:30	Burnt	update README.md
+74ae927e0a962cdf231384c10ec5b7204697e0c9	2024-02-08T18:24:46+10:30	Burnt	added present/resizeBuffers pointers for winstore & downpatched
+636541e9e5720d41ac050a8c87506946fec6351d	2024-02-08T18:04:44+10:30	Burnt	Fixed checkpoint inject issue with odst/reach/h4 where HCMExternal was reporting the wrong game tab as being open
+fd5223ec3b0704972164de2086826d9215ff0524	2024-02-02T17:12:03+10:30	Burnt	actually ver bump derp
+d5c44dfdc053288b34c9fbfb42f4b49d0eebc0ef	2024-01-25T23:30:13+10:30	Burnt	ver bump -> 3.0.6
+3d2cc409fc8ab2e3c778249592f55655c1e79d58	2024-01-25T23:05:40+10:30	Burnt	Added forceFutureCheckpoint cheat for coop
+35dcb1e10af678e99fe13dd7c9a269718878db55	2024-01-25T18:22:52+10:30	Burnt	Support for fancy characters in checkpoint filepaths
+d0bb26884e87b2dd72a95a0c85b4f781c16b82cb	2024-01-18T15:29:24+10:30	Burnt	Fixed h3 inject pointer confusion
+0edf053cd8af72ef4daa11cb3d7324a09605ddcb	2024-01-18T15:17:10+10:30	Burnt	reverted IsBadReadPtr redefinition as it was causing awful performance issues
+48ea17e7fd3f7bb8d299c466e9e1762c165dfd4e	2024-01-16T18:00:46+10:30	Burnt	Improved injector logging by adding some missing GetLastError()s
+384b4fb6ba1368268f7ba5622c7e7bc719f78287	2024-01-13T19:44:32+10:30	Burnt	fixed h4 current patch revertFlag pointer
+50b8288f87bcb9687b17565b9117d7f30e831cd5	2024-01-12T23:30:22+10:30	Burnt	better comment on reset()
+b3dc9be691efdec79f4061cdaf660221f9340bab	2024-01-12T23:22:00+10:30	Burnt	created skeleton of a h1 carrier bump analysis tool
+8c8677ceb92a33ebd5324dfd16d9469a68b6e691	2024-01-12T23:21:21+10:30	Burnt	Added framecap info to speedhack tooltip
+b84844f11a1429d80f053cb0eeda93450130e93a	2024-01-12T00:15:41+10:30	Burnt	Added setPlayerHealth cheat
+8732b14cb3b56d6dba40603b847d532089080646	2024-01-12T00:15:23+10:30	Burnt	Refactored getObjectHealth to be more typesafe (no more mixing health & shields) and providing mutable accessors
+b3c37a1686b96d2c5a4b37b010671709e675a6d4	2024-01-11T22:49:26+10:30	Burnt	3.0.5 ver bump
+0c8ff157525670e843153a3e9efffb527b410693	2024-01-11T22:22:49+10:30	Burnt	Fixed freecam crash by changing hideHUD implementation to use modulePatches instead of midhooks. For reasons I don't understand the midhook jump table would be temporarily corrupted on construction, some of the time.
+f56fed1bcf3dd6201195e36053dc18c213061e99	2024-01-10T00:22:35+10:30	Burnt	Added short delay between freeCamera threadFreeze and setCameraDataHook attachment - hoping to fix a rare (?) crash that can occur on freecam toggle
+1e705a9d8d05acec954c6e6fffc78a8a0f8fa5a6	2024-01-10T00:19:39+10:30	Burnt	Mutex'd setting->UpdateValueWithInput to prevent people crashing HCM by spamming a keybind too fast
+1f4bceae41d4b51c14177ab7c28949b497c1dff4	2024-01-10T00:06:23+10:30	Burnt	Removed some debug control code that slipped into release lol
+e9cb880c253b3a807d6f6133236d6e9df11360b7	2024-01-10T00:00:55+10:30	Burnt	Added some optionalCheat construction mutexes to account for mutli-threading
+69cfdf7cc6a7b28a052ebd2db3040721dcbdef94	2024-01-09T23:59:59+10:30	Burnt	replaced IsBadReadPtr implementation
+84070b490f84be996f4ad858ef523d7fe1533af1	2024-01-09T23:58:08+10:30	Burnt	improved optionalCheatManager documentation
+80d6b708b2929a07e35bf5c1f0971c9ef32bf207	2024-01-08T11:42:51+10:30	Burnt	Fixed h1 playerDatum pointer
+d6287fcf558eedccc56b0707c86c6c5aef58be39	2024-01-05T16:37:08+10:30	Burnt	Fixed h1 playerDatum not resolving when out-of-bounds
+aae892af143b6a01190ac45b1e54c720c5c58ca1	2024-01-05T15:39:53+10:30	Burnt	Fixed erroneous exception when user cancelled rename checkpoint/folder dialog
+ee3bd40bd35b2b77451c779072df44ea06684792	2024-01-04T12:09:35+10:30	Burnt	Fixed H3 injection issue (loadedBSP swap)
+1b1406ad6e2caab4bf3ab707033ef80246289dad	2024-01-03T13:33:40+10:30	Burnt	multithreaded optionalCheat creation, which legit speeds up HCMInternal init time by 100x since we're no longer consecutively waiting on 300 pointer-data-missing exceptions to unwind
+6a36d4e7b048df8854cf93adcd3964dc1f32ebe5	2024-01-02T23:53:56+10:30	Burnt	auto-checkpoint before dump now occurs AFTER the modal dialog (also means cancelling the dialog will not still force a checkpoint)
+07d090cbeb861a9d060590ed2609620655547d33	2024-01-02T23:51:03+10:30	Burnt	Hotkey disabling now handled by GenericScopedServiceProvider, and modal dialogs disable hotkeys
+c9e9ae4d118177be5970346b5316540cb9d57aad	2024-01-02T23:14:45+10:30	Burnt	fixed h3 current patch checkpointLocations being swapped around
+07352fc0fdabd286510260a94ba85b5d8828b845	2024-01-02T11:41:06+10:30	Burnt	forgot a line
+4d6df0edab0bc3fa8459b65215876a79ec975f2e	2024-01-02T11:40:31+10:30	Burnt	Freeze threads before setting speedhack speed
+bb4a40fec22d708411d5e45b1d7869d15d323145	2023-12-28T21:06:22+10:30	Burnt	3.0.4 ver bump
+fdb0fbec3d5e1c00e41a2cec5768ad763fe5e498	2023-12-28T20:42:58+10:30	Burnt	Fixed some external GUI bugs. Added extra functionalility to h2 invulnerability to fix fall-timer-disappearing glitch. Fixed h2 checkpoint injection crash. Fixed multilevelpointer issue where GetLastError could give you the second-last-error instead.
+c8764b94aae0020f65e7c2226436673ed5664d29	2023-12-21T22:44:48+10:30	Burnt	Added a optionalCheat check for the dxgi pointer before adding OBSBypass gui element. Lapua service now only runs while OBS bypassed.
+9fc4d9f175a854b55e2a6ac0a701e9b958e928b9	2023-12-21T21:03:40+10:30	Burnt	S7 and S8 basic ptr data, removed some useless files
+4b55a35e676324b1f7e788fcaa6e24da1aa3343e	2023-12-18T20:38:44+10:30	Burnt	Removed some unused resources/libraries
+c00776a147aa9db33f7e3bf2698fc252894ed529	2023-12-18T18:06:17+10:30	Burnt	Fixed double rendering that doesn't eat inputs plus proper obs bypass
+fde8a5ed2063e13c52598870ffbd852c980c7c11	2023-12-18T11:53:03+10:30	Burnt	revert shitty double rendering implementation
+2e6c270bf1a7ebcaeba175c82366b3d5554d95ad	2023-12-15T17:36:49+10:30	Burnt	double rendering oh my god
+444a21e45e2e5635a30afc7898864d9b1b997c5a	2023-12-15T15:57:30+10:30	Burnt	much better alternate lapua implementation
+1e378f2e94a9da8f28680d8cb7acdb1de99e1cad	2023-12-15T01:58:53+10:30	Burnt	remember to actually hit save all first before commiting
+7b1f361eb0e22188c1f9a07d3c01ce944a05d9e3	2023-12-15T01:58:37+10:30	Burnt	e
+0bf0468a42573f0b58f01dbcdbbcced4403ae7e6	2023-12-15T01:57:32+10:30	Burnt	Revert "Implemented basic lapua service, prerequesite for hide-overlay feature"
+45c06291353553fccd42092e17dcb1c8b2896c82	2023-12-15T01:57:20+10:30	Burnt	Implemented basic lapua service, prerequesite for hide-overlay feature
+5d13810a5e3b8423c2b0d78059ac5cb2ac985976	2023-12-14T19:28:37+10:30	Burnt	Ver -> 3.0.3
+de5dd3528740abb97ef41257fa69281a5bf91f86	2023-12-14T18:46:23+10:30	Burnt	Added winstore isCursorShowing ptr data
+258b292888c1914a86162c2d116f9221492dfa6c	2023-12-14T18:38:23+10:30	Burnt	rollLeft and rollRight were swapped around
+d3db71b874a4f1834443973557faac6f87dbefb8	2023-12-14T18:26:33+10:30	Burnt	Added a bit of extra logging to try to figure out rare crash when enabling a hook for the first time. I did not figure it out.
+d67a12ccc04852e18045b924fde38ea17370bc76	2023-12-14T17:46:13+10:30	Burnt	Fixed issue where closing HCM while freecam running would crash the game
+9280e85094ca82cad0a54ad8451f784a1a4d2429	2023-12-14T17:30:50+10:30	Burnt	fixed h1 freecam issue where pausing game froze isMouseInput flag
+bf2390d295ecdec2228b91612516881ee1c1e039	2023-12-14T16:39:05+10:30	Burnt	Rejigged hotkey system to allow for non-event-firing hotkeys (RebindableHotkeys), which freeCameras userInputReader can now use for rebindable inputs. Added HideHUD cheat (h1/h2). Also half implemented h3 freecam but then gave up cos short on time
+03be8568d5c8c1266d25c3a165be79e17222e411	2023-12-11T12:51:36+10:30	Burnt	Fixed some h2 freecam issues and hidewatermark/messages issues
+6172413625d851c67495666218fc4fad176ded55	2023-12-09T20:08:36+10:30	Burnt	freeCameraDisableScreenEffects impl for h1
+c2ec8a870271c9dcdf9531ab688a603ee0860dae	2023-12-08T20:08:35+10:30	Burnt	H2 freecam reimplemented. rejigged thirdPersonRendering hook. rejigged input handling to deal with halo 2 workin a little different from halo1.
+ceeb86eaa4b47545647bd3867668104320ecc540	2023-12-08T15:08:27+10:30	Burnt	freeCam frameDelta now accounts for speedhack
+80eb73c1c62cf300c4cf82e8246cedac0c9e6d70	2023-12-08T14:41:17+10:30	Burnt	fixed h1 third person rendering when in vehicles (UI wasn't getting disabled previously)
+3432fe0f11ff5ef1f1db0e4d6fd34081bc4d9cd1	2023-12-08T14:20:36+10:30	Burnt	updated camera set ptrs for h1 so death animations don't fuck with em
+6226587d47dd87709dadd8a3fa5c4a240e2bcd22	2023-12-08T01:57:07+10:30	Burnt	Added alternate way to resolve directX present and resizeBuffer VMT entries using multilevelpointers from HCM2. This method is now preferred to dummy swapchains since I suspect the latter is causing crashes when using Rivatuner and etc. However if pointer data is missing we still fallback to dummy swapchain method.
+f2f9b1d3ed4e6a0def358013b0f1c99a8fea6b07	2023-12-08T01:07:51+10:30	Burnt	Added display current BSP/zoneset to display info. added switchBSP/zoneset ptr data for all games
+f37279fb5db77815eb18e522ead531a255642a57	2023-12-07T21:28:18+10:30	Burnt	added h1 switchBSP ptr data
+d21450a2b2b939b390ca9fe48b0862196659b600	2023-12-07T21:21:30+10:30	Burnt	Added copy & paste buttons for forceTeleport->AbsolutePosition
+4f806e84c1dd66e6371310f387ce381235380376	2023-12-07T20:26:34+10:30	Burnt	SwitchBSP cheat (halo2)
+9ba74dc8c2001a00142c4f74b0de47c1c605bf77	2023-12-07T03:05:59+10:30	Burnt	freeCamera serialisation
+70c423abf413002d43868a3358fcf02c41886e01	2023-12-07T02:57:31+10:30	Burnt	view angle editing cheat added
+cc05e39a21b188a1ffa94de7bcc8c53024ee7e51	2023-12-05T23:13:47+10:30	Burnt	Added checkpoint injection logging
+b34634d940439ff75396d31237c9ea4e9fa18428	2023-12-05T20:48:20+10:30	Burnt	Added displayInfo->showRNGSeed for h1
+f0a6a74c81f9a3cb1434be7f8424cca71a0d92b0	2023-12-05T20:13:42+10:30	Burnt	Fixed issue where cursor could accidentally get caught on main gui collapse button while playing
+08011cb48668881626274e2b103c02b5b643f742	2023-12-05T18:45:52+10:30	Burnt	Fixed ctrl-tab window popup issue
+ecff09add1ed470c9d6d44af0fa12a35bc7ed9d0	2023-12-05T18:25:34+10:30	Burnt	Fix for croppable watermark issue on ultrawide resolutions with centered hud
+c65437e75b8fd063f08bcf9c29810a6faa1e8a27	2023-12-05T17:52:04+10:30	Burnt	Hooked up increase/decrease translation speed hotkeys
+9c02df99877714f10a5e26702265a7aedf73e117	2023-12-05T17:41:47+10:30	Burnt	User input camera settings subheading starts open
+551efda42795a0526818f75c9e283f1a7d8db2c8	2023-12-05T14:55:08+10:30	Burnt	Hooked up setPosition/Rotation & fillWithCurrent and copy/paste to clipboard
+ef68570b649b55f5ed40dcf5516ed8ec8a4efd20	2023-12-05T12:57:00+10:30	Burnt	refactored some transformer/smoother stuff so they hook up to settings properly
+2123b751a733b35a9797b8a3577bf712a8b1c9b1	2023-12-02T21:26:43+10:30	Burnt	Implemented freeCams block-game-input
+400252ce40a5084db8b55276c9afdf8760ae5137	2023-12-02T20:42:22+10:30	Burnt	Split out third-person-rendering stuff into seperate optionalCheat so it can fail independently of freeCamera. & added a toggle for it in gui.
+0b73aeef2fc2b0b95740dd594db794a167d408e0	2023-12-02T19:58:01+10:30	Burnt	Implemented HideWatermark/HideMessages & CameraInputDisable
+41544def9a49089e4042e1485d62bccfe268dffe	2023-12-02T19:30:25+10:30	Burnt	FreeCamera gui (not hooked up yet)
+85d3acd6f830700ac1a56ecef09423d90c3f2315	2023-11-30T12:27:29+10:30	Burnt	Linear smoother snaps to final position at very small differences. Shit squaresmoother implementation. Down position input now goes down instead of up.
+1439ef6c0dfe28345a039f9494c352071836073e	2023-11-30T00:59:13+10:30	Burnt	Reorganised how camera transformer connects to input reader and etc
+695b280473e1112775912ba2eeae7562d5b6f650	2023-11-29T20:55:02+10:30	Burnt	IT'S WORKING! THANK YOU LEONHARD EULER
+76199180f5c098499037c4097dbb754c5a1a187f	2023-11-29T18:37:55+10:30	Burnt	are euler angles the solution to all my problems?
+a93e6c971c5d2ed07ea7c3efd97b24e62c0aa3de	2023-11-27T00:44:23+10:30	Burnt	Revert "hhhhh"
+c2e01478320b79f27cda50ac0e7412e3ef8273cb	2023-11-27T00:44:00+10:30	Burnt	hhhhh
+9e9bd43404c8008d4df855970a96128393266648	2023-11-26T00:22:04+10:30	Burnt	Fixed some bad math. Camera now reads mouse/gamepad inputs
+e2e9a3feb1105eb4be3e614f230a7cf51c5b23ef	2023-11-24T13:44:47+10:30	Burnt	Fixed some bad math. Renamed interpolators to smoothers since that's more accurate and made them work properly. Added h2 camera pointer data.
+705661ef77f77b3d29249b7304acc8569fbc8aec	2023-11-22T20:59:15+10:30	Burnt	Added logic to chain multiple camera controllers together. Fixed gimbal lock by rotating with quats. Added a couple random issues tho lmao
+766726bb58b68ae8446d73615d7559cedd736bee	2023-11-22T16:23:05+10:30	Burnt	Fixed some dumb freeCam rotation math. Can now control full yaw/pitch/roll (with keyboard). Switched to cubic interpolation (smoothstep) for translation/rotation.
+ee99d935f6a1cecaa86e91d1e02db319232d5f9f	2023-11-22T01:21:00+10:30	Burnt	WASD now moves relative to lookdir. Can yaw with JK. Redid some math to not be stupid af. Added little linear interpolator thingy that probably doesn't need to be its own class but eh, makes the camera movement/rotation much smoother.
+e8c8a7bb796a7be83038883fb2e35b800267b820	2023-11-21T16:45:12+10:30	Burnt	Extremely basic freeCamera implementation. Right now just frees the camera and let's you translate it in absolute coords using WASD.
+359b746970f949dc01497a7b78b196cace9bf6f1	2023-11-20T23:55:09+10:30	Burnt	Implemented Display2DInfo and a lot of shit to make that possible: * Added second font (proggyVector) at higher font scale so we can adjust display2dinfo font scale without it going pixelated * Added dataStringGetters to actually get the data & convert to string for displayinfo * Added GetAggroData service * Split out getting a bipeds vehicle datum into a seperate service (GetBipedsVehicleDatum) * Added safety check to GetObjectAddress that the tagElement entry salt matches the datum salt, added isValidDatum function * Added GetObjectHealth, GetObjectTagName, GetTagName services * Added new guiElement types (GUIColourPickerAlpha, GUIComboEnum, GUIVec2, GUIInputInt, GuiFloat) * Added better debugging to multiLevelPointer::dereferencePointer * Fixed some StrideableDynamicStruct code * Fixed Datum toString method
+0d1f7988fb119be9d33dbd71d9eace67b21ec1b4	2023-11-10T21:53:12+10:30	Burnt	standardised how optionalCheats lockOrThrow weak ptrs in trycatch blocks. They also all now hold non-weak ptrs to RuntimeExceptionHandler
+4a120cf86bde74715dd5c259c61928e5712c6401	2023-11-10T01:18:25+10:30	Burnt	InfiniteAmmo and BottomlessClip cheats for h1
+04b413bf5748b6b219d4f07e14c3ed87682a357d	2023-11-10T00:09:03+10:30	Burnt	Build -> 3.0.1. Fixed unit tests.
+08858f4ddd43e5599e682fe90fd03590ba51ff30	2023-11-09T23:51:40+10:30	Burnt	HeartbeatTimer now requests only PROCESS_QUERY_LIMITED_INFORMATION to allow GetExitCodeProcess on privledged HCMExternal process
+05f10628235d3a9338e43826965162631f0d16f8	2023-11-09T23:45:36+10:30	Burnt	shared memory perms now unrestricted
+b271391f36de7cea1f8f7d59cc9d7c48fcf3ffd7	2023-11-09T23:12:11+10:30	Burnt	convert sharedMem init bip exceptions to HCMInitExceptions
+c3e886b8668f0531af7dec885adc2a40c793a94e	2023-11-09T22:39:03+10:30	Burnt	improved injection logging
+3525dc94e320fad770f96242beeb389010c046a7	2023-11-09T18:59:58+10:30	Burnt	HCMExternal inject command now actually works
+a381a30f00cb9327b5b2965919679a3a1a51d87d	2023-11-09T18:35:45+10:30	Burnt	added 3272 external pointer data. Fix for external pointer data not being copied to outdir in debug configuration
+f4b7ee798807bf1cc852c6f7db4786ff48716947	2023-11-09T18:02:04+10:30	Burnt	H1 fix for auto-revert after death
+6157366751a6402f5430bddab625f7eb0f048899	2023-11-09T12:41:34+10:30	Burnt	Fixed heartbeattimer only looking for "HCMExternal.exe" instead of "HaloCheckpointManager.exe" too
+ab396dbc9895adee2c9f4f7b39063f4038ee3f75	2023-11-09T12:02:38+10:30	Burnt	icky hack to make h1 core save stuff not attempt construction on winstore (cores are steam only)
+9ff1cf96d497ca4606b45c06ef9bb5633a76e75d	2023-11-09T11:50:33+10:30	Burnt	Added WinStore current patch ptr data. Fixed internal ptr data not getting copied to output dir in debug build.
+f70d230d557518a9e45f38979a37ede36aaa455f	2023-11-09T01:18:52+10:30	Burnt	added ico, renamed exe -> HaloCheckpointManager
+cb1bdee161fbe2b26ec003cda1c8c387ae25dba4	2023-11-09T00:45:52+10:30	Burnt	* Added natural checkpoint disable (all games) * Fixed hotkey for medusa * Macro now defines allHotkeysData length in HotkeyDefinitions, constructor assert assures you init data for each enum element
+64eedfe9c32a33f9a577809cd45ebf0cbb1cba45	2023-11-08T23:11:41+10:30	Burnt	Fixed speedhack updating when disabled. Fixed default value for ForceTeleportManual setting
+d639c09a12adeb55fd0d9580792560ccfd7c257e	2023-11-07T22:01:10+10:30	Burnt	Automated HCM FileVersion updating so it all propogates from one file (Directory.Build.props) using a powershell script. HCMExternal startup now checks that required assemblies have matching FileVersion.
+d994102540f1c44e36105dc1990552953ba3e2da	2023-11-06T00:07:26+10:30	Burnt	Fixing some release config issues: * Fixed issue where internal pointer data wasn't downloading cos curl excepts a c string not a std::string. * Updated pointer data urls. * Release build now compiles (I forgot to test for HCM_DEBUG def in  GUIRequiredServices for debug-only GUIelements). * Tests now compile - made it use internals pch.h file directly instead of having to maintain a copy. * Fixed awful HCMExternal infinite recursive refresh bug that occured when you only had one (no more, no less) checkpoint in the active saveFolder. * Internal and External pointer data now only copied to output dir in debug config.
+89f4f7a730b2386fd4a677bf92ece280c5fb1b08	2023-11-05T19:50:55+10:30	Burnt	Added tooltips for most GUIElements
+6898212afba0bb625f792c96e93b7a8b2544a9df	2023-11-05T13:56:50+10:30	Burnt	Makes a new timestamped logfile each session instead of overwriting the old one
+fb3848cc3b248aeaca87c42a503946b6782416db	2023-11-05T13:53:18+10:30	Burnt	Fixed blockInput crash + now blocks mouse clicks too
+187b67dc041095f021c32984998670d617a54d68	2023-11-05T12:20:15+10:30	Burnt	Medusa impl and data for h1/h2
+d5a32c2f8cc8c63fcf2dc911621cdc642c0cef0a	2023-11-04T21:41:00+10:30	Burnt	h4 ai freeze
+00f46c0fc9c45ea730af83db747c0abfcaaf231a	2023-11-04T00:14:28+10:30	Burnt	big tele/launch commit: * Added Force Teleport and Force Launch cheats, implemented for all games (current patch only for now). Options to act on player or other object, for vec3 input to be absolute or relative to player. Automatically acts on vehicles instead of bipeds when biped is in vehicle. * Replaced custom vec2 struct with DirectX::SimpleMath (+ conversions to ImGui vecs, stringstream operators) * Big changes to GetObjectAddress service - now does a direct lookup of the object table instead of calling the games own func for it. * Added common services: GetObjectPhysics, GetHavokComponent, GetHavokAnchorPoint, GetPlayerViewAngle * Rechecked all math on how current heights of gui elements are calculated (now using some DEFs instead of raw ints) to fix annoying spacing issues I was having * Added debug header to main gui when in debug build, now contains a getObjectAddress CLI as well as the console command thing (h1 only for the latter still) * Added a bunch of new GUIElement classes. Importantly one for inputting a vec3, and a pair (GUIRadioButton and GUIRadioGroup) for handling radio buttons (with optional children) * Added a check to MessagesGUI for null length string, and iterateMessages() now locks addMessageMutex to prevent multi thread access issues. * Got rid of MultilevelPointer factory methods, now you just make the specialisations directly. * Added some extra PointerManager::getData specialisations to support services being able to specifically request MultilevelPointer specialisations instead of only base MultilevelPointer * Moved object types to own class and fixed some issues with how getObjectAddress was getting their data. * Added deserialisation methods for Vec2/Vec3
+1ffa8c94e96cee6ce2a6a94232da6519b4e3599a	2023-10-26T01:20:38+10:30	Burnt	Moved advanceTicks' tickHook to seperate cheatService GameTickEventHook so it can be reused by other stuff. Added tickIncrement/counter data for all games (3272).
+2187f2ac24b9f944867a3d39b3f7997874df7395	2023-10-25T12:24:30+10:30	Burnt	Added pause pointer data for h3/od/hr/h4 (3272) and fixed some advanceTicks data
+886cfaad57bde1d44bab4cdc3d1ac4ac16394cbc	2023-10-25T01:58:31+10:30	Burnt	Fixed annoying hook issues in PauseGame (& updated h1 patch to be more consistent). Fixed dumb bug in modulePatch where the originalBytes vector would get filled with junk/null data if you tried attaching the hook while the module wasn't loaded. Added advanceTicks pointer data for all games (3272)
+bae4f5310ec986fe91589ab536b6a4fb0f30fe77	2023-10-24T23:39:43+10:30	Burnt	Updated unit tests. 754/950 passing.
+38a229cd82172d92df33ccb8192c2d16f9660ca2	2023-10-24T23:31:43+10:30	Burnt	Modal dialogs now dismissable with enter/escape keypresses
+b256c282d46db948301ee5e5acf94c4b2f4aca4f	2023-10-24T23:28:20+10:30	Burnt	Added counts of total failures and failures per game to FailedOptionalCheatServicesDialog
+941b2539d6faaaf71478cfd349adff2ea58a0b04	2023-10-24T23:17:28+10:30	Burnt	GUI can now be navigated with keyboard/gamepad, technically.
+ad90255d2e506a161d79e1f06d3b9f1440e871b4	2023-10-24T22:55:11+10:30	Burnt	Added pause data h2 (3272). Added ai freeze h3 (3272)
+04b41ebc334abbd0686a58f29ae30083d48943ff	2023-10-23T19:51:43+10:30	Burnt	BlockgameInput now actually works good
+d72df5d08c40a093ae0f8aa7e12ba4a8f6f21589	2023-10-22T23:51:08+10:30	Burnt	Changed BlockPlayerInput impl to a different set of function nopping that doesn't queue up inputs, but is now broken in a different way - it'll repeat your last input from when it started, getting "stuck" turning left or walking forward etc. Eh it's progress. I think.
+b7ef00992eee8bfc23047cf88f33e7872d533266	2023-10-22T21:46:23+10:30	Burnt	AdvanceTicks' tickIncrementHook now doesn't attach until the first time you call advanceTicks for a game (just in case there's a crash with the hook)
+672bc45b0abfffb0f32a54c97f6c3b4fe078a482	2023-10-22T21:32:49+10:30	Burnt	Added "advance x ticks" cheat (for while paused)
+99ee3f7aab871424f458b8bf0bb2e39294bcfcb4	2023-10-22T00:39:14+10:30	Burnt	Scoped callbacks now hold weak. Ensured interfaces have virtual destructor. Replaced explicit calls to scoped callback destructors with removeCallback(). This has managed to fix a leak/cyclic dependency issue, so now SettingsStateAndEvents is destructing before the call to FreeLibrary - which means settings and hotkey serialisation/deserialisation is actually working properly now!
+620b56e4c52fabec9ba60aba467950b4a9442a12	2023-10-21T22:27:37+10:30	Burnt	GUI elements now hold onto weak_ptrs instead of shared
+8e10c305bb68453f3ec1abde256211f08d65dcd6	2023-10-21T21:54:41+10:30	Burnt	OptionalCheats now only store weakptrs to injected services. OptionalCheatManagerImpl split into two parts. OptionalCheatManager keeps DIContainer alive until it's destruction to ensure optionalCheats have good access to the weakptrs.
+36528ec74466527e9ca423743db982ca58967309	2023-10-20T20:17:34+10:30	Burnt	Changed replacement code for ChecksumPatch, now does cmp reg, reg with the original register instead of testing a random register that I THOUGHT would always be zero but ACTUALLY WASN'T
+a7b65b084b770fbbfbb2e021c0a1984dca4ba293	2023-10-20T19:40:49+10:30	Burnt	Fixed a couple crashes that could rarely occur when service failure modal popup began too fast - added half second delay to it's spawning thread.
+271f38fd0a5093fe914cd946ca06a5845d3bc1de	2023-10-20T19:02:39+10:30	Burnt	* Added logic data and toggle for ignore checkpoint checksums on revert. * Fixed infinite loop bug on hotkey deseralisation * Changed setting serialisation to use full names instead of acronyms (we had too many settings) * Fixed some issues with modulePatch and storing/retrieving vector data in PointerManager * Pause settings now depend on pause cheat * BlockGameInput/FreeMCCCursor hooks now correctly attach to "main" instead of "".
+3c58aab8e53376d8b5b5d6f43ceab71187bc88e5	2023-10-20T14:22:25+10:30	Burnt	Added logic + toggle for difficulty mismatch check on injecting checkpoint
+dac213d769135a9fa7129ea31794036c93904fed	2023-10-20T13:29:00+10:30	Burnt	HCMExternal SaveFolder no longer nullable. Interproc shared memory save folder data now passes data for all games instead of just the current HCMExternal tab. Together these fix an issue where save folder shared mem was getting init to a null value on external startup, and make it possible to dump checkpoints even if HCMExternal is on the wrong tab.
+1e965f475b368d84264c3b7177269d67b131d2c4	2023-10-20T00:28:28+10:30	Burnt	HCMExternal now monitors saveFolders for changes to files and directories, auto refreshing the list/tree when observed.
+608c8cbacb6324aa5401a56dc557c6a83717f99a	2023-10-20T00:05:09+10:30	Burnt	Added logic/option for checking if checkpoint's game version matches current game version
+17ce3b372b5ba5e4737ae6ee3301fb0cb59f8e6f	2023-10-19T20:11:43+10:30	Burnt	Added options+logic for auto-reverting after inject and auto-saving before dumping.
+860a64de6a73105e9c5c0e277614b47e3d7723ac	2023-10-19T18:53:03+10:30	Burnt	Added logic & gui toggle for warning the user when injecting a checkpoint/core into the wrong level. Added a GetCurrentLevelCode service for that purpose, and fixed an interproc bug where the shared memories selectedCheckpoint->levelCode wasn't getting updated.
+664ce8e21d6e5e7fe34f420511b5b4eb149e75bc	2023-10-19T17:28:13+10:30	Burnt	Forgot to hit save all
+62de6325a2764e59914d6bcea2e9573eb96d578a	2023-10-19T17:14:08+10:30	Burnt	Dump name dialog hook in to core save dumping. Added gui toggle for whether user wants to autoname checkpoints/cores or enter name in via modal dialog.
+98c23fc125ac6b4e6d6f146d4c59d3a129d7a226	2023-10-19T16:33:45+10:30	Burnt	Fixed unit tests
+4286e1ae430be70ae00e5b9cd5cc5ac38cc1dce3	2023-10-19T11:51:38+10:30	Burnt	Changed menuIndicator and gameIndicator to point to better values. Specifically the gameIndicator is now a gameEngineIndicator and updates while you're in the main menu. Added a mcc state hook on the writing of the gameEngineIndicator to update state. Fixed PointerManager issue where negative hex strings weren't getting interpreted correctly.
+29c88fed336fee88409c51ddb825ea313207629c	2023-10-19T10:24:00+10:30	Burnt	* All gui elements and hotkeys now fire their events on seperate threads to prevent ui blocking / better performance. Hopefully this doesn't bite me in the ass later with concurrent threads trying to do the same thing (easy fix though: just make the firer join the last event before firing, no vector of threads). * Added button to bring up optional cheat service failures whenever under control heading. * Control heading & elements now render even if no game is loaded.
+c19fa85e5aaaafc020c5e9edea7357d8d09e652c	2023-10-19T00:37:44+10:30	Burnt	optional cheat service failures now display a pretty modal dialog at startup instead of printing messages to the screen
+47c00d285bf19c8d2355ae2215425b0b8f1292dd	2023-10-18T23:43:07+10:30	Burnt	Added check for MCC being a supported game version
+fab527b9f6c7a3c40a71cbc3b687517253d2bf9c	2023-10-18T12:04:13+10:30	Burnt	Fixed ScopedAtomicBool not notifying waiting threads (this was causing a rare-ish freeze when destructing d3dHook). TogglePause now actually checks that it's specific game is working, not just the service as a whole.
+bd38e4393fda632dc80e2557fe97d624373cc324	2023-10-18T11:48:45+10:30	Burnt	Added directly toggleable pause cheat with some settings. Brightened up the childBg (used in subheadings and hotkeys) a little to increase contrast.
+625f38871ca7de7bee14c3e22705b47c316467ce	2023-10-18T00:01:51+10:30	Burnt	Added PauseGame control service, again tied into modal Dialog and main gui. Only impl for h1 and 3272, unlike the other control services the impl (or at least the hooks) is game specific. This pause impl has the nice property of not stopping you from turning the camera around, or using debug camera etc, only the game simulation is paused.
+7c3bccacd9fe022a4b35dd520f9c49f3b64491c0	2023-10-17T22:36:58+10:30	Burnt	Added BlockGameInput control service, tied into modal dialog and main gui in the same way as the freeCursor service
+6ce0a7934d88d7230e1f23d9dab8a4366f41ba8d	2023-10-17T20:58:29+10:30	Burnt	Added rebindable hotkey to toggle main GUI
+f61c0baba7ed82d4b53b4f23b54e26506d241028	2023-10-17T11:37:48+10:30	Burnt	Freeing the cursor when GUI open is now a user-controlled option under Control heading
+7d9c4e1805fda6d25d4269acdbf181acd336951f	2023-10-17T11:25:48+10:30	Burnt	HCMInternalGUI now frees cursor when open
+3232222f88f37cd3a5a9b2466bcf9c582f79dd13	2023-10-17T11:12:00+10:30	Burnt	Forgot to hit save before doing that last commit
+39c85468debb3c2d21add83504cded41079a6743	2023-10-17T11:11:32+10:30	Burnt	Moved FreeMCCCursor service to be constructed by and contained within a ControlServiceContainer, which will also store other stuff. This container is also passed to OptionalCheatManagers dependency-injection-container so cheats can make use of the contained services.
+37aa23c0736a160ccdd66143944b66e9b33d9daa	2023-10-15T21:05:04+10:30	Burnt	Made the freeCursorService optional so HCM can survive without it. Added freeCursorService test to unit tests. Split unit test macro into two types, one that tests Steam & WinStore (for current patch), and one that tests only Steam (for all other MCC versions).
+194e335c5f31ecb235501e6ecfa46f12ad49e127	2023-10-15T20:39:55+10:30	Burnt	Moved ScopedServiceRequest to it's own class since I intend to add more services using the same concept
+d2713c06fb8d847a5a93b5eee24299cf06db79d2	2023-10-15T20:07:09+10:30	Burnt	Added "FreeMCCCursor" service to free the MCC cursor when modal dialogs are running, using scoped requests.
+3bca8b39ab1e24f871a9638c1d60275a407c99ac	2023-10-15T17:57:42+10:30	Burnt	Added ModalDialogRenderer that can be called to spawn input-requesting popups by optionalCheats - implemented for example in dumpCheckpoint to request the name of the dumped checkpoint. TODO: make cursor automatically get freed when popup rendering.
+5f456569267286128b7371ebf9a2371c7b149df9	2023-10-15T13:37:55+10:30	Burnt	Rearranged main internal GUI to organise stuff into headings and subheadings neaterly. This required messing with a bunch of the GUIElementEnum macros and whatnot. Renamed GUIHeader -> GUIMCCState for clarity. Added destructor logging to all optionalCheats. Fixed issue where SimpleInvulnerabilityImpl destructor was not getting called which was messing up my unit tests & causing invuln to crash on HCM shutdown
+37e103302cecbb402974dcd7e8b785103562e3a5	2023-10-14T20:12:13+10:30	Burnt	Checkpoint List now auto expands to fill available space - no more dead space to the right of "createdOn". This has been bugging me for literally years.
+6a32c9e78f09bddc667f50f73d77d35813c8e252	2023-10-13T22:33:07+10:30	Burnt	Fix for new horizontal expansion of saveFolder being able to expand past the edge of the screen
+1357bdad55e130e793f7f2e01f4473aef1c0b782	2023-10-13T22:09:26+10:30	Burnt	Can now resize savefolder tree horizontally
+0c129ad6773d3e01934b24535e50f4f563daba93	2023-10-13T21:53:17+10:30	Burnt	Fixed vert and hori scrollbars for HCMExternal's save folder tree
+93f889d34100f2eb5ae729039d59c2aa5d5c5b21	2023-10-13T21:06:47+10:30	Burnt	Fixed issue where HCMExternal wouldn't reinject internal on the second+ time MCC was opened
+83efc1418babc578c2ddb27d408a4b4171f28fa3	2023-10-13T20:05:38+10:30	Burnt	Release mode console logging removed, now shows MessageBox on init exceptions/unhandled exceptions
+61eb2366dfd28522c5efed12285491ce23db1541	2023-10-13T19:40:14+10:30	Burnt	Added h1 console command. Probably won't make it to release but it's useful for reverse engineering & debug, plus could be a useful non-GUI'd service for other cheats to use
+463531ea55a2cdd5d841d4e7d7c0ed2b58f1e9a7	2023-10-12T23:32:47+10:30	Burnt	Added MidhookFlagInterpreter class that can be used by midhooks determine what registerFlag needs to be set (and whether to set it false or true) from pointer data
+3e7d7091f71482097f6953d7c56f09f0b4998c1d	2023-10-12T12:10:29+10:30	Burnt	H4 invuln all versions. Moved SimpleInvuln.h -> Invulnerability.cpp since it turned out we only needed one (templated) implementation for all games
+2088b862a14b045e47b87013ae4e89034340d6d5	2023-10-12T01:27:30+10:30	Burnt	Reach invuln all versions. Added globalKill call when MCC recieves WM_DESTROY (ie from user closing MCC)
+d18b4329e2cec5d27487990cb4155c8d70189340	2023-10-11T22:24:55+10:30	Burnt	Fix for levelID/gameIndicator enum parsing issue (changed magic_enum min/max range)
+fc9f12f3462654b073e90a3359b542595dd6175d	2023-10-11T12:37:19+10:30	Burnt	odst invuln all versions
+0dc3bf9e3b3455a78fba51ff5a3818e6a692f810	2023-10-11T02:15:03+10:30	Burnt	AI freeze for h2 just to see if it'd be easy to reverse engineer. Turns out it was!
+93ce6df51c6fcdc37b2fa2bb21c023af6f6d924a	2023-10-11T01:59:32+10:30	Burnt	AI freeze for h1 current patch as an experiment. I really gotta make it easier to add a new cheat instead of needing to add an enum in 10 different places
+7078bf510351feb55decc67d79d52ec8b254700a	2023-10-11T01:23:33+10:30	Burnt	H3 invuln all versions. Fixed around some destruction guard stuff. Moved d3dhook vmt pointer patching to be after all other classes init, this prevents a lot of init crashes.
+437871f8859b91158ebf2b242e6d1a9f4a541325	2023-10-10T11:29:59+10:30	Burnt	Added gameHasBoarding template parameter to invuln class so we eval at compile time if we need to call playerIsBoarding. Fixed some destruction guards.
+5d083d8e9850ed8e4554279a75632d046fd712be	2023-10-09T23:48:05+10:30	Burnt	H2 invuln for 2448, 2645. Changed level indicator pointer to a better one.
+342b73aa663a2565722c28afa80de72305cf7284	2023-10-09T12:52:36+10:30	Burnt	Fixed boarded vehicles being invuln (h2). We simply check if the games UI is displaying the "press blah to melee" or "to plant grenade" text, and don't make the players vehicle invuln if true.
+06d2a67283f041c92eebde17e368ad08de524596	2023-10-09T01:21:42+10:30	Burnt	h2 invuln for 3272 (still makes you unable to board vehicles, hm). Moved hotkey event lambdas for toggle cheats to seperate class. Added check for multilevelpointer-data having matching GameState and module name. Renamed Halo1InvulnerabilityImpl -> SimpleInvulnerabilityImpl since h2 can just reuse it's cose (had to template to separate the static variables)
+a5aaab637cd1484db58f195d7c4074c04664c320	2023-10-08T22:47:15+10:30	Burnt	Added pointer data for nearly everything (2448, 2645, 3272). Just need to do non-h1 invuln impls/data
+63ca6178d9674373a5864261d044448e6d4d06c4	2023-10-08T20:32:58+10:30	Burnt	Added unit tests for cheat construction using fancy macro magic. Most of these are failing right now due to lack of pointer data, but the dopamine hit of turning red things into green things should motivate me to fix that. Had to touch a bunnnch of classes to interfaceify and mockify some stuff to allow for these tests.
+b70ebba086bb6d8793117989a37ab280c8798a25	2023-10-07T13:06:28+10:30	Burnt	Added GetPlayerDatum and GetObjectAddress services for h1. The latter just calls the games own function for this. Added DynamicStruct so we can make sense of objects whose address we get, such as the player. Used these things to implement fully functional invulnerability cheat: if current damaged unit isn't player, we getObjectAddress(playerDatum), then interpret it with a biped DynamicStruct so we can check it's currentVehicle datum- if match, make invuln. Also added module name lookup to gamestate class.
+7721914f0ed1e7ee133229ad8cd924af22995083	2023-10-04T17:19:24+10:30	Burnt	Removed buggy rpclib crap, now all interproc just done with boosts named shared memory
+d6699d6cd328981eb00d1e6d26c0ddedcf093faa	2023-10-04T11:19:03+10:30	Burnt	HeartBeat now justs directly checks if the HCMExternal process hasn't exited instead of sending stupid buggy rpc messages (this is foreshadowing the next commit)
+5c234a3d2fc30fcb780639d7b7f61c4d28de689a	2023-10-03T22:35:07+10:30	Burnt	Added destruction guards back to callbacking classes, seems to work okay most of the time. Added more diagnostics to d3dinit to try to figure out a crash that rarely occurs
+14a51715f19cf84abb7ffdcf28557fb20cfae94c	2023-10-02T20:52:16+10:30	Burnt	Huge refactor, see doobly * Got rid of (most) public singletons, now dependencies directly injected by App class (private singletons remain for static safetyhook callbacks) - this will let us to do proper mocking/testing later and clarified object lifetimes & hierarchy of dependencies. * Completely refactored how GUIElements and OptionalCheats are organised and constructed (using a bunch of magic_enum / macro magic). * Added local DIContainer class for passing dependencies to OptionalCheat constructors. * Added ScopedCallback that RAII'ifies the eventpp events and handles. * Unit tests for DIContainer and ScopedCallback. * IAnchorPoint , right now just used to locate MessagesGUI on screen relative to main gui. Can be used for eg DisplayPlayerData later. * Refactored GameStateHook -> MCCStateHook that gets more game info, and uses better loading hooks/flags. * Rejigged out internal gets hcmDirPath on startup, still not sure on it. --- lots of issues remain: * Randomly crashes on startup about half the time for various reasons. * Randomly crashes on shutdown about half the time for various other reasons. * Too many shared_ptrs where unique or weak would be better. * Still no good solution to static callback running after owning class destroyed (tried make_shared_from_this stuff but has it's own issues). * RPCClientInternal::sendFatalInternalError totally broken for some reason. * HCMExternal still doesn't re-inject on second mcc opening .
+07789677f1785467df46f9d104eca0994ffd4e1a	2023-09-08T00:03:29+09:30	Burnt	Moved speedhack to seperate dll so it can live forever - if it gets destroyed, the game will crash cos negative time delta
+f058f16b4e07a60809e735b3c3a50da16d4461dd	2023-09-05T01:09:41+09:30	Burnt	H1Invuln mostly working. Better impl pattern.
+b4f51bc9e53a16de94c2268c5f6abb3445419266	2023-09-04T22:16:31+09:30	Burnt	A kinda working impl of invulnerability (for h1 anyway). I think this pattern would work better for some other cheats down the line, but I might split this one out so each game gets a seperate impl extending a base impl since the nature of the invulnerability logic can be pretty different between games
+e135664ef80b04372c1897374dcfd1d629d89194	2023-09-04T02:47:07+09:30	Burnt	The hotkey system is FULLY ARMED AND OPERATIONAL
+b3d46dce9cfe6ffcd2fd3fdf3cff706714c1b9c9	2023-09-03T19:30:39+09:30	Burnt	First half of hotkey GUI (still need to do the rebinding dialog)
+4bdc2ebff1d795e52a0f6cd2691e016e0d878888	2023-09-03T01:26:30+09:30	Burnt	Added ability for hotkeys to have more than one set of bindings. Added hotkey (de)serialisation. Split ImGuiRenderEvent into Background, Midground, and Foreground render events - modal dialogs/popups will go foreground, main gui and messages will go midground, overlays will go background. ActionEvent typedef now global. Added Hotkeys namespace to store hotkey definitons. Fixed some hotkey manager code to make processing the hotkeys more performant (check keydowns before keypress)
+9ca6482e950fc15827d863f2c1a420cbf764f83c	2023-09-01T19:37:10+09:30	Burnt	Added hotkey system that supports combo bindings and mixing inputs. No gui for user-rebinding, yet.
+986b3d092dbcca3a9d6f44b8600acbbb4f61738d	2023-09-01T15:01:57+09:30	Burnt	Implemented speedhack
+aee64df11dfc6717441c50235f9dc0d5a1f4cb65	2023-08-25T19:24:21+09:30	Burnt	Made selectedcheckpoint not null when opening HCMExternal. Made it so HCMInterproc doesn't miss the first Selected Checkpoint info.
+c2c879aefe946fffb4c376dce3b55bc29b824a1c	2023-08-24T23:50:10+09:30	Burnt	Split CheckpointInjectDump into InjectCore/InjectCheckpoint/DumpCore/DumpCheckpoint - now one can fail without taking the others down with it. Fixed issue where GUI elements were rendering in a random order. Added implementation of core save injection/dumping, and forcing core saves/loads. Rewrote GameState to wrap an enum class, to forbid default construction (and add some other neat methods) - this fixed (and prevents from me doing it again) an awful bug I was having because I forgot to pass on the GameState val to mImplGame in the Dump/InjectCheckpointImpls.
+68ff60043bf01664f61dea592351dbba2ed4bc43	2023-08-20T19:19:29+09:30	Burnt	Reversed message order in messagesGUI. Mandatory exception logging now way less verbose
+70582f37e34a17c0927f08d1211b0ae8539cb872	2023-08-20T19:11:08+09:30	Burnt	FailedServiceInfo now provides way more info about the failed services (ie what game they were for) as well as which user-facing GUI elements will be unable to function on account of that
+bf938cf65bf710d03f9e2e62b8afc575e2fc4657	2023-08-20T17:57:13+09:30	Burnt	smart pointerfied optionstate and guielement stuff, and made OptionsState vars inline instead of extern so I don't need the .cpp file
+770035eb1ad5bf5ed7663711420298b233923a40	2023-08-20T17:15:56+09:30	Burnt	Fixed broken event invocation from GUISimpleButton (stores event pointer instead of ref now)
+4e693241b434263d96563aad1b3db9e8f721d2db	2023-08-20T01:59:51+09:30	Burnt	Split GUIElementBase to have one instance per game instead of one for all games. It also handles initializing its own required cheatServices
+fdfe6a9820df0b615e69906065047852aa7440cb	2023-08-18T23:38:26+09:30	Burnt	Inject/dump finally working after a bunch of rpc/interproc shennigans that I'll spare you the details of
+e3a2acb096433fbc5fb7e4a20074375273635751	2023-07-29T20:39:46+09:30	Burnt	This is a real in-the-weeds commit, I'm working thru a lot of issues rn. Cp dumping is kinda working, injection is not. My real struggle has been the rpc stuff, and the reason I'm committing this is that I think I want to change how I'm doing that. Right now interproc sets up an rpc server to comm with internal, but then needs to use callbacks to comm with external. Having this interproc middleman is giving me a huge headache, so I think I'll look to use some other rpc library where I can just setup the rpc server directly in external. Tho I'll still keep interproc around just for the dll injection functions.
+d812043cae483f33469124862dce0ddabfb3a866	2023-07-22T23:36:21+09:30	Burnt	fixed hard coded paths & disabled building stl modules
+d18de84c42b461ab15906bc007bd3230daa220bd	2023-07-14T14:55:38+09:30	Burnt	fixed out some wip stuff (cp injection)
+8b6e8df3c5ca548f0e2efaacc3ab68dd5a5486a3	2023-07-13T11:45:00+09:30	Burnt	get rid of old files
+f8df7b5b0188cf7f5b350df765f37d9c80f5d297	2023-07-13T11:25:42+09:30	Burnt	major rework (wip)
+28297dc8094f73b7e5f1eced75ea919c264a80c4	2023-06-27T02:24:09+09:30	Burnt	Add .gitattributes and .gitignore.
+9533c6f987e6fc6ac34a9f3d97e0dc03a35f8956	2023-04-05T12:30:29+09:30	Burnt	dev
+3b876b365d947b6b2f96f0bc2ccea4724ccec613	2023-01-19T20:22:12+10:30	Burnt	Hooking Present (and ResizeBuffers) now handled internally, this also removes the need for Kiero's vtable lookup stuff which I suspect was causing a crash for some people
+a2d8a5c8888e564ee124e0265ceffbdface9d621	2023-01-19T18:37:02+10:30	Burnt	Changed 2862 support to be for trick-jumper modded DLL instead of for vanilla
+65a209b52449944bad24be00b7ade53c061115db	2023-01-18T23:54:34+10:30	Burnt	build number update 2.0.7, replaced LatestHCMVersion with LatestHCMVersions (plural)
+9c010a522356463824e29ee9ccc9320f0d66476d	2023-01-18T23:12:43+10:30	Burnt	Added missing no-overlay message for OHK and TheaterFriend
+5f595cc99c5160f69bbcb039a8246e58ca05d720	2023-01-18T22:59:50+10:30	Burnt	Another attempted fix for ODST level transition bug after injection
+8fd5612be7f938ecc6e7f9906228a0555b082793	2023-01-18T22:59:34+10:30	Burnt	Fix regression of overlay not re-engaging if turned off then on again
+21e5ae408e1dd3c2da575c269f7cc0e12b4b5c6e	2023-01-18T22:40:51+10:30	Burnt	Reduced logspam
+988ed72d7382bf7eb26cd59e4e1b5161ed286580	2023-01-18T21:11:25+10:30	Burnt	PersistentCheat.IsChecked no longer spams PropertyChanged if value didn't actually change - this prevents CallInternalFunction getting spammed via CheatStateChanged
+80f3a35a57ae745ff0610cc8bbac98a15e92bfb4	2023-01-18T13:08:09+10:30	Burnt	Reverted ODST "fix" as it was making things way worse
+41662f31cd93fb158075fb831c2538704b8ad0cc	2023-01-18T01:59:42+10:30	Burnt	Actual fix for h3 multi null checkpoint crash
+7e4bf1fe271bb17fd7a7ddc06e08032e6fe6a8d9	2023-01-18T01:39:37+10:30	Burnt	Tentative fix for H3 checkpoint injection
+b9ec5235ab42dae2d94e95e371c48bbde5dc0f79	2023-01-18T01:06:52+10:30	Burnt	Attempting to fix a multiplayer crash
+b843df46412a17489ac4ae414484e8b9877de8b9	2023-01-18T00:55:04+10:30	Burnt	Fix for ODST checkpoint injection breaking level transitions
+92880de44971956387e35618b68fb85593a0d819	2023-01-17T23:54:22+10:30	Burnt	Added partial H3 2862 support. Added Theater Friend for H3. Fixed some other multiplayer issues.
+9f535431e6fac4611d60ef78e5d699d8131eec03	2023-01-17T11:28:16+10:30	Burnt	Fix for S7 HR injection not working (cp locations swapped)
+f12e658651881d8be59acc2ae2bbefc1e00ca885	2023-01-16T23:49:36+10:30	Burnt	revert test
+53615fe3de3cf22a247621fe09986fd483d2fa8e	2023-01-16T23:45:04+10:30	Burnt	testing checkforupdates
+4c8198ac97e1d37c6eddc0b1f1fbc144ff6cb73e	2023-01-16T23:17:26+10:30	Burnt	Merge branch 'HCM2' of https://github.com/Burnt-o/HaloCheckpointManager into HCM2
+c7064494d51f8afd597e70ca23292c07db0129ac	2023-01-16T23:17:14+10:30	Burnt	Build number update
+df8f712d7c4579f22ae45d020406d03a5967862b	2023-01-16T23:16:08+10:30	Burnt-o	Update README.md
+6ab093b5d2aff2e77c7d8d14444eb230038eabae	2023-01-16T23:14:09+10:30	Burnt	Merge branch 'HCM2' of https://github.com/Burnt-o/HaloCheckpointManager into HCM2
+465753bce35944a8711e7d48bf44a5ffe8aac94e	2023-01-16T23:13:25+10:30	Burnt	Added demo image for readme
+0b46023f7c79aa5ac5719fad0607e944b8d84bd6	2023-01-16T23:08:30+10:30	Burnt-o	Update README.md
+3084faef98d1610a28defbeccd04546f4b3eba06	2023-01-16T22:59:51+10:30	Burnt	Added many tooltips. And option for switching level icon type to anniversary.
+4ee275a801cbc78a29217f96c2ca3a51f6ac2985	2023-01-16T21:53:10+10:30	Burnt	fix for H4 checkpoint sharing
+9016841edbdaec5e6e4df02737e3222464743922	2023-01-16T21:43:47+10:30	Burnt	Removed some junk
+86eb56d6a66c8086ea5f2c2a22e7c1be7f2b55b7	2023-01-16T21:42:02+10:30	Burnt	Merge branch 'HCM2' of https://github.com/Burnt-o/HaloCheckpointManager into HCM2
+05f12987aa66be0302d13e204185a8218c35db98	2023-01-16T21:41:34+10:30	Burnt	Added commands to Folder Explorer, and some UI cleanup
+35328edf9eb0ba34ef40a0193cff7127d6dafa51	2023-01-16T20:31:36+10:30	Burnt-o	Update README.md
+c5d6f55b9879d94fa1b55f009f378c353fe64a99	2023-01-16T20:14:04+10:30	Burnt-o	Update README.md
+b4a45e452765bd71ac3af478f513aa431edf5514	2023-01-16T19:53:01+10:30	Burnt	Fixed H1 clearing auto-revert flag/timer
+72e8da87e46822cecc5783a86687a35ade56a7ab	2023-01-16T19:45:22+10:30	Burnt	Added some labels to CheckpointDetailControl and Folder Explorer
+e5dfaddd3d83ecdfba4a96f67c134ce26e0622d7	2023-01-13T22:50:06+10:30	Burnt	Added ico, fixed CE IGT reading issue
+4cc4bc501f164788c3489de86d754e32823dee90	2023-01-13T22:38:01+10:30	Burnt	build number update (2.0.5)
+040813f93f01c682b340116c48c2b12afe8d5385	2023-01-13T22:07:44+10:30	Burnt	S7 (2448) H4 support added.
+d88f67f46fa70edcdc3e38d8223d2bf658c9e612	2023-01-13T21:49:25+10:30	Burnt	Added ability for user to disable checking for HCM updates, and a first-run info dump on disabling the directX overlay.
+4e26e9aa93e32292f23e8c27f3e98c27c127ee80	2023-01-13T21:23:16+10:30	Burnt	Speedhack UI now shows that it can't be fine tuned if overlay is disabled.
+06f1f8c0bf776b99fe8014f845545a1de78d7340	2023-01-13T21:08:46+10:30	Burnt	S7 (2448) HR support added.
+b8b40a480275986e49f8acd3a8560d8017ebf5a6	2023-01-13T20:30:41+10:30	Burnt	Fixed bug where allocated detours (for patches) weren't getting deallocated.
+25739b8316a80975253e14402d355a50256e335f	2023-01-13T19:41:36+10:30	Burnt	small detour/alloc bugfixes, fix for H2 Invuln occasionally not working.
+df64824fbd89c96dd30d665c06f98b96dbd37ad4	2023-01-12T21:32:24+10:30	Burnt	S7 (2448) ODST support added.
+a0051847e9f59b6309073b006f992d3666ac7b3e	2023-01-12T19:06:05+10:30	Burnt	S7 (2448) H3 support added.
+35876b948bedf0eac732587855e5bc6a6166f627	2023-01-12T16:55:55+10:30	Burnt	Added ability to remotely disable the DisableOverlay option in case bugs/cheating issues pop up.
+352540569c3ca33ea6e112c1e8dcb9c01236fd32	2023-01-12T03:10:56+10:30	Burnt	S7 (2448) H1 support added.
+93cb15cdb8c1d294d67053ff11b15266170c242b	2023-01-12T02:20:15+10:30	Burnt	Added sort command to clicking checkpoint list column header.
+8ae5ac54a0343d6b601a6fcb96caed88ad1bf503	2023-01-12T02:14:03+10:30	Burnt	Fix for sorting with multiple comparers.
+976def0338b646491fb1f25bb18b1826dfae6d12	2023-01-11T20:43:33+10:30	Burnt	Fix for controller detection if controller isn't connected when HCM launched.
+0843116cb32d864f822c0876a6e19819c8f7dbed	2023-01-10T21:15:36+10:30	Burnt	made more overlayless cheats work. fixed H1 currentpatch natural checkpoint issue. Fixed level sorting bug. build no 2.0.4.
+8c89dcbebc36577a90fefbffc74faba418a856c8	2023-01-10T20:05:19+10:30	Burnt	Added auto-checkpoint on dump. Made removehook stuff not get called constantly, only on setting change.
+6455c68b1eafd208112728b56e5ab617794bc292	2023-01-09T21:33:26+10:30	Burnt	Fixed hook removal regression
+f340b3a33f12d1e92ad63b690ed039d8526aeb23	2023-01-09T21:03:17+10:30	Burnt	Checkpoint list selected highlight much more obvious. Enwidened HCM default size. Auto switch tab on dump implemented.
+a1100cec15a8529da290582136ff1a1fd1750203	2023-01-08T23:34:07+10:30	Burnt	fix for overlay crashing on MCC fullscreen (or window resize)
+84ad4ca72127022bfb3284a84805cbf4613cbb30	2023-01-06T15:26:24+10:30	Burnt	build number update
+2bb0041ffdf592adaf71cadc171db50a75a5df9a	2023-01-06T15:23:33+10:30	Burnt	Implemented ability to turn off overlay and have most functions work
+77305792e390b5d9d15d57d998bb15d31f672968	2023-01-02T23:50:02+10:30	Burnt	even more logging in SetupInternal and another very tentative fix
+8b91cd48e4f782afc76d918c041c7088d7ad5e70	2023-01-02T23:17:10+10:30	Burnt	Added a lot more debugging/logging. Fixed core save injection. Very tentative fix for MCC crash (presentHook issues)
+398175eadb4a79ae7fe711c0e6a7185c8101eb29	2022-12-27T20:42:38+10:30	Burnt	build update to 2.0.1
+f41df935ef103e2e3593506b8f79d5c7adf74d41	2022-12-27T20:36:34+10:30	Burnt	tentative fix for overflow in VirtualAllocExNear. H4 ChecksumFix fixed for Current Patch.  fixed autorevert.
+140f42483d422e8d4aadef5f295b03e824a2c1b8	2022-12-27T19:44:19+10:30	Burnt	fix for levelcodes having tonnes of whitespace leading to level injection warning issue
+75ae54011b5a7ff146cf12382890578ff5526365	2022-12-27T19:34:04+10:30	Burnt	implemented Reloaded.Assembler for assembly, instead of Keystone
+347b03e0cfded3fb3fe15377d63e9604ccd1f52f	2022-12-26T19:31:40+10:30	Burnt	fixed some app shutdown stuff, some button hiding stuff, some build stuff
+56aaba63bdb5b56680c55e6756fb4d31e836ad2c	2022-12-26T17:24:43+10:30	Burnt	actually removed some old junk
+a055c9c91f53b357720aab380723026cbdfc2396	2022-12-26T17:23:12+10:30	Burnt	removed some old junk
+343a000c520deea98bf851409b4666e3fa128ce4	2022-12-26T17:14:59+10:30	Burnt	jesus christ why didn't I commit these individually. basically bare minimumly functional now at least.
+a37060215f197a18b2da2017b07077e5b823b88b	2022-11-24T21:29:37+10:30	Burnt	implemented warn on wrong level and wrong version. fixed eternal loading bug if MCC not open when HCM started. some darkmode stuff.
+681e25d25f8a804758d062894e68810e79443ee2	2022-11-23T20:43:36+10:30	Burnt	sortcheckpoints working, added checksum fix patch for all games. added hour display to checkpoints with really long in-game-times
+9f5ad997aacc3ca15d29ba4828f6f3887c13df3d	2022-11-20T20:58:51+10:30	Burnt	added checks for overlay being hooked. added OneHitKill mode cheat for h3. fixed up some h3/h4/od view stuff. added checksum fix patch for cp injection in h4 (todo: add to other games)
+1d49eeacbff9208e56d537ae6f04e81f41f72376	2022-11-19T20:37:16+10:30	Burnt	serialisation & autodetection of H1 corebinfolder
+0de290ead4e4688543a9be247001a2232f4b366a	2022-11-18T21:57:27+10:30	Burnt	uhhh implemented some settings stuff
+2c61516a819b83a4540d85cdd44dff9565d30d34	2022-11-14T18:15:38+10:30	Burnt	now actually removes the overlay hook on closing HCM
+6a60c2ae952e0bc6eee2bb20fbc76d5c3d8db1af	2022-11-14T14:12:37+10:30	Burnt	fixed present hook not occuring early enough sometimes for eg OBS game capture
+48ef12cfa889c74d8ce7eb1690e959fdfff3db1d	2022-11-11T01:22:25+10:30	Burnt	implemented HR teleport/launch/invince
+93b35ed4af0b177efa96d8c814e7859425f4e45d	2022-11-10T17:53:22+10:30	Burnt	implemented h3 & OD invince/tele/launch, partial dark mode implementation
+59fb3d94fba01c776d7b8f0b9343448e84cd722f	2022-11-08T17:12:41+10:30	Burnt	Added check for if buttons should be enabled per game & version in PointerData
+227dbd931791b13686ee9f8ae4a93bd96d62b8fd	2022-11-08T15:39:53+10:30	Burnt	added a lock on DLL injection and invuln toggle
+f4cdea646e517b0de9791097570e8fac2e4090f7	2022-11-08T14:51:37+10:30	Burnt	Moved all relay commands to run on seperate tasks - this seems to fix keyboard input laggyness. Genericised some openOptionsWindow stuff. Fixed Teleport Fill w/ position. Prettified up OptionViews
+38525d6144b2299897904f8f265a6147c7b4c872	2022-11-08T14:16:51+10:30	Burnt	fixed gamepad inputs in changeHotkey being laggy
+70a8a996d2ca9d07c575b9dd4ed148581c4ce9f1	2022-11-08T00:05:20+10:30	Burnt	Hotkeys! for both Keyboard and gamepad. Current Issues: Can only bind one key to an action, not key combos. In changeHotkey dialog, gamepad inputs are buggy and laggy. When using hotkeys, toggle cheats are buggy and laggy but ONLY when triggered by keyboard (gamepad is fine).
+e122df54fedf6c0f2d3a5ff5c8120d0448fdfbbd	2022-11-03T17:28:57+10:30	Burnt	Add rename and inject right click commands
+a54c235aa2a6d2d9db373882222b0a3967616288	2022-11-03T15:15:57+10:30	Burnt	Implemented GenericOptions, moved inject and dump over to trainerview, added rename checkpoint command
+54633709f886656c2bfcfb5564b41edf4bbaf318	2022-11-03T00:56:12+10:30	Burnt	H2 teleport/boost.. suffering
+57fa055397d08613a07e3f3afd83f6146f054263	2022-10-30T20:54:44+10:30	Burnt	implemented temporary overlay messages
+174f381ca1a7afdcdeed475f460d244b6709d007	2022-10-30T13:29:53+10:30	Burnt	Implemented Teleport and Boost for h1, implemented complicated UI stuff for teleport options, renamed and shuffled around some files relating to view and viewmodel
+ed7ff9d3e382b46496a79f4cf1323135f57e8986	2022-10-28T13:28:57+10:30	Burnt	Added Application_Exit cleanup (remove persistent cheats)
+e2c21d294181d1bd9dde1916cfc9c4b24b0de74e	2022-10-28T01:15:40+10:30	Burnt	Finished implementing inject/dump/checkpoint/revert for remaining games, finished double revert for non-h1 games, finished block CPs for all games. still 2645 only tho
+53d7c86a9e2ab4f3b03d9ffbbb015e3e7d13dd17	2022-10-27T21:02:19+10:30	Burnt	more UI stuff + fix h3 invince to workin vehicles + inject/dump for h3
+90db3eb572457f967ffdc4bfca6edd0a787a622f	2022-10-26T19:53:39+10:30	Burnt	h3 invuln implemented
+d065a046d09ea36dc4bbb757a6d3a952b82f5270	2022-10-26T01:09:05+10:30	Burnt	Refactored loading/parsing of PointerData
+f2b246b589b28b61a0cd9526b0a0400bafd72ca9	2022-10-25T01:06:19+10:30	Burnt	Reimplemented Speedhack, and touched up Trainer UI stuff
+4e5f7b0d31a8b4b60abd159b99af213bf82d7998	2022-10-24T00:36:02+10:30	Burnt	generalised detour code
+b7757138e0e46fa316e5617d6e321f94e306f893	2022-10-21T23:46:09+10:30	Burnt	h1 invuln no longer stops force application
+75353c2d93dc26146a6a3ddaf1d9bf924bd7ab6d	2022-10-21T18:21:02+10:30	Burnt	h2 invuln no longer stops force application
+d8e5144ff4989f5440d726ad3153c1b6a78fa1a0	2022-10-21T16:43:24+10:30	Burnt	Fixed HCMInternal crashing on MCC window resize/fullscreen mode. Maybe fixed VirtualAllocExNear. Changed Trainer view logic to present cheats of loaded game instead of Tab game.
+38fd219474bc749f00fbe4b8b11bc1b6df49b88f	2022-10-20T16:50:03+10:30	Burnt	Reimplemented H1Invuln as a detour using KeystoneEngine to parse mnemonics. Hooked up persistent cheat state to internal hack overlay.
+f6549dd98e2fb8da2865ed67e6f8a077b3cedccf	2022-10-18T00:13:44+10:30	Burnt	moving around the injected code so it's actually getting committed, no actual changes
+2684315825e2fe5349be635c3f6b9e19126ab5c9	2022-10-18T00:01:32+10:30	Burnt	calling injected DLL functions with parameter
+b11b1b5acdc1197f8c041732b2df3324483cb19d	2022-10-17T00:33:07+10:30	Burnt	working on some internal hack shenanigans
+9c15d1bf766488729437bcac4760a29c41a9dacb	2022-10-14T23:40:32+10:30	Burnt	Implemented logic of toggling controls. Added H1 Invulnerability cheat.
+44da12577f32290fa9e844385c723d3cc6bd8819	2022-10-14T19:57:56+10:30	Burnt	Now supports both winstore and steam
+39f2fd2c4f82eec3f68c5bf0b54d47a1de16cf68	2022-10-14T17:46:17+10:30	Burnt	Cleaned up namespaces
+41ad7fe395485ea48422f58414a003a3c7438a86	2022-10-14T01:23:38+10:30	Burnt	Trainer Stuff. Laid the groundwork for a lot of the ui, and command/service routing. And the databinding of controls. and trainerviewmodel with the buttonviewmodels.
+25a5653d516003849c07dd1ab43dc7c85d9b2fee	2022-10-13T00:13:58+10:30	Burnt	Implemented Dependency Injection.
+f9c3908fe4f445c6efcff0dfc77909e1cb47aaa9	2022-10-12T14:37:59+10:30	Burnt	Rearranged a bunch of MVVM stuff so that model no longer has any concept of the observable collections. And other decoupling stuff.
+002cb03b0dda3077f8e13f4efa9841ae248ff7dd	2022-10-12T03:01:32+10:30	Burnt	Added context menu for checkpointlist, implemented right click > delete checkpoint.
+aedca893bf4645278ced42e65ac80a9518653f6e	2022-10-12T02:24:49+10:30	Burnt	Refactored some MVVM stuff. CheckpointModel no longer knows about SelectedCheckpoint or SelectedSaveFolder, only CheckpointViewModel. Moved Dump/Inject commands to own file and fixed up their CanExecute logic (now both use new CheckpointViewModel property TabAlignedWithHaloState, which many buttons will use in future)
+0f56976f01c3fe863530b6916a4d2a94ec4f0d1a	2022-10-12T00:45:27+10:30	Burnt	Merged CheckpointData back into PointerData and cleaned up TryDump/TryInject respectively. Also added CanExecute to dump and inject, not sure if should keep.
+1602e9e25f9a37c95c69c651a244b4a8697b0d26	2022-10-11T01:22:52+10:30	Burnt	Implemented Checkpoint Injection (only tested for H1 so far)
+8f3a676a229914e7c7eeab8007ce7d8dad616a6e	2022-10-10T13:22:37+10:30	Burnt	SaveFolders can be moved but it's a little weird
+6563b7513144a571e43da08d4c48121205e156c5	2022-10-10T01:06:53+10:30	Burnt	Checkpoint moving finally works properly now, instead of just swapping the dragndrop pair.
+cd3d5e39047b415fc974b07c1e5792bd76eba659	2022-10-09T01:04:47+10:30	Burnt	Can now drag and drop checkpoints to reorder them
+b20c287171f640f93c0566d7890a8011a3c11090	2022-10-08T20:49:51+10:30	Burnt	Dumping is actually functional now. Implemented CurrentHaloState.
+d6173ffad0793159f94d51370187c1b3ef5843d4	2022-10-07T16:20:49+10:30	Burnt	working on Dump Checkpoint functionality
+a9dd4a607490727f7c73ccd0e34ad93be5c14554	2022-10-07T14:00:08+10:30	Burnt	FolderExplorer now has scroll bar when list too long
+8a3cc74025ae62571b9c2e795df78aabdfa687e4	2022-10-07T13:43:28+10:30	Burnt	FolderExplorer hooked up to checkpoint model. Also always (initially) expanded, always has a selected item, and rememebers your selected folder on tab changed.
+a562fa844d3a95d3bdec7869ceea5b8eadd99c36	2022-10-07T03:21:12+10:30	Burnt	DateTime and LevelImage converters working. Only make one CheckpointFileDecoder. Folder explorer kinda mostly works now, though I haven't hooked it up to checkpointModel yet
+ca4f5c7a3a32b009f2c72140ab0b1fbff0839256	2022-10-07T00:37:45+10:30	Burnt	cleaned up PointerData and CheckpointData
+9632407f14c730e8b75c9eb703da0a99bafd3023	2022-10-06T15:42:30+10:30	Burnt	Added images, some converter cleanup
+a2222e06ce99fa1bb4f52d80e141cf316387a62a	2022-10-06T14:08:20+10:30	Burnt	cleaned up CheckpointFileDecoder
+bb9f5b01e495b1664fddd2b57fcc9795ab301452	2022-10-05T22:25:05+10:30	Burnt	Got a bunch of checkpoint file reading working.
+caf2651cdd19910294a4cff14a1cad2c7d388234	2022-10-05T20:50:16+10:30	Burnt	Dispatcher invoking to fix multithreads trying to interact with observablecollections
+09a40463d83d9eceea02a96f89fcf1b1bc136197	2022-10-05T19:19:05+10:30	Burnt	FolderExplorer working
+86422615e701565f2d1cf68773de9eac652877ca	2022-10-04T00:13:05+10:30	Burnt	nearly got treeview working
+a28365b211a3b3ec57b4c988cf7efa72d2aff0ce	2022-10-03T13:02:55+10:30	Burnt	Reorganising folders
+c62a1f962de54d563b1b0d12e4135eef3ac8ca4e	2022-10-03T12:26:24+10:30	Burnt	Got the hierarchy between models and viewmodels figured out, I think
+dac4e98511ebafac6946f88a131114d99c044256	2022-10-02T23:47:38+10:30	Burnt	implementing some checkpointfile stuff. And thinking about relationship between model and viewmodel
+e21217adb2f4069b0ebb0525bca118a7e7c28e74	2022-10-02T00:45:26+09:30	Burnt	Moving some stuff around to make sense maybe
+20e9486cd4176009560990fca8358dc2634cc51b	2022-09-30T23:31:47+09:30	Burnt	Difficulty and GameTick converters
+86662b1a7c797e89a9575f3418f08a201c4741c0	2022-09-30T16:55:57+09:30	Burnt	hashing out MVVM pattern
+5c90b7673097adb34f60c7bcc27d08f806df9dc7	2022-09-30T13:50:20+09:30	Burnt	Trainer Controls
+61c83cb03d895c3b2a7800453429fefc5bde060b	2022-09-30T03:58:22+09:30	Burnt	Having fun designing UI stuff
+308b5c3577b98985b69b6fbdf3a7b3ec6cfe06be	2022-09-29T01:02:08+09:30	Burnt	HaloState, finishing figuring out bindings/commands
+e7d3f8f8930683fce599f95cbb95093335596f79	2022-09-28T00:46:27+09:30	Burnt	Figured out ICommand stuff sorta
+9da0bdff57e61a0ac6067e738e207c8bc18a093c	2022-09-27T17:45:34+09:30	Burnt	kinda understand xml parsing now
+9cff5ff0ca09f2ceb78a5268d73485f22036df16	2022-09-27T13:41:34+09:30	Burnt	Trying to figure out xml deserialisation of pointers
+a2b733ea5453a94199ed18c8f3585fdb73115ef4	2022-09-27T02:17:42+09:30	Burnt	blank slate, let's try again but simpler
+00af3fe4063f49154f86b6f3eca44a81ec52fdc7	2022-09-25T20:43:50+09:30	Burnt	ughhhhh
+9a31969ad648a456c8609bde71d4987b00a2a8b6	2022-09-25T14:50:41+09:30	Burnt	Experimenting with tree view stuff. Learning from https://wpf-tutorial.com/treeview-control/treeview-data-binding-multiple-templates/
+4f910c785e57b8d61dbed9869ec58a46b29acbda	2022-09-25T03:30:48+09:30	Burnt	experimenting with MVC pattern from this tutorial https://www.codeproject.com/Articles/23241/Using-MVC-to-Unit-Test-WPF-Applications
+58dcc2011db9939423b5d6852cb3e54597c4653b	2022-09-08T19:35:04+09:30	Burnt	test
+e60b49bdb621fa727657dee0b3f56dfb54332dc2	2022-09-04T19:19:26+09:30	Burnt	2969
+922c5912c2c5c4cbd3b16886e8c28f370b8a25c4	2022-07-09T20:35:36+09:30	Burnt	2904 tentative
+0cc567cbb96e9cbee1fe5ab2b9b849be145a21f9	2022-05-14T19:52:02+09:30	Burnt	2862 tentative
+d9e456a3815051ae904f011a9e882465fc895374	2022-05-03T15:32:10+09:30	Burnt	h2 preserve location added
+b673489419d609b3e94e58ae5d6d5ef88d079e10	2022-05-03T02:18:44+09:30	Burnt-o	fixxxxx
+562bdae434a88f5fc49329951068eafe2c0d7663	2022-05-03T01:17:11+09:30	Burnt-o	winstore fix
+2c10b910d3fab808b5f332792590794ba0a7e50a	2022-05-03T01:03:06+09:30	Burnt-o	2845 - no changes
+63b4ba34641c68f01112a629990266013f22a0be	2022-04-17T20:11:22+09:30	Burnt	message fixes
+bcbed75678959a64f72ea48aa2f460832f523ddf	2022-04-17T19:49:19+09:30	Burnt	h4 message
+29990a370dd9f0e544a0b3c54c96b8c8841bc62c	2022-04-17T19:45:50+09:30	Burnt	message fix ?
+8dcad51af0d095adfb2d675a52da7240319e064f	2022-04-17T19:29:51+09:30	Burnt	2835, minor h2 logic changes
+4fa1261ea6d17a784eaa5e361ce6d3d4716983e7	2022-02-21T03:21:35+10:30	Burnt	h3 mp fix
+970274a19304a11ff96bec039dffe06783b8792c	2022-01-29T20:03:51+10:30	Burnt	h2 crash fix
+ed26619f3e7d3871d169520bb3aa7e0064c8d575	2021-12-02T01:09:58+10:30	Burnt-o	2645
+a951578a0f14ccf84ba33cc28c37ee690af5f314	2021-11-20T22:22:52+10:30	Burnt-o	S8
+15c49e7546a578c2f65e4ea63697d93bebeda35b	2021-09-10T18:55:31+09:30	Burnt-o	woops typo
+878f5ecf376eb67c1589435d34ce535e3afcc54e	2021-09-10T18:50:31+09:30	Burnt-o	ver info to 0.9.8
+9420a7c6123ada48f2c590aca6f1f3586f008bf2	2021-09-10T18:48:18+09:30	Burnt-o	reach checkpoint fix to deal with new checksum
+e6bac9982b766a9860de4d2824f3700fb3156c65	2021-07-23T18:29:52+09:30	Burnt-o	winstorefix
+7e10b3288761b637954fee1df0645035e7a0cec4	2021-07-23T17:57:46+09:30	Burnt-o	2448, winstore tentative
+afec9e53a9021cc1fc922edeac13de0ec4102ac0	2021-07-14T23:14:33+09:30	Burnt-o	version number updates
+e9a09aa2cccb163c166cf260dfc3faf72673ca22	2021-07-14T23:04:45+09:30	Burnt-o	Merge pull request #6 from delan/add/remember-sort-settings
+6dea72c7d3718feb3e37860792e68df43388d2f0	2021-07-13T15:58:19+08:00	Delan Azabani	remember sort settings when reopening sort dialog
+156e3abcabb48c297258ff4c38cc962a25da143e	2021-07-09T00:05:27+09:30	Burnt-o	small registerhotkeys error fix, update version numbers to 0.9.7
+91284b7724abdb6e6ac0f7f21844754d358ae6e5	2021-07-08T23:45:14+09:30	Burnt-o	Merge pull request #5 from x-e-r-o/master
+fd2d1ee6ea0a9be66fc7aac19c96646114495f77	2021-07-08T02:10:23-07:00	x-e-r-o	* Added hotkeys for checkpoint/revert/double revert (press escape to unbind). * Added keybind selectors for checkpoint/revert/double revert to settings window. * Removed unnecessary sender and eventargs params from checkpoint/revert/double revert functions.
+dc4d25a9cb7a1e8fa91ea670a27fa4b39c4c99e2	2021-06-26T11:44:29+09:30	Burnt-o	2406 fix hopefully
+dc9284979c4d50f1974425469293124da4e9d1cb	2021-06-25T23:52:42+09:30	Burnt-o	2398 fixes
+6294b5414f77d3dcd5312e42d3016dd8f62d8b28	2021-05-29T19:19:18+09:30	Burnt-o	fix odst fade in
+ec53ef60a0a13ff99a12cf187812727ba848186a	2021-05-01T15:06:57+09:30	Burnt-o	2282 update testing
+63fa3f40dfcba798720ef396efe7dc40c10d14fb	2021-04-13T21:16:10+09:30	Burnt-o	odst winstore revert fix
+67bc4d3db02103e3365b10223c53f8fe03e3d0d0	2021-04-13T20:34:38+09:30	Burnt-o	stupid bugfix
+175d8442a03b39baf2a93cbe6015fe5a635f5236	2021-04-13T20:22:54+09:30	Burnt-o	update for 2241, many bugfixes
+dc08607719b45d882e2a12645948c2b24d27ecdd	2021-01-29T01:24:01+10:30	Burnt-o	update for MCC v2094
+ca4700da4bbddb632769f8aac7ad351d86e442bd	2021-01-07T19:54:51+10:30	Burnt-o	bugfix for levellockout
+768a5749e26c10434a121a1158171bde5e497f2b	2021-01-07T19:24:44+10:30	Burnt-o	0.9.4 release cand (h4 suport, new features)
+e073ab18566475dc04f176df8432eefa257c3e81	2020-12-27T22:15:32+10:30	Burnt-o	levellist image icon options (soon acronym and full name too)
+da3daee116874598e11b2a622cf4287c428b89dc	2020-12-27T20:38:46+10:30	Burnt-o	lockout fixes
+2c3bd1730626fd73f22b9ea2ed88ee68562d29f8	2020-12-27T14:29:08+10:30	Burnt-o	level lockout
+bc42c19b7b927db916daeb161638e7c7b74b4f4f	2020-12-27T01:37:17+10:30	Burnt-o	implemented save/load of window properties. fixed some profile & save bugs.
+fc4a8f31b74e4e322df24d28ea369a408aeefdcf	2020-12-25T14:14:48+10:30	Burnt-o	sortsaves WORKING!
+a7c29552a63cc6a613a86ca190884bd7b9cdf26d	2020-12-22T16:08:10+10:30	Burnt-o	sortsave ui stuff (no implementation yet)
+c92858621ef3e8776d4c00b8682965e9edfcf40b	2020-12-22T15:01:16+10:30	Burnt-o	profile label, open-in-explorer button
+553f65db6a04292dc0e4a7e78071b6c8632624e5	2020-12-22T02:23:33+10:30	Burnt-o	profile/folder system is working
+b7033f684be609776ec3438865dcd72f30993ff5	2020-12-20T19:54:09+10:30	Burnt-o	0.9.3
+26529cd8fee5ac7391b8982cb2097e0f81edf9bc	2020-12-20T16:04:19+10:30	Burnt-o	prerelease cand
+2dc906bb1784293cb1a9044ee1a4e9cf887c33eb	2020-12-20T14:32:26+10:30	Burnt-o	whole buncha shit
+e4ad9a59fbfd20d7eb98f836a53ef01c02500ce7	2020-12-17T18:46:45+10:30	Burnt-o	odst wip stuff
+b383d4bc4c6d0623bef42f2075ba9d29c556fbbf	2020-12-14T15:05:03+10:30	Burnt-o	beta branch with h1 corefolderpath changes, mostly
+7483a223255d02406bed87605317fa0fa14cbb23	2020-12-13T23:06:20+10:30	Burnt-o	h1 corefolder path changes, todo list shit, h1/h3 ui lockouts
+6bdb892726d084548c7079d7ec2b7fe316e7f678	2020-12-10T02:19:08+10:30	Burnt-o	h3 release cand
+8e0150f2828c17bb8a688742a7be865651b6d287	2020-12-10T01:39:40+10:30	Burnt-o	h3 image files
+3a508b66a39544f75911f95353dbb5a7812f2342	2020-12-10T01:03:54+10:30	Burnt-o	h3 pretty much working, just need splash images
+29618246f9fc3975119b2d9083b263787984750e	2020-12-09T16:18:48+10:30	Burnt-o	hc <> uprising, scandata info
+2468f87b34122158183587b89775e4804913be89	2020-12-05T02:33:51+10:30	Burnt-o	winstore fix (stupid typo)
+78354584de49ffd411b224b851ef223b977d29ba	2020-12-04T00:59:22+10:30	Burnt-o	solution bs
+0dab5e8e521b53c50e33477f3b603acd70697267	2020-12-04T00:51:01+10:30	Burnt-o	h2 support, release cand
+51d34ef71bdf2293cab896a2807bae11d9133ccd	2020-12-03T03:52:53+10:30	Burnt-o	Merge branch 'master' of https://github.com/Burnt-o/HaloCheckpointManager
+51de7d47557a282bf906eff247a51c56ae9becfd	2020-12-03T03:51:52+10:30	Burnt-o	started work on h2
+e52e3231946986e949c7f6e2ef13d136b05d99cb	2020-11-22T18:07:11+10:30	Burnt-o	Update README.md
+2f2c73705773bb1e379418cb7f2a5e2160034f16	2020-11-22T17:36:01+10:30	Burnt-o	release cand 3 (fixed profile bug)
+a668ebd1532d7b6e6f4c88bc0ab6bd3062b07c61	2020-11-22T17:25:14+10:30	Burnt-o	just solution stuff (still release cand)
+5d6c02edfe306ccba0b393f2d923ed41313e2866	2020-11-22T17:21:27+10:30	Burnt-o	HCM 0.9.0 release candidate 1
+b2f12057d138c226f4287b304ee9fdbce289151b	2020-11-22T16:44:06+10:30	Burnt-o	h1 offsets
+a5fc22b27590009078cb3c3f2ad151d4619c030f	2020-11-22T16:12:09+10:30	Burnt-o	negative hex number in json support yay
+3d4e8052e477c4b2ec490ed9b327683ca1b3821b	2020-11-22T15:25:43+10:30	Burnt-o	1.1955 offsets file
+5f74b9fcdb4f851b3f0bb68c863b2ff8fc8e9cc2	2020-11-12T23:41:12+10:30	Burnt-o	oops
+21a38085b64ac4f7aaac5b1eeb6f3b71200f8e63	2020-11-12T23:39:51+10:30	Burnt-o	half implemented profiles
+acc448010047631cef5fe240158578355395e3f4	2020-11-12T16:24:33+10:30	Burnt-o	verification bugfix if config doesn't exist
+6b9e9bc549112ba67e1103b50d7f27ae48636215	2020-11-12T16:10:08+10:30	Burnt-o	config/offset verification for new hcm version
+65a9be29e74ee33a0615066ed66c6ee0e5803c03	2020-11-12T16:09:19+10:30	Burnt-o	verification for config/offsets on new hcm version
+290d9604e23df23aa74e47639682976bdf6e8426	2020-11-12T15:36:55+10:30	Burnt-o	finished hcm update checking
+20d29202e1f7fc4f26bdb2866c11327473fbf30b	2020-11-12T15:28:14+10:30	Burnt-o	hm
+9c1d4c6bf768c40d9f820b199b0fd0abf55b8639	2020-11-12T15:27:00+10:30	Burnt-o	gr
+cc4a2bdd04a8a30c6826b09444e0421f3c04f450	2020-11-12T15:19:41+10:30	Burnt-o	testing hcm updates stuff
+58ea849db322cca8548824488c4613151f57e2cf	2020-11-12T04:29:11+10:30	Burnt-o	level check
+1888b19d64ff8aba9dd73c006b871d9426ea4c9a	2020-11-11T21:27:45+10:30	Burnt-o	state indicator check & reach seed readout
+2366edeace8125518a16b3d6a84eecdbce3717f9	2020-11-11T02:58:57+10:30	Burnt-o	removed redundant code in button handlers
+1df86b99c71c5aeb757005b4098b12ef12d50983	2020-11-11T02:28:31+10:30	Burnt-o	cleaned up h1cs code by merging it into general functions
+5d5c4f5166a2f69ec9cb329d44c8fdadbd3c1685	2020-11-11T01:08:30+10:30	Burnt-o	improved error handling for button-functions
+fb2dc1fd6540f9f948e1ffe26885e2139b5355f6	2020-11-10T01:19:39+10:30	Burnt-o	millisecond readout for loa and sel
+8f3e855301d70997fc61d2050588c138c258586c	2020-11-10T00:44:20+10:30	Burnt-o	fix mp map icons & mp diff images (+per game diff images)
+36d80650a8e32c5420d718eb1b5e2192a43f83dc	2020-11-09T02:04:55+10:30	Burnt-o	autoupdater fix
+54e1840521a3e6b39cb2e140932440f80281ee32	2020-11-09T01:42:33+10:30	Burnt-o	mostly functional now?
+6e32eeeb28027f5d2c9ca9a89d76b118f17e894f	2020-11-09T00:43:30+10:30	Burnt-o	refreshsel and levelimage stuff
+ad40240476d2adc6a5299dc26864f0960786a0e6	2020-11-08T17:42:34+10:30	Burnt-o	better mp support
+be37c0d3ebfeb38e81cbd64268199a0ee71057df	2020-11-08T17:15:25+10:30	Burnt-o	level image fixing/adding
+5808a6e023bc487239982e3f3e84a33532ea75b1	2020-11-08T03:05:34+10:30	Burnt-o	reach refreshloa
+33fc8dc9a3fcd31c7db7756ac5df060dcdede089	2020-11-06T01:25:03+10:30	Burnt-o	fixed hr dumping, implementing hr refreshlist stuff
+b563bc771854d15ac87ea78ebd8717bf36d34d10	2020-11-06T00:51:59+10:30	Burnt-o	reach cp dumping
+eead7ab8b4e6ddea2e0faebb13bdcb93b5c55fbb	2020-11-06T00:27:26+10:30	Burnt-o	basic reach functions (cp, rev, dr)
+881b844adff8977d553575797d1d5aca3257cd79	2020-11-05T23:58:04+10:30	Burnt-o	h1 custom message "Core Save... done"... done
+c11c0eb4c963a15bcb2583d834f63edcda76783f	2020-11-05T02:31:17+10:30	Burnt-o	extra validity checks
+9f283d106ef309e8c25e84f19a4c2f30d7c2f0ee	2020-11-05T01:57:03+10:30	Burnt-o	ui lockouts
+f2dab1211a3b9f53922be90169dd9a7b1430c359	2020-11-04T22:41:26+10:30	Burnt-o	basic coresave/load
+eeeb046880ca3d4c0ba7e0d402c70509165ff3ec	2020-11-04T21:59:15+10:30	Burnt-o	added check for admin priv
+d8faaaa8e0bb7e385779fe9f17e289d8fb35d2c3	2020-10-29T03:48:51+10:30	Burnt-o	checking attached game
+a88c38347e1c7b3473e99c2fcf4147fa09df93cf	2020-10-29T02:22:01+10:30	Burnt-o	versioning works! MUWAHAHA
+2ea43c8f7edb62930ba144ffabb6c377195c0ade	2020-10-29T01:38:27+10:30	Burnt-o	ee
+609f3404d9cb2a772ca775b64de8fc2fbada0b0e	2020-10-29T01:23:39+10:30	Burnt-o	more versioning stuff
+e49464d524442cd13799e35b1d47da0bc9ec2aee	2020-10-28T22:07:52+10:30	Burnt-o	started version checking stuff
+0f0d2d36bb4677f851dac43d58ed973b44a75707	2020-10-28T18:08:51+10:30	Burnt-o	oh dear god
+1c2416ab094453613956a031b4f596dc142c60b4	2020-10-28T17:44:10+10:30	Burnt-o	more h1cs cleanup
+c0f6f51f62be77e3851eba5173b35bc5fdbe38b1	2020-10-28T17:33:11+10:30	Burnt-o	cleaning up h1cs
+f795cda35daab42540e6fb233da0ebf934c96301	2020-10-26T16:18:20+10:30	Burnt-o	movetotop/bottom work good
+f29c7961d978e766a6406058d4c28a26d0268162	2020-10-26T15:35:43+10:30	Burnt-o	bababab
+e534d181118f52075d61fa1cd4d09a72f55083ef	2020-10-26T14:15:11+10:30	Burnt-o	ui cleanup, move-to-top/bottom implemented
+9df5f426e9b1794aa6107cb8643e1509ea3639bd	2020-10-26T02:32:43+10:30	Burnt-o	Merge branch 'master' of https://github.com/Burnt-o/HaloCheckpointManager
+a4206df2ea9a5d6ed24db12810e967ce3e3afe9c	2020-10-26T02:31:51+10:30	Burnt-o	merge uimockup
+5432b4b6b4cff50a5244bb7ac125ffe43487cb5f	2020-10-26T02:29:10+10:30	Burnt-o	nice
+8428c8a64c130930e3d00009658bd51bf66da75c	2020-10-25T23:19:47+10:30	Burnt-o	yeee
+109ce6704f1a6c371b4dfea33c9f72f18ccc48e5	2020-10-25T22:22:47+10:30	Burnt-o	moooo
+0e9ea001aa13d0c65108064cfb2a1a9358cd8d10	2020-05-22T17:27:01+09:30	Burnt-o	Merge pull request #4 from Scaless/master
+07e5a7d5052247fcea54ecf48683934fe9cf1156	2020-05-20T16:03:39-04:00	Scales	Update AboutWindow.xaml
+91afe6b16702280295a0feda5325b84bb6c4908f	2020-05-16T02:17:18+09:30	Burnt	fixed EndOfStreamException
+5e054f9c3613238115dc7063d2bf78c62df0053b	2020-05-16T01:32:23+09:30	Burnt	disabling h1cp and h2cp
+2f7b43ce63e1c5219c1330388f675ce6a0a5d719	2020-05-16T01:19:37+09:30	Burnt	autoshow About on firstrun
+6b7e8a59c0f4fad81ce4761ea041c65169588c9e	2020-05-13T18:06:04+09:30	Burnt	more ui clarity
+71f7a7c5885d2fdb9f88af5e888cc67242ee6b5f	2020-05-13T16:34:50+09:30	Burnt	moving ui stuff for clarity
+08ae5e6aa704fd7d10a9fd2e34c7832fe52eb830	2020-05-13T15:19:02+09:30	Burnt-o	Create README.md
+9b29ab4bf65ad28a71c754248b3f0232bdbabdcc	2020-05-13T15:05:26+09:30	Burnt	more about cleanup
+99fe15739b565dd194d1a52577054e39f9ca877c	2020-05-13T15:03:15+09:30	Burnt	h2 support (need to divide ticks/2 if h2)
+1aa26b9c0053d68bfa141c92af720a9fe4d6b9f1	2020-05-13T14:08:25+09:30	Burnt	about page cleanup
+2e570253068e557b5872d5c93e0f5a0d5f5e5374	2020-05-13T04:51:01+09:30	Burnt	columndefinition fix, target 64bit
+c9480881c43ec461dd577da6dedf8d340c23a2bc	2020-05-13T04:31:56+09:30	Burnt	added ico
+53f68fd327e3d5dc8ebe7bc1493648fb5f52208c	2020-05-13T04:01:43+09:30	Burnt-o	Merge pull request #3 from Scaless/master
+13aa0eb20dfc0f11618151b565a784192ddd0566	2020-05-12T14:14:22-04:00	Scales	Merge remote-tracking branch 'upstream/master'
+2142cc89dffec01c235ee75e291079d45bffeb1d	2020-05-12T14:08:51-04:00	Scales	Change listviews to use data bindings and update associated callbacks with typed data
+9569832cf133e52fe053b634c221377e97854f94	2020-05-12T10:41:08-04:00	Scales	Clean up settings and about windows
+317bf9b7066565adcce64f0c52058ffaf3282016	2020-05-13T00:04:29+09:30	Burnt	fixed sel/loa difficulty icons
+046ade97cc940bdeddcbfbe2caf4d20e60095f0f	2020-05-12T10:12:15-04:00	Scales	Code Cleanup
+06617ceb58d5e2a00088f6d612634dd174a10762	2020-05-12T21:18:12+09:30	Burnt-o	Merge pull request #2 from Scaless/master
+039fd757a51e20d224159b7ccbd75bf9202031d0	2020-05-12T07:05:44-04:00	Scales	Fix autoconfig setup
+66928683656b4e6fa568b39862db4c5d6390c1e8	2020-05-12T18:58:27+09:30	Burnt	trying to fix null errors
+4018612c1a761bbe73cb6ad94b9428f73e40d645	2020-05-12T17:30:20+09:30	Burnt	prep for halo2 metadata offsets
+147ecbb6d3bedfba59a58e0ef58b22d0da88dc8c	2020-05-12T17:23:33+09:30	Burnt	autodetect paths on first run, targeting 64bit
+dd861ad4b9b49905cbf8a355ef3ba9f8a8cf55fa	2020-05-12T14:33:23+09:30	Burnt	woops whitespace
+964ab43d68143c16bc8d47266b0cb8d79ed96d8c	2020-05-12T14:31:59+09:30	Burnt	close required file after creating it
+4c1dc16238de3188db386f5fe98b20fa50d9d54a	2020-05-12T13:59:32+09:30	Burnt-o	Merge pull request #1 from Scaless/master
+d22758bd4e3f57adcdfb308783abdb97ff4295ef	2020-05-11T16:40:06-04:00	Scales	Don't copy images to output directory
+05569cc9e931fc5ded019befd7672012221ec842	2020-05-11T16:37:16-04:00	Scales	Add type data to loaded file metadata
+8aca6a8192da77dfd01e528a3a902323981ea629	2020-05-11T15:39:57-04:00	Scales	Formatting cleanup
+5652b072c20a330f6ef076d71cc0b79d16e65c7c	2020-05-11T15:06:29-04:00	Scales	Fix Cutscene -> Core Save typo
+e02d5bd1452b40ed8d34484dcd6fc1a1d49bf9a5	2020-05-11T15:01:13-04:00	Scales	Clean up conversion of level codes to names
+24fd56fd1127e8949089907579c1f40a300818a9	2020-05-11T14:45:17-04:00	Scales	Move config to JSON and simplify checks for directory structure
+9a8cbc6d866ac7c0ecce58a40fec5ae9dc82e393	2020-05-11T13:52:13-04:00	Scales	Move images to subfolder
+75d7f28a71534eddef899cdc49f81dccbd103970	2020-05-12T03:02:26+09:30	Burnt	eee
+5aceca1b101c803a4358d6fad958fd4d47322c78	2020-05-12T02:52:23+09:30	mauri	Add .gitignore and .gitattributes.

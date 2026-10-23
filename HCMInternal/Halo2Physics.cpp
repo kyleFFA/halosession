@@ -1,0 +1,565 @@
+#include "pch.h"
+#include "Halo2Physics.h"
+#include "SettingsStateAndEvents.h"
+#include "IMessagesGUI.h"
+#include "DirPathContainer.h"
+#include "RuntimeExceptionHandler.h"
+#include "IMCCStateHook.h"
+#include "GameTickEventHook.h"
+#include "IMakeOrGetCheat.h"
+#include "MultilevelPointer.h"
+#include "KeepArmedController.h"
+#include "PointerDataStore.h"
+#include <filesystem>
+#include <fstream>
+#include <sstream>
+
+namespace
+{
+    std::mutex armStatsMutex;
+    std::map<GameState, std::weak_ptr<KeepArmedController>> armControllers;
+	struct H3sbOptions
+	{
+		bool physics;        // the master switch: off = the mod is not loaded, the game is untouched
+		int barriers;        // 0-3, h3sb_barriers.txt
+		bool tick30;
+		bool combos;
+		bool noFallDeaths;
+		bool fly;            // h3sb_fly.txt; works with physics off too (the mod is then loaded for it alone, mode 0)
+		float flySpeed;
+		bool clip;           // h3sb_clip.txt: bottomless clip (HCM's Bottomless Clip toggle); with physics off too, like fly
+		bool ai;             // h3sb_ai.txt: Disable AI; with physics off too
+		bool forge;          // h3sb_forge.txt: Forge objects count as the map (with physics on)
+		bool lines;          // Map grid / Jump spots (PoorboyWorldLines) need the mod's world file: the mod stays loaded (observe mode when alone)
+		bool flyHold;        // "Hold the Fly key to fly": the mod stays loaded between holds (no unload and load at every press)
+	};
+
+	// The one mod in the process, whichever game's cheat instance asks.
+	class H3sbHost
+	{
+		std::mutex mMutex;
+		std::wstring mDir;                          // <PCM folder>\h3sb\ (with the trailing backslash)
+		std::atomic<bool> mUnloadAsked = false;     // mode 9 written: the dll takes itself out within a quarter second
+		PROCESS_INFORMATION mLive{};                // the map window, started from here
+		std::string mLastError;
+		bool mSaidPhysics = false, mSaidFly = false, mSaidClip = false, mSaidAI = false, mSaidLines = false; // what the message log was last told (both games' instances call apply)
+		bool mSpotInUse = false;                    // Save spot was pressed: the mod stays loaded for it (observe mode when nothing else is on)
+
+		// a switch file as a whole: unchanged ones are left alone, a changed one is written beside it and swapped in, so
+		// the mod (which reads the switches the moment it is poked) never sees one half written. A rename refused for a
+		// moment (the mod has the file open) is tried again; at the end the file is written in place as before.
+		void writeText(const wchar_t* name, const std::string& text)
+		{
+			const std::filesystem::path path(mDir + name);
+			{
+				std::ifstream in(path, std::ios::binary);
+				std::string now((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+				if (in.good() || in.eof())
+					if (now == text) return;
+			}
+			const std::filesystem::path temp(mDir + name + std::wstring(L".new"));
+			{
+				std::ofstream f(temp, std::ios::trunc | std::ios::binary);
+				f << text;
+			}
+			for (int i = 0; i < 20; i++)
+			{
+				if (MoveFileExW(temp.c_str(), path.c_str(), MOVEFILE_REPLACE_EXISTING)) return;
+				Sleep(1);
+			}
+			std::error_code ec;
+			std::filesystem::remove(temp, ec);
+			std::ofstream f(path, std::ios::trunc | std::ios::binary);
+			f << text;
+		}
+
+		void writeSwitch(const wchar_t* name, int value) { writeText(name, std::to_string(value)); }
+
+		void writeFly(bool on, float speed)
+		{
+			std::ostringstream s;
+			s.imbue(std::locale::classic());
+			s << (on ? 1 : 0) << ' ' << std::clamp(speed, 0.5f, 100.f);
+			writeText(L"h3sb_fly.txt", s.str());
+		}
+
+		// a line for the message log when physics or fly changed since the last call ("" = nothing new)
+		std::string news(const H3sbOptions& o)
+		{
+			std::string line;
+			if (o.physics != mSaidPhysics) line = o.physics ? "Halo 2 physics on" : "Halo 2 physics off: the game's own physics again";
+			if (o.fly != mSaidFly && !o.flyHold) line += std::string(line.empty() ? "" : ". ") + (o.fly ? "Fly on: stick where you look, jump up, crouch down" : "Fly off");
+			if (o.clip != mSaidClip) line += std::string(line.empty() ? "" : ". ") + (o.clip ? "Bottomless Clip enabled." : "Bottomless Clip disabled");
+			mSaidPhysics = o.physics;
+			mSaidFly = o.fly;
+			if (o.ai != mSaidAI) line += std::string(line.empty() ? "" : ". ") + (o.ai ? "AI disabled" : "AI back on");
+			mSaidClip = o.clip;
+			mSaidAI = o.ai;
+			if (o.lines != mSaidLines) line += std::string(line.empty() ? "" : ". ") + (o.lines ? "Map lines on" : "Map lines off");
+			mSaidLines = o.lines;
+			return line;
+		}
+
+		static bool loaded() { return GetModuleHandleW(L"h3sb.dll") != nullptr; }
+
+		// the mod reads its switch files now instead of within the next quarter second (a build without h3sb_poke: as before)
+		static void poke()
+		{
+			HMODULE pinned = nullptr;
+			if (!GetModuleHandleExW(0, L"h3sb.dll", &pinned) || !pinned) return;
+			if (auto fn = (int (*)())GetProcAddress(pinned, "h3sb_poke")) fn();
+			FreeLibrary(pinned);
+		}
+
+		static bool running(PROCESS_INFORMATION& pi) { return pi.hProcess && WaitForSingleObject(pi.hProcess, 0) == WAIT_TIMEOUT; }
+
+		static void closeHandles(PROCESS_INFORMATION& pi)
+		{
+			if (pi.hProcess) CloseHandle(pi.hProcess);
+			if (pi.hThread) CloseHandle(pi.hThread);
+			pi = PROCESS_INFORMATION{};
+		}
+
+		std::string fail(std::string message)
+		{
+			mLastError = message;
+			return message;
+		}
+
+		// a file of ours that was unzipped but is gone: antivirus programs quarantine the helper (and could the dll)
+		static constexpr const char* kAntivirusFix = "Restore it in Windows Security > Virus & threat protection > Protection history "
+			"(or your antivirus's quarantine) and allow it, or unzip Session again.";
+
+		static std::string missingFile(const std::wstring& path)
+		{
+			return std::format("Halo 2 physics: {} is missing. Your antivirus probably removed it (a false alarm). {}",
+				std::filesystem::path(path).string(), kAntivirusFix);
+		}
+
+		void startHelper(PROCESS_INFORMATION& pi, const std::wstring& args)
+		{
+			if (running(pi)) return;            // already open (both games' cheat instances get the same button press)
+			closeHandles(pi);
+			const std::wstring exe = mDir + L"helper\\h3sb_helper.exe";
+			if (!std::filesystem::exists(exe)) throw HCMRuntimeException(fail(missingFile(exe)));
+			std::wstring cmd = L"\"" + exe + L"\" " + args;
+			STARTUPINFOW si{};
+			si.cb = sizeof(si);
+			if (!CreateProcessW(exe.c_str(), cmd.data(), nullptr, nullptr, FALSE, 0, nullptr, mDir.c_str(), &si, &pi))
+			{
+				const DWORD error = GetLastError();
+				pi = PROCESS_INFORMATION{};
+				if (error == ERROR_VIRUS_INFECTED || error == ERROR_VIRUS_DELETED)
+					throw HCMRuntimeException(fail(std::format("Halo 2 physics: your antivirus blocked {} (a false alarm). {}", std::filesystem::path(exe).string(), kAntivirusFix)));
+				throw HCMRuntimeException(fail(std::format("Halo 2 physics: could not start the helper (error {})", error)));
+			}
+		}
+
+		// the helpers close themselves when h3sb_helpers.stop is newer than they are (the Stop script's way: they may
+		// run as administrator, a closer that is not one cannot end them); an old world-lines window goes too
+		void stopHelpersLocked()
+		{
+			if (!mDir.empty())
+			{
+				std::ofstream f(std::filesystem::path(mDir + L"h3sb_helpers.stop"), std::ios::trunc);
+				f << "stop asked by Poorboys Checkpoint Manager";
+			}
+			closeHandles(mLive);
+		}
+
+	public:
+		void setDir(const std::string& pcmDir)
+		{
+			std::scoped_lock lock(mMutex);
+			if (mDir.empty()) mDir = (std::filesystem::path(pcmDir) / L"h3sb").wstring() + L"\\";     // pcmDir may end in a slash
+		}
+
+		// returns a line for the message log ("" = nothing worth saying)
+		std::string apply(const H3sbOptions& o)
+		{
+			std::scoped_lock lock(mMutex);
+			if (mDir.empty()) return "";
+			if (!o.physics && !o.fly && !o.clip && !o.ai && !o.lines && !o.flyHold && !mSpotInUse)
+			{
+				if (loaded() && !mUnloadAsked)
+				{
+					writeFly(false, o.flySpeed);
+					writeSwitch(L"h3sb_clip.txt", 0);
+					writeSwitch(L"h3sb_ai.txt", 0);
+					writeSwitch(L"h3sb_mode.txt", 9);
+					mUnloadAsked = true;
+				}
+				return news(o);
+			}
+			const std::wstring dll = mDir + L"h3sb.dll";
+			if (!std::filesystem::exists(dll)) throw HCMRuntimeException(fail(missingFile(dll)));
+			if (loaded() && mUnloadAsked)
+			{
+				// still on its way out from a moment ago: let it finish, then load it again
+				for (int i = 0; i < 40 && loaded(); i++) Sleep(100);
+				if (loaded()) throw HCMRuntimeException(fail("Halo 2 physics: the mod did not unload; switch it on again in a moment"));
+			}
+			mUnloadAsked = false;
+			// fly, bottomless clip, the map grid or the spot alone (physics off): the mod in observe mode with the game's own
+			// barriers, tick rate, melee and falls
+			writeSwitch(L"h3sb_tick.txt", o.physics && o.tick30 ? 30 : 60);
+			// the Halo 2 body at the game's own tick rate (60 tick bouncing at 60): clears a 30 left by the 1.3.2 / 1.3.3
+			// tests' "Halo 2 at 30, game at 60" switch
+			writeSwitch(L"h3sb_h2rate.txt", 0);
+			writeSwitch(L"h3sb_barriers.txt", o.physics ? std::clamp(o.barriers, 0, 3) : 0);
+			writeSwitch(L"h3sb_combos.txt", o.physics && o.combos ? 1 : 0);
+			writeSwitch(L"h3sb_falls.txt", o.physics && o.noFallDeaths ? 1 : 0);
+			writeSwitch(L"h3sb_clip.txt", o.clip ? 1 : 0);
+			writeSwitch(L"h3sb_ai.txt", o.ai ? 1 : 0);
+			writeSwitch(L"h3sb_forge.txt", o.physics && o.forge ? 1 : 0);
+			writeFly(o.fly, o.flySpeed);
+			writeSwitch(L"h3sb_mode.txt", o.physics ? 3 : 0);
+			if (loaded())
+			{
+				poke();                         // it reads the switches four times a second; now, for hold to fly
+				return news(o);
+			}
+			// a new session: the mod records every tick (about 120 MB per half hour), clear the last session's first
+			std::error_code ec;
+			for (auto& e : std::filesystem::directory_iterator(mDir, ec))
+			{
+				const std::wstring name = e.path().filename().wstring();
+				if (name.starts_with(L"h3sb_ticks_") && e.path().extension() == L".bin") std::filesystem::remove(e.path(), ec);
+			}
+			if (!LoadLibraryW(dll.c_str())) throw HCMRuntimeException(fail(std::format("Halo 2 physics: could not load h3sb.dll (error {})", GetLastError())));
+			mLastError.clear();
+			return news(o);
+		}
+
+		void openMapWindow(bool callouts)
+		{
+			std::scoped_lock lock(mMutex);
+			if (mDir.empty()) return;
+			startHelper(mLive, L"live \"" + mDir + L".\" --with-game --data \"" + mDir + L"spots\"" + (callouts ? L"" : L" --no-sound"));
+		}
+
+		void closeHelpers()
+		{
+			std::scoped_lock lock(mMutex);
+			stopHelpersLocked();
+		}
+
+		// PCM is closing: the mod and its windows go too
+		void shutdown()
+		{
+			std::scoped_lock lock(mMutex);
+			if (mDir.empty()) return;
+			if (loaded() && !mUnloadAsked)
+			{
+				writeSwitch(L"h3sb_mode.txt", 9);
+				mUnloadAsked = true;
+			}
+			stopHelpersLocked();
+		}
+
+		int readStatus(H3sbStatus* out)
+		{
+			if (mUnloadAsked) return 0;
+			// holds the dll while it is called, so it cannot go away under the call (it unloads itself from its own thread)
+			HMODULE pinned = nullptr;
+			if (!GetModuleHandleExW(0, L"h3sb.dll", &pinned) || !pinned) return 0;
+			int ok = 0;
+			if (auto fn = (int (*)(H3sbStatus*))GetProcAddress(pinned, "h3sb_status")) ok = fn(out);
+			FreeLibrary(pinned);
+			return ok;
+		}
+
+		bool isLoaded() { return loaded() && !mUnloadAsked; }
+
+		// 1 armed on the next tick, 0 no Halo 2 body to arm, -1 the mod is not loaded
+		int arm()
+		{
+			if (mUnloadAsked) return -1;
+			HMODULE pinned = nullptr;
+			if (!GetModuleHandleExW(0, L"h3sb.dll", &pinned) || !pinned) return -1;
+			int ok = 0;
+			if (auto fn = (int (*)())GetProcAddress(pinned, "h3sb_arm")) ok = fn();
+			FreeLibrary(pinned);
+			return ok;
+		}
+
+		// from the first Save spot on the mod stays loaded for the spot
+		void useSpot()
+		{
+			std::scoped_lock lock(mMutex);
+			mSpotInUse = true;
+		}
+
+		// Save spot (1) / Back to spot (2): 1 queued for the next tick the player is on foot, 0 the mod refused it,
+		// -1 the mod is not loaded
+		int spot(int what)
+		{
+			if (mUnloadAsked) return -1;
+			HMODULE pinned = nullptr;
+			if (!GetModuleHandleExW(0, L"h3sb.dll", &pinned) || !pinned) return -1;
+			int ok = 0;
+			if (auto fn = (int (*)(int))GetProcAddress(pinned, "h3sb_spot")) ok = fn(what);
+			FreeLibrary(pinned);
+			return ok == 1 ? 1 : 0;
+		}
+
+		std::string lastError()
+		{
+			std::scoped_lock lock(mMutex);
+			return mLastError;
+		}
+	};
+
+	H3sbHost& host()
+	{
+		static H3sbHost h;
+		return h;
+	}
+}
+
+class Halo2Physics::Halo2PhysicsImpl
+{
+private:
+	GameState mGame;
+	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+
+    std::shared_ptr<KeepArmedController> mKeepArmed = std::make_shared<KeepArmedController>();
+    std::shared_ptr<ObservedEvent<GameTickEvent>> mArmTicks;
+    std::shared_ptr<MultilevelPointer> mMenuCursor;
+    std::unique_ptr<ScopedCallback<GameTickEvent>> mArmTickCallback;
+    std::mutex mArmSubscriptionMutex;
+    struct ArmCallbackLife { std::mutex mutex; bool closing=false; };
+    std::shared_ptr<ArmCallbackLife> mArmCallbackLife=std::make_shared<ArmCallbackLife>();
+    ScopedCallback<ToggleEvent> mKeepArmCallback, mOverlayArmCallback, mPauseArmCallback;
+
+    void updateKeepArmed(bool enabled)
+    {
+        std::lock_guard subscriptionLock(mArmSubscriptionMutex);
+        mKeepArmed->setEnabled(false); // drain any in-flight request before disabling/rebinding
+        mArmTickCallback.reset();
+        if (!enabled) return;
+        if (!mArmTicks || !mMenuCursor)
+        {
+            auto state = mccStateHookWeak.lock();
+            if (state && state->isGameCurrentlyPlaying(mGame))
+                say("Keep armed unavailable: game tick or menu detection could not initialize");
+            return;
+        }
+        const int nativeGame = physicsStatusGame(mGame == GameState(GameState::Value::Halo3ODST)
+            ? PhysicsHostGame::Halo3ODST : mGame == GameState(GameState::Value::HaloReach)
+            ? PhysicsHostGame::HaloReach : PhysicsHostGame::Halo3);
+        mKeepArmed->setEnabled(true);
+        mArmTickCallback = mArmTicks->subscribe([controller=mKeepArmed, stateWeak=mccStateHookWeak,
+            cursor=mMenuCursor, game=mGame, nativeGame](uint32_t) {
+            controller->tick(nativeGame, GetTickCount64(), [&]() {
+                auto state = stateWeak.lock();
+                if (!state || !state->isGameCurrentlyPlaying(game)) return false;
+                uint8_t menuCursor = 1;
+                if (!cursor->readData(&menuCursor) || menuCursor != 0) return false;
+                DWORD foregroundPid=0;
+                GetWindowThreadProcessId(GetForegroundWindow(), &foregroundPid);
+                if(foregroundPid != GetCurrentProcessId()) return false;
+                CURSORINFO info{sizeof(CURSORINFO)};
+                return GetCursorInfo(&info) && !(info.flags & CURSOR_SHOWING);
+            }, [](H3sbStatus* out) { return host().readStatus(out); }, [] { return host().arm(); });
+        });
+    }
+
+	ScopedCallback<ToggleEvent> mPhysicsCallback, mTick30Callback, mCombosCallback, mNoFallDeathsCallback, mFlyCallback, mClipCallback, mAICallback, mForgeCallback, mLinesCallback, mWireViewCallback, mSpotsCallback, mFlyHoldCallback;
+	ScopedCallback<eventpp::CallbackList<void(float&)>> mFlySpeedCallback;
+	ScopedCallback<eventpp::CallbackList<void(int&)>> mBarriersCallback;
+	ScopedCallback<ActionEvent> mArmCallback, mMapWindowCallback, mCloseHelpersCallback;
+	ScopedCallback<ActionEvent> mSpotSaveCallback, mSpotBackCallback;
+
+	H3sbOptions options()
+	{
+		auto s = mSettingsWeak.lock();
+		if (!s) throw HCMRuntimeException("Halo 2 physics: settings went away");
+		return H3sbOptions{ s->h2pPhysicsToggle->GetValue(), s->h2pBarriers->GetValue(), s->h2pTick30Toggle->GetValue(), s->h2pCombosToggle->GetValue(),
+			s->h2pNoFallDeathsToggle->GetValue(), s->h2pFlyToggle->GetValue(), s->h2pFlySpeed->GetValue(), s->bottomlessClipToggle->GetValue(),
+			s->h2pDisableAIToggle->GetValue(), s->h2pForgeBounceToggle->GetValue(), s->wireViewToggle->GetValue() || s->h2pWorldLinesToggle->GetValue() || s->h2pJumpSpotsToggle->GetValue(),
+			s->h2pFlyHoldToggle->GetValue() };
+	}
+
+	void say(const std::string& line)
+	{
+		if (line.empty()) return;
+		if (auto messages = messagesGUIWeak.lock()) messages->addMessage(line);
+		PLOG_INFO << line;
+	}
+
+	template <typename F>
+	void guarded(F f)
+	{
+		try
+		{
+			f();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+	bool originalHalo2Active() const
+    {
+        auto mcc = mccStateHookWeak.lock();
+        return mcc && (mcc->getCurrentMCCState().currentGameState == GameState(GameState::Value::Halo2) || mcc->getCurrentMCCState().currentGameState == GameState(GameState::Value::Halo2MP));
+    }
+    void onChange() { if (originalHalo2Active()) return; guarded([this]() { auto opts=options(); mKeepArmed->setPhysics(opts.physics); say(host().apply(opts)); }); }
+
+	// both games' instances get the press: only the one whose game is running answers it
+	void onArm()
+	{
+		auto mcc = mccStateHookWeak.lock();
+		if (!mcc || !mcc->isGameCurrentlyPlaying(mGame)) return;
+		const int r = host().arm();
+		say(r == 1 ? "Arm requested (applies on the next physics tick)" : r == 0 ? "Not armed: the Halo 2 body is not driving the player right now (in a vehicle, dead or loading?)"
+			: "Not armed: turn Halo 2 physics on first");
+	}
+
+	// Save spot: works with Halo 2 physics off too (the mod is loaded for it in observe mode)
+	void onSpotSave()
+	{
+		auto mcc = mccStateHookWeak.lock();
+		if (!mcc || !mcc->isGameCurrentlyPlaying(mGame)) return;
+		guarded([this]() {
+			host().useSpot();
+			if (!host().isLoaded()) if (!originalHalo2Active()) say(host().apply(options()));      // throws when it cannot be loaded
+			H3sbStatus s{};
+			s.size = (int32_t)sizeof(H3sbStatus);
+			const bool armed = host().readStatus(&s) == 1 && s.have_body && s.armed;
+			// the mod keeps the view with the spot too (HCM's view-angle pointer reads a checkpoint copy, so it fails in
+			// multiplayer and is stale in campaign)
+			if (host().spot(1) != 1)
+			{
+				say("Spot not saved: the Halo 2 physics mod is not running");
+				return;
+			}
+			say(armed ? "Spot saved (armed)" : "Spot saved");
+		});
+	}
+
+	void onSpotBack()
+	{
+		auto mcc = mccStateHookWeak.lock();
+		if (!mcc || !mcc->isGameCurrentlyPlaying(mGame)) return;
+		guarded([this]() {
+			H3sbStatus s{};
+			s.size = (int32_t)sizeof(H3sbStatus);
+			if (host().readStatus(&s) != 1 || s.size < (int32_t)sizeof(H3sbStatus) || !s.spot)
+			{
+				say("No spot saved on this map yet: Save spot first");
+				return;
+			}
+			if (host().spot(2) != 1)
+			{
+				say("Back to spot: the Halo 2 physics mod is not running");
+				return;
+			}
+			say(s.spot_armed ? "Back to spot (armed)" : "Back to spot");
+		});
+	}
+
+public:
+	Halo2PhysicsImpl(GameState game, IDIContainer& dicon) :
+		mGame(game),
+		mSettingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+        mKeepArmCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pKeepArmedToggle->valueChangedEvent,
+            [this, life=mArmCallbackLife](bool& value) { std::lock_guard lock(life->mutex); if(!life->closing)guarded([&]() { updateKeepArmed(value); }); }),
+        mOverlayArmCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->GUIWindowOpen->valueChangedEvent,
+            [controller=mKeepArmed](bool& value) { controller->setOverlay(value); }),
+        mPauseArmCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->togglePause->valueChangedEvent,
+            [controller=mKeepArmed](bool& value) { controller->setPaused(value); }),
+		mPhysicsCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pPhysicsToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mTick30Callback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pTick30Toggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mCombosCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pCombosToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mNoFallDeathsCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pNoFallDeathsToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mBarriersCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pBarriers->valueChangedEvent, [this](int&) { onChange(); }),
+		mFlyCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pFlyToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mFlySpeedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pFlySpeed->valueChangedEvent, [this](float&) { onChange(); }),
+		mClipCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->bottomlessClipToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mAICallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pDisableAIToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mForgeCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pForgeBounceToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mWireViewCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->wireViewToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mLinesCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pWorldLinesToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mSpotsCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pJumpSpotsToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mFlyHoldCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pFlyHoldToggle->valueChangedEvent, [this](bool&) { onChange(); }),
+		mArmCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pArmEvent, [this]() { onArm(); }),
+		mMapWindowCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pOpenMapWindowEvent, [this]() {
+			guarded([this]() { host().openMapWindow(mSettingsWeak.lock()->h2pCalloutsToggle->GetValue()); });
+			}),
+		mCloseHelpersCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->h2pCloseHelpersEvent, [this]() { host().closeHelpers(); }),
+		mSpotSaveCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->spotSaveEvent, [this]() { onSpotSave(); }),
+		mSpotBackCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->spotBackEvent, [this]() { onSpotBack(); })
+	{
+		host().setDir(dicon.Resolve<DirPathContainer>().lock()->dirPath);
+        { std::lock_guard lock(armStatsMutex); armControllers[mGame]=mKeepArmed; }
+        auto settings=mSettingsWeak.lock();
+        mKeepArmed->setPhysics(settings->h2pPhysicsToggle->GetValue());
+        mKeepArmed->setOverlay(settings->GUIWindowOpen->GetValue());
+        mKeepArmed->setPaused(settings->togglePause->GetValue());
+        try {
+            mArmTicks=resolveDependentCheat(GameTickEventHook)->getGameTickEvent();
+            mMenuCursor=dicon.Resolve<PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>("isCursorShowing");
+            updateKeepArmed(settings->h2pKeepArmedToggle->GetValue());
+        } catch(HCMInitException& ex) { PLOG_ERROR << "Keep armed unavailable: " << ex.what(); }
+
+		// switched on last time PCM ran: on again (a missing dll is reported, it does not stop PCM)
+		try
+		{
+			if (!originalHalo2Active()) say(host().apply(options()));
+		}
+		catch (HCMRuntimeException ex)
+		{
+			PLOG_ERROR << ex.what();
+		}
+	}
+
+	~Halo2PhysicsImpl()
+	{
+        { std::lock_guard lock(mArmCallbackLife->mutex); mArmCallbackLife->closing=true; mKeepArmCallback.removeCallback(); }
+        mKeepArmed->stop();
+        { std::lock_guard subscriptionLock(mArmSubscriptionMutex); mArmTickCallback.reset(); }
+		host().shutdown();
+	}
+};
+
+Halo2Physics::Halo2Physics(GameState gameImpl, IDIContainer& dicon)
+	: pimpl(std::make_unique<Halo2PhysicsImpl>(gameImpl, dicon))
+{
+}
+
+Halo2Physics::~Halo2Physics()
+{
+	PLOG_VERBOSE << "~" << getName();
+}
+
+int Halo2Physics::readStatus(H3sbStatus* out) { return host().readStatus(out); }
+
+bool Halo2Physics::isLoaded() { return host().isLoaded(); }
+
+std::string Halo2Physics::lastError() { return host().lastError(); }
+
+std::string Halo2Physics::keepArmedStats(GameState game)
+{
+    std::shared_ptr<KeepArmedController> controller;
+    { std::lock_guard lock(armStatsMutex); auto i=armControllers.find(game); if(i!=armControllers.end())controller=i->second.lock(); }
+    if(!controller)return "Keep armed controller unavailable";
+    auto s=controller->stats();
+    const double seconds=s.lastMs>=s.firstMs ? (s.lastMs-s.firstMs)/1000.0 : 0;
+    return std::format("Sample span: {:.1f}s\nTick callbacks: {}\nSuspended/invalid: {}\nAlready armed (no request): {}\nArm requests: {} (accepted {})\nRequests near rest: {}\nRequests per sampled second: {:.2f}\nCounts are requests, not measured CPU cost or verified body writes.",
+        seconds,s.ticks,s.suspended,s.alreadyArmed,s.requests,s.accepted,s.idleRequests,seconds>0?s.requests/seconds:0);
+}
+void Halo2Physics::resetKeepArmedStats(GameState game)
+{
+    std::shared_ptr<KeepArmedController> controller;
+    { std::lock_guard lock(armStatsMutex); auto i=armControllers.find(game); if(i!=armControllers.end())controller=i->second.lock(); }
+    if(controller)controller->resetStats();
+}

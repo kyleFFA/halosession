@@ -1,0 +1,17 @@
+{
+  "baseline": "Original Quick Menu beta",
+  "purpose": "Compatibility hashes only; not redistribution permission",
+  "required_components": {
+    "h3sb/h3sb.dll": "67203112695C2BFABEF17199781DEF201F990184B3DD82A2BD49CA14C3A9F136",
+    "h3sb/helper/h3sb_helper.exe": "EB6818731A8FDC2311AA2A216F97E34529AC62B24FF6138A19FFB8E8F8C2C650",
+    "HCMInterproc.dll": "D898BBDE043295DCE1A6ED36F519E464A15649DD94DDF41ED2B521503372230C",
+    "PCMSpeedhack.dll": "22542E2FD074557E3468DA2EC18AA6CB1181A83AAC3DE38805B08100492CD7BB"
+  },
+  "additional_files": "The complete compatible helper dependency tree and required static data must accompany the physics DLL; these four hashes are not a complete release manifest.",
+  "implementation_available_here": {
+    "HCMInterproc": "Source included",
+    "PCMSpeedhack": "HCMSpeedhack source included; new build not runtime-validated",
+    "h3sb_and_helper": "Buildable implementation not present in this source tree"
+  },
+  "static_runtime_manifest": "runtime-data-manifest.json"
+}

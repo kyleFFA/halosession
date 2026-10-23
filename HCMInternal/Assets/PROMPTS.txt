@@ -1,0 +1,15 @@
+Session UI beta artwork - built-in image_gen tool, transparent_background=true.
+Both outputs copied into this workspace without changing their generated pixels/alpha.
+Approved reference: the original Session ring/cloud concept generated for this project.
+Concept sheet: original Session design, panel A.
+
+session-ring.png
+Use case: precise-object-edit. Create a production artwork layer for the Session in-game ImGui UI from this approved reference. Deliver ONLY the tall, complete oblique Halo ring and the airy clouds spilling outside and weaving around its silhouette, in the same beautiful fine graphite pencil / architectural sketch and pale blue watercolor style with delicate cyan rim highlights. Remove ALL text, letters, tabs, labels, keycaps, buttons, toggles, shadows behind labels, and UI. The central opening must be EMPTY AND TRANSPARENT so a separate cloud/text layer can be placed behind the ring. Exterior genuinely transparent too, alpha PNG, no black/white/checkerboard rectangle. Keep the ring whole and comfortably inside the image bounds, tall gently oblique oval like reference, broad central opening suited to real readable controls. 4:5 portrait canvas. Use canvas normalized geometry: outer ring approximately x=.12..88,y=.03..97; large interior opening x=.29..80,y=.17..84, with generous blank central area x=.31..77,y=.25..78. Clouds may feather beyond the ring silhouette; do not obscure the central blank opening. No rectangular frame, no typography, no characters or added scenery. Fine pencil detail, soft luminous cloud edges, restrained cyan accents, preserve approved sketch identity. This asset is the transparent foreground ring layer, not a UI mockup.
+
+session-clouds.png
+Use case: precise-object-edit. Production transparent PNG layer for a real ImGui overlay, matching the pale cloud/pencil texture of the approved reference. Output ONLY a softly irregular, tall oval bed of ivory-white clouds and faint powder-blue watercolor haze, with subtle graphite cloud outlines near the OUTER edges. No ring, no metal, no UI, absolutely NO text, title, buttons, key labels, toggles, typography or rectangular panel. This is the separate INNER CLOUD layer that sits behind a transparent Halo ring. 4:5 portrait canvas. The cloud oval occupies roughly x=.20..87 and y=.10..94, with a broad nearly opaque quiet off-white center in x=.29..80,y=.23..80 to support dark real text; delicate organic cloud lobes and feathers spill around the oval outline and fade to REAL ALPHA outside. Keep center low contrast and calm, not blue-dark, no giant dark shadows. Beautiful fine pencil/watercolor sketch style like reference, softly luminous clouds. Exterior fully transparent alpha, not black or checkerboard. No rectangular boundaries or frame. Preserve high central opacity for readable overlay controls.
+
+Selected assets are separate RGBA PNGs, 1122x1402. Alpha checks: both outer corner=0;
+ring center=0; cloud center=252. They are embedded as PNG resources 6001 and 6002
+in PCMInternal.dll and also supplied separately for review. Runtime text and controls
+are real ImGui elements, not pixels in these PNGs. No CLI/API fallback was used.

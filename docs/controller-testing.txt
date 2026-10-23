@@ -1,0 +1,54 @@
+Quick Menu beta - real-game acceptance is pending
+
+Offline evidence is not a substitute for this test. No automatic injection,
+restart, action execution or modification of the current live session occurred.
+
+Record controller model, Xbox/PS4/PS5, USB/Bluetooth, mapper and input route,
+XInput slot or native axis choices, Halo title, map and local/host/client mode.
+
+First prove input coexistence with an Empty slot selected:
+1. Hold activation, move with LEFT stick and turn RIGHT stick around the wheel.
+   Player movement and game simulation should continue; camera should stay still.
+2. Release in center. The wheel closes, no action fires, and normal camera turning
+   returns immediately on the next poll. Repeat after several seconds holding.
+3. Repeat with Xbox/XInput, PlayStation mapped to XInput, and native PlayStation
+   with calibrated right axes. Test USB and Bluetooth where applicable. Confirm
+   native axis setup never affects left-stick movement or trigger values.
+
+Then test deliberate actions in a suitable local practice session:
+- Five distinct fixed slots, prominent center label, clear selected/disabled
+  state, configurable dead zone and sensitivity. One release -> one action.
+- Hold for several seconds: no repeated action. Recenter: no action. Sector-edge
+  stick noise should not rapidly switch the selection.
+- Verify Save/Back/Auto-crouch individually through the existing safe session
+  guards. H2 distance remains 0.2; H3/ODST/Reach remain 0.4, including pitch.
+- Toggle state display tracks full-menu/keyboard changes. Fly respects Hold Fly.
+  H2 30 tick is disabled until its Practice tickrate control is enabled.
+- Unsupported actions stay in their assigned sectors and cannot execute.
+
+Cancel while a sector is selected, then release:
+- Controller unplug/reconnect, focus loss, death/respawn, loading, title/map/session
+  transition and opening the full menu/rebind/modal. No delayed action should
+  execute. Reconnect/return while held must require release before rearming.
+- Existing keyboard hotkeys and rebound full Menu toggle still work. Activation
+  overlap with the game's normal action is expected; test the actual binding.
+
+Placement/readability:
+- Drag full menu to bottom-right and shrink it; close settings and summon wheel.
+  Wheel must remain proportional inside the ring at that saved placement.
+- Resize/reposition again, change resolution/viewport and inspect all five labels,
+  highlights, center label and clipping. Minimum practical menu is 620 x 600.
+  A tiny viewport may reduce readability; it must not jump to screen center.
+
+Pause behavior:
+- Wheel never requests pause in solo campaign, multiplayer or co-op.
+- Full settings menu does not pause multiplayer or campaign co-op. Automatic
+  menu pause is offered only in verified solo original-H2 campaign.
+- An independently enabled Pause remains enabled when closing either menu.
+  The game's own native pause menu is independent of this wheel.
+
+Shutdown/reconnect:
+- After deliberate testing, close Session normally. Camera and movement must be
+  normal. Watch for cleanup errors; do not force reload while cleanup is pending.
+- Test a later fresh-session reconnect separately. Existing working/default/
+  rollback builds remain the fallback; do not promote this beta on offline proof.

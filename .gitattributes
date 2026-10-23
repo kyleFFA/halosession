@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.png binary
+*.cpp diff
+*.h diff
+*.hpp diff
+*.xml diff
+*.vcxproj diff
