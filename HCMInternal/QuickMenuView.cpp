@@ -3,16 +3,16 @@
 namespace quickmenu {
 void renderWheel(const SessionSketch::State& s,const WheelView& v) {
  SessionSketch::backdrop(s);
- const auto g=geometry(s);auto d=ImGui::GetForegroundDrawList();auto font=SessionSketch::font();
+ const auto g=geometry(s);auto d=ImGui::GetForegroundDrawList();
  const auto c=g.center;const float radius=g.radius.x,scale=SessionSketch::layout(s).diameter/900.f;
  constexpr float pi=3.14159265359f,step=2*pi/5;
  d->PushClipRect(s.position,{s.position.x+s.size.x,s.position.y+s.size.y},true);
  d->AddCircleFilled(c,radius,ImGui::ColorConvertFloat4ToU32(s.wheel.background),96);
  auto point=[&](float angle,float f){return ImVec2{c.x+std::sin(angle)*radius*f,c.y-std::cos(angle)*radius*f};};
  auto text=[&](const std::string& text,ImVec2 at,float wrap,ImU32 color,float size,bool backing){
-  auto extent=font->CalcTextSizeA(size,10000,wrap,text.c_str());ImVec2 a{at.x-extent.x/2,at.y-extent.y/2};
+  auto face=SessionSketch::textFont(size);auto extent=face->CalcTextSizeA(size,10000,wrap,text.c_str());ImVec2 a{at.x-extent.x/2,at.y-extent.y/2};
   if(backing)d->AddRectFilled({a.x-5*scale,a.y-3*scale},{a.x+extent.x+5*scale,a.y+extent.y+3*scale},IM_COL32(9,24,34,205),5*scale);
-  d->AddText(font,size,a,color,text.c_str(),nullptr,wrap);
+  d->AddText(face,size,a,color,text.c_str(),nullptr,wrap);
  };
  for(int i=0;i<5;++i) {
   const float angle=i*step;

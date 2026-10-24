@@ -1,5 +1,7 @@
 # Developer setup
 
+The current source includes the accepted menu/controller follow-ups and independent Speed Overlay. The native overlay and launcher passed Release x64 compilation using the installed pinned dependency cache. The repository build wrapper restores declared dependencies; fresh-machine reproduction remains a contributor check.
+
 ## Prerequisites
 
 - Windows x64; Visual Studio 2022 or Build Tools with MSVC v143 and a Windows SDK.
@@ -74,3 +76,20 @@ Each developer should clone this repository, use the same baseline/dependency ha
 Run `cmd /c tools\test-appearance-defaults.cmd` for the current focused defaults check. `test-skin-loading.cmd` and `test-seasonal-skins.cmd` cover skin validation/fallback and production rendering. `test-circular-skin.cmd` measures isolated rendering cost; those measurements are not in-game performance promises. Tests use the installed dependency path configured by the native project under `%LOCALAPPDATA%/HaloPracticeBuild/HCMInternal/x64-windows-static`.
 
 Before the defaults change, the seasonal renderer, loader, controller hook/core and solo-H2 pause fixtures passed. Those broader checks were not repeated for this appearance-only update. Some older UI fixtures encode the earlier startup appearance; explicitly select a fixture appearance when comparing historical output. No additional in-game acceptance cycle was required for this update.
+
+## Current UI regression fixtures
+
+With `VSDIR` configured as above, the focused scripts exercise production rendering and input policy:
+
+```powershell
+cmd /c tools\test-combined-preview.cmd
+cmd /c tools\test-menu-camera-priority.cmd
+cmd /c tools\test-menu-camera-render.cmd
+cmd /c tools\test-workshop-input.cmd
+cmd /c tools\test-workshop-render.cmd
+cmd /c tools\test-menu-spot.cmd
+cmd /c tools\test-speed-overlay.cmd
+cmd /c tools\test-speed-overlay-settings.cmd
+```
+
+The render fixtures use software WARP and write generated output to ignored `out/`. The Speed Overlay fixture writes its sizes/timings to `out/speed-overlay-validation.json`. Its settings fixture uses the production settings and event registrations. Local snapshot-comparison audits also passed before acceptance; those require private sibling candidate trees and are not part of the portable test suite. No script above launches or injects Session.

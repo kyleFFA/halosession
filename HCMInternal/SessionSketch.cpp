@@ -2,6 +2,8 @@
 #include "SessionSketch.h"
 #include "SessionRingOpening.h"
 #include "SessionSkinDefinition.h"
+#include "SessionPresetFormat.h"
+#include "SessionApprovedStars.h"
 #include <wincodec.h>
 #include <wrl/client.h>
 #include <algorithm>
@@ -13,6 +15,9 @@ namespace {
 ComPtr<ID3D11Device> owner;
 ComPtr<ID3D11ShaderResourceView> ring,clouds,nodeTexture,plaqueTexture;
 SessionSkin::Definition selectedSkin;
+std::optional<SessionSkin::Definition> presetSkin;
+std::filesystem::path appearanceDirectory;
+State* pendingPresetState=nullptr;std::string pendingPresetId;
 std::vector<SessionSkin::Definition> skinCatalog;
 std::filesystem::path skinDirectory;
 std::optional<std::string> pendingSkin;
@@ -27,7 +32,7 @@ struct AlphaMask {
 };
 AlphaMask ringMask,cloudMask;
 bool frameLayers=false;
-ImFont* bodyFont=nullptr;ImFont* titleFont=nullptr;
+ImFont* bodyFont=nullptr;ImFont* retinaBodyFont=nullptr;ImFont* largeBodyFont=nullptr;ImFont* titleFont=nullptr;ImFont* digitsFont=nullptr;float dashboardOpeningWidth=0;
 struct ComScope {HRESULT hr=CoInitializeEx(nullptr,COINIT_MULTITHREADED);~ComScope(){if(SUCCEEDED(hr))CoUninitialize();}};
 bool decode(ID3D11Device* device,BYTE* data,DWORD bytes,ComPtr<ID3D11ShaderResourceView>& out,AlphaMask* mask,uint64_t& pixelBudget) {
  ComScope com;ComPtr<IWICImagingFactory> factory;ComPtr<IWICStream> stream;ComPtr<IWICBitmapDecoder> decoder;ComPtr<IWICBitmapFrameDecode> frame;ComPtr<IWICFormatConverter> converted;
@@ -61,11 +66,12 @@ void defaultSkin(std::string message={}){
 }
 void applyRequestedSkin(){
  if(!pendingSkin||!owner)return;const auto id=std::move(*pendingSkin);pendingSkin.reset();
- if(id=="default"){defaultSkin();return;}
+ if(id=="default"){presetSkin.reset();defaultSkin();return;}
  auto found=std::find_if(skinCatalog.begin(),skinCatalog.end(),[&](const auto& skin){return skin.id==id;});
- auto definition=found==skinCatalog.end()?std::optional<SessionSkin::Definition>{}:SessionSkin::read(found->folder);
+ auto definition=presetSkin&&presetSkin->id==id?SessionSkin::read(presetSkin->folder):(found==skinCatalog.end()?std::optional<SessionSkin::Definition>{}:SessionSkin::read(found->folder));
+ if(definition&&presetSkin&&presetSkin->id==id)definition->id=id;
  auto fail=[&]{defaultSkin("Skin could not be loaded. Session V1 restored.");};
- if(!definition||!SessionSkin::contained(std::filesystem::weakly_canonical(skinDirectory),definition->folder)){fail();return;}
+ if(!definition||!(SessionSkin::contained(std::filesystem::weakly_canonical(skinDirectory),definition->folder)||(presetSkin&&presetSkin->id==id&&SessionSkin::contained(std::filesystem::weakly_canonical(appearanceDirectory/"SavedSkins"),definition->folder)))){fail();return;}
  ComPtr<ID3D11ShaderResourceView> nextRing,nextClouds,nextNode,nextPlaque;AlphaMask nextRingMask,nextCloudMask;uint64_t budget=0;
  if(!fileTexture(definition->ring,nextRing,&nextRingMask,budget)||!fileTexture(definition->clouds,nextClouds,&nextCloudMask,budget)||(!definition->node.empty()&&!fileTexture(definition->node,nextNode,nullptr,budget))||(!definition->plaque.empty()&&!fileTexture(definition->plaque,nextPlaque,nullptr,budget))){fail();return;}
  auto clearCorners=[](const AlphaMask& mask){return !mask.hit(0,0)&&!mask.hit(.999f,0)&&!mask.hit(0,.999f)&&!mask.hit(.999f,.999f);};
@@ -87,12 +93,16 @@ void cloudLayer(ImDrawList* draw,ImVec2 a,ImVec2 z,ImU32 tint,bool rim){
  for(int y=0;y<steps;++y)for(int x=0;x<steps;++x){unsigned i=base+y*side+x;for(unsigned index:{i,i+1,i+side+1,i,i+side+1,i+side})draw->PrimWriteIdx(ImDrawIdx(index));}
  draw->PopTextureID();
 }
+#include "SessionCenterRenderer.inl"
+ImVec4 foregroundText(const State& state){return state.autoTextContrast?(state.centerBackground>=3?ImVec4{.94f,.97f,1,1}:ImVec4{.12f,.16f,.18f,1}):state.textColor;}
 struct Styles {
- Styles(){
+ Styles(const State& state){
   auto accent=ImGui::GetStyleColorVec4(ImGuiCol_CheckMark);
   auto tint=[&](float strength){return ImVec4{1-(1-accent.x)*strength,1-(1-accent.y)*strength,1-(1-accent.z)*strength,.93f};};
+  const bool dark=state.centerBackground>=3;
+  const auto text=foregroundText(state);
   const std::pair<ImGuiCol,ImVec4> colors[]={
-   {ImGuiCol_Text,{.12f,.16f,.18f,1}},{ImGuiCol_TextDisabled,{.32f,.39f,.42f,1}},
+   {ImGuiCol_Text,text},{ImGuiCol_TextDisabled,dark?ImVec4{.72f,.81f,.87f,1}:ImVec4{.32f,.39f,.42f,1}},
    {ImGuiCol_WindowBg,{0,0,0,0}},{ImGuiCol_ChildBg,{0,0,0,0}},{ImGuiCol_Border,{.24f,.43f,.47f,.45f}},
    {ImGuiCol_FrameBg,{.83f,.90f,.92f,.85f}},{ImGuiCol_FrameBgHovered,{.61f,.87f,.91f,1}},{ImGuiCol_FrameBgActive,{.40f,.80f,.86f,1}},
    {ImGuiCol_Button,tint(.25f)},{ImGuiCol_ButtonHovered,tint(.55f)},{ImGuiCol_ButtonActive,tint(.7f)},
@@ -101,19 +111,26 @@ struct Styles {
    {ImGuiCol_ScrollbarBg,{.85f,.92f,.94f,.35f}},{ImGuiCol_ScrollbarGrab,{.31f,.59f,.64f,.7f}},{ImGuiCol_ScrollbarGrabHovered,{.08f,.59f,.69f,1}},{ImGuiCol_ScrollbarGrabActive,{.0f,.42f,.54f,1}},
    {ImGuiCol_Separator,{.30f,.61f,.67f,.5f}},{ImGuiCol_PopupBg,{.96f,.98f,.98f,.99f}},
    {ImGuiCol_Tab,{.75f,.88f,.91f,.6f}},{ImGuiCol_TabHovered,{.43f,.85f,.91f,1}},{ImGuiCol_TabActive,{.49f,.83f,.88f,1}}};
-  for(auto& c:colors)ImGui::PushStyleColor(c.first,c.second);count=int(std::size(colors));
+  for(auto c:colors){if(dark&&(c.first==ImGuiCol_Button||c.first==ImGuiCol_ButtonHovered||c.first==ImGuiCol_ButtonActive||c.first==ImGuiCol_FrameBg||c.first==ImGuiCol_FrameBgHovered||c.first==ImGuiCol_FrameBgActive||c.first==ImGuiCol_PopupBg||c.first==ImGuiCol_Header||c.first==ImGuiCol_HeaderHovered||c.first==ImGuiCol_HeaderActive))c.second={.12f,.22f,.29f,.97f};ImGui::PushStyleColor(c.first,c.second);}count=int(std::size(colors));
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{6,5});ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize,0.f);ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize,0.f);ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding,5.f);ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize,1.f);
  }
  int count=0;~Styles(){ImGui::PopStyleVar(5);ImGui::PopStyleColor(count);}
 };
 }
-void beginFrame(){applyRequestedSkin();auto d=ImGui::GetBackgroundDrawList();d->ChannelsSplit(2);d->ChannelsSetCurrent(1);frameLayers=true;}
+#include "SessionPresets.inl"
+void beginFrame(){if(pendingPresetState){auto state=pendingPresetState;pendingPresetState=nullptr;loadPreset(*state,pendingPresetId);}applyRequestedSkin();auto d=ImGui::GetBackgroundDrawList();d->ChannelsSplit(2);d->ChannelsSetCurrent(1);frameLayers=true;}
 void endFrame(){if(frameLayers){ImGui::GetBackgroundDrawList()->ChannelsMerge();frameLayers=false;}}
 void addFonts(){
  wchar_t path[MAX_PATH]{};GetWindowsDirectoryW(path,MAX_PATH);std::filesystem::path root(path);
  auto body=root/L"Fonts"/L"segoeui.ttf",title=root/L"Fonts"/L"segoepr.ttf";
- if(std::filesystem::exists(body))bodyFont=ImGui::GetIO().Fonts->AddFontFromFileTTF(body.string().c_str(),16.f);
- if(std::filesystem::exists(title))titleFont=ImGui::GetIO().Fonts->AddFontFromFileTTF(title.string().c_str(),32.f);
+ auto atlas=ImGui::GetIO().Fonts;
+ ImFontConfig bodyConfig;bodyConfig.RasterizerDensity=2.f;bodyConfig.OversampleH=bodyConfig.OversampleV=2;
+ ImFontConfig retinaConfig=bodyConfig;retinaConfig.RasterizerDensity=4.f;
+ ImFontConfig titleConfig=bodyConfig;titleConfig.RasterizerDensity=3.f;
+ ImFontConfig digitConfig;digitConfig.OversampleH=digitConfig.OversampleV=1;
+ static const ImWchar digits[]={'-','.', '0','9',0};
+ if(std::filesystem::exists(body)){bodyFont=atlas->AddFontFromFileTTF(body.string().c_str(),16.f,&bodyConfig);retinaBodyFont=atlas->AddFontFromFileTTF(body.string().c_str(),16.f,&retinaConfig);largeBodyFont=atlas->AddFontFromFileTTF(body.string().c_str(),48.f,&bodyConfig);digitsFont=atlas->AddFontFromFileTTF(body.string().c_str(),384.f,&digitConfig,digits);}
+ if(std::filesystem::exists(title))titleFont=atlas->AddFontFromFileTTF(title.string().c_str(),32.f,&titleConfig);
 }
 void setSkinDirectory(const std::filesystem::path& directory){skinDirectory=directory;refreshSkins();pendingSkin="default";}
 void refreshSkins(){
@@ -124,7 +141,7 @@ void refreshSkins(){
   }
   std::sort(skinCatalog.begin(),skinCatalog.end(),[](const auto& a,const auto& b){return a.name<b.name;});
  }catch(...){skinCatalog.clear();}
- if(selectedSkin.id!="default")pendingSkin=std::any_of(skinCatalog.begin(),skinCatalog.end(),[](const auto& skin){return skin.id==selectedSkin.id;})?selectedSkin.id:std::string("default");
+ if(selectedSkin.id!="default")pendingSkin=((presetSkin&&presetSkin->id==selectedSkin.id)||std::any_of(skinCatalog.begin(),skinCatalog.end(),[](const auto& skin){return skin.id==selectedSkin.id;}))?selectedSkin.id:std::string("default");
 }
 std::vector<SkinChoice> availableSkins(){std::vector<SkinChoice> result{{"default","Session V1"}};for(const auto& s:skinCatalog)result.push_back({s.id,s.name,!s.node.empty(),!s.plaque.empty()});return result;}
 SkinChoice activeSkin(){return {selectedSkin.id,selectedSkin.name,bool(nodeTexture),bool(plaqueTexture)};}
@@ -137,18 +154,24 @@ void prepare(ID3D11Device* device){
   HMODULE module=nullptr;wchar_t path[32768]{};
   if(GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,(LPCWSTR)&load,&module)){const DWORD length=GetModuleFileNameW(module,path,DWORD(std::size(path)));if(length>0&&length<std::size(path))skinDirectory=std::filesystem::path(path).parent_path()/L"skins";}
  }
+ if(appearanceDirectory.empty())setAppearanceDirectory(skinDirectory.parent_path());
  defaultSkin();refreshSkins();if(restore!="default")pendingSkin=restore;
 }
-void reset(){frameLayers=false;ring.Reset();clouds.Reset();nodeTexture.Reset();plaqueTexture.Reset();ringMask.clear();cloudMask.clear();owner.Reset();bodyFont=titleFont=nullptr;if(!pendingSkin)pendingSkin=selectedSkin.id;}
+void reset(){centerTexture.Reset();loadedCenterPath.clear();frameLayers=false;ring.Reset();clouds.Reset();nodeTexture.Reset();plaqueTexture.Reset();ringMask.clear();cloudMask.clear();owner.Reset();bodyFont=retinaBodyFont=largeBodyFont=titleFont=digitsFont=nullptr;dashboardOpeningWidth=0;if(!pendingSkin)pendingSkin=selectedSkin.id;}
 bool ready(){return ring&&clouds;}
-ImFont* font(){return bodyFont?bodyFont:ImGui::GetFont();}
+ImFont* font(){const auto dpi=ImGui::GetIO().DisplayFramebufferScale;return std::max(dpi.x,dpi.y)>1.4f&&retinaBodyFont?retinaBodyFont:(bodyFont?bodyFont:ImGui::GetFont());}
+ImFont* textFont(float pixels){const auto dpi=ImGui::GetIO().DisplayFramebufferScale;return pixels*std::max(dpi.x,dpi.y)>24&&largeBodyFont?largeBodyFont:font();}
+ImFont* speedFont(){return digitsFont?digitsFont:font();}
+float readoutWidth(){return dashboardOpeningWidth;}
+ID3D11Device* renderDevice(){return owner.Get();}
 Layout layout(const State& s){
  const float d=std::min(s.size.x/1.5f,s.size.y);
  const ImVec2 frameCenter{s.position.x+s.size.x*.5f,s.position.y+s.size.y*.5f};
  const ImVec2 a{frameCenter.x-d*.5f,frameCenter.y-d*.5f};
  const auto opening=skinOpening();const ImVec2 c{a.x+d*opening.center.x,a.y+d*opening.center.y};
  const float area=opening.radius/SessionRingOpening::radius;
- return {c,a,{a.x+d,a.y+d},{c.x-d*.225f*area,c.y-d*.21f*area},{d*.45f*area,d*.42f*area},d};
+ const bool dashboard=s.workshopDashboard&&s.tab==0;const float w=dashboard?.40f:.45f,h=dashboard?.47f:.42f;
+ return {c,a,{a.x+d,a.y+d},{c.x-d*w*.5f*area,c.y-d*h*.5f*area},{d*w*area,d*h*area},d};
 }
 NavigationNode navigationNode(const State& s,int index){
  const auto l=layout(s);index=std::clamp(index,0,3);
@@ -164,7 +187,7 @@ static void renderNavigation(State& s,bool inputs){
  for(int i=0;i<4;++i){
   const auto n=navigationNode(s,i);char id[48];snprintf(id,sizeof(id),"##SessionNavigation%d",i);
   ImGui::SetNextWindowPos(n.minimum);ImGui::SetNextWindowSize({n.maximum.x-n.minimum.x,n.maximum.y-n.minimum.y});
-  auto flags=ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus;
+  auto flags=ImGuiWindowFlags_NoNavInputs|ImGuiWindowFlags_NoNavFocus|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus;
   if(!inputs)flags|=ImGuiWindowFlags_NoInputs;
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{0,0});ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize,0.f);
   ImGui::Begin(id,nullptr,flags);ImGui::SetCursorPos({0,0});
@@ -186,7 +209,7 @@ static void renderNavigation(State& s,bool inputs){
   for(int tick=0;tick<8;++tick){float a=tick*3.14159265f/4.f;draw->AddLine({n.center.x+std::cos(a)*n.radius*.83f,n.center.y+std::sin(a)*n.radius*.83f},{n.center.x+std::cos(a)*n.radius*.92f,n.center.y+std::sin(a)*n.radius*.92f},IM_COL32(218,234,238,255),1.f);}
   }
   if(nodeTexture&&(selected||hover))draw->AddCircle(n.center,n.radius*.96f,IM_COL32(150,241,255,255),48,std::max(1.f,l.diameter/450.f));
-  const float textSize=18.f*l.diameter/900.f;auto textFont=font();const auto extent=textFont->CalcTextSizeA(textSize,10000,0,labels[i]);
+  const float textSize=18.f*l.diameter/900.f*s.textScale;auto textFont=SessionSketch::textFont(textSize);const auto extent=textFont->CalcTextSizeA(textSize,10000,0,labels[i]);
   const float tx=n.left?(n.minimum.x+n.center.x-n.radius)*.5f:(n.center.x+n.radius+n.maximum.x)*.5f;
   if(plaqueTexture)draw->AddRectFilled({tx-extent.x*.5f-3,n.center.y-extent.y*.5f-2},{tx+extent.x*.5f+3,n.center.y+extent.y*.5f+2},IM_COL32(12,29,38,205),3);
   draw->AddText(textFont,textSize,{tx-extent.x*.5f,n.center.y-extent.y*.5f},IM_COL32(238,250,252,255),labels[i]);
@@ -215,7 +238,7 @@ bool hit(const State& s,ImVec2 point){
  // Keep the capture boundary steady while the optional visual layers move.
  return ringMask.hit(x,y)||cloudMask.hit(x,y);
 }
-void render(State& s,ImVec2 screen,bool inputs,bool& open,const std::function<void(int)>& contents){
+void render(State& s,ImVec2 screen,bool inputs,bool& open,const std::function<void(int)>& contents,const std::function<void()>& appearance){
  if(!open)return;
  clamp(s,screen);const auto l=layout(s);auto a=s.position;
  backdrop(s);
@@ -223,34 +246,53 @@ void render(State& s,ImVec2 screen,bool inputs,bool& open,const std::function<vo
  auto captureFlags=ImGuiWindowFlags_NoInputs|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoBringToFrontOnFocus;
  if(!inputs||!hit(s,ImGui::GetIO().MousePos))captureFlags|=ImGuiWindowFlags_NoInputs;
  ImGui::Begin("##SessionSilhouette",nullptr,captureFlags);ImGui::End();
- Styles styles;renderNavigation(s,inputs);
+ Styles styles(s);renderNavigation(s,inputs);
  if(s.measuredRevision!=s.contentRevision){s.contentHeights.fill(0);s.contentWidths.fill(0);s.measuredRevision=s.contentRevision;}
  s.tab=std::clamp(s.tab,0,3);
- const float groupScale=std::clamp(l.diameter/900.f,.82f,1.15f);
- const float chrome=102.f*groupScale;
- const float height=s.contentHeights[s.tab]>0?std::min(l.controlsSize.y,chrome+std::max(28.f*groupScale,s.contentHeights[s.tab])):l.controlsSize.y;
- const ImVec2 groupPosition{l.center.x-l.controlsSize.x*.5f,l.center.y-height*.5f};
+ const bool dashboard=s.workshopDashboard&&s.tab==0;
+ dashboardOpeningWidth=l.diameter*skinOpening().radius*2.f;
+ const float baseScale=std::clamp(l.diameter/900.f,.82f,1.15f);
+ const float groupScale=std::clamp(l.diameter/900.f,.82f,1.15f)*s.textScale;
+ const float chrome=dashboard?78.f*baseScale:102.f*groupScale;
+ const float height=dashboard?l.controlsSize.y:(s.contentHeights[s.tab]>0?std::min(l.controlsSize.y,chrome+std::max(28.f*groupScale,s.contentHeights[s.tab])):l.controlsSize.y);
+ const ImVec2 groupPosition{l.center.x-l.controlsSize.x*.5f,s.centered?l.center.y-height*.5f:l.controlsMin.y};
  ImGui::SetNextWindowPos(groupPosition);ImGui::SetNextWindowSize({l.controlsSize.x,height});
- auto flags=ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoScrollWithMouse;
+ auto flags=ImGuiWindowFlags_NoNavInputs|ImGuiWindowFlags_NoNavFocus|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoScrollWithMouse;
  if(!inputs)flags|=ImGuiWindowFlags_NoInputs;
  ImGui::Begin("Session###PCM",nullptr,flags);
- if(bodyFont)ImGui::PushFont(bodyFont);
- float scale=std::clamp(l.diameter/900.f,.82f,1.15f);ImGui::SetWindowFontScale(scale);
+ if(bodyFont)ImGui::PushFont(font());
+ float scale=dashboard?baseScale:baseScale*s.textScale;ImGui::SetWindowFontScale(scale);
  float width=ImGui::GetContentRegionAvail().x;
- auto titleFace=titleFont?titleFont:ImGui::GetFont();
- const float titleWidth=titleFace->CalcTextSizeA(30*scale,10000,0,"Session").x+12*scale;
- const float headerWidth=titleWidth+120*scale+16.f;
+ auto utilities=[&]{
+ auto titleFace=titleFont?titleFont:ImGui::GetFont();const float titleSize=(dashboard?20.f:30.f)*scale;
+ const float titleWidth=titleFace->CalcTextSizeA(titleSize,10000,0,"Session").x+12*scale;
+ const float headerWidth=titleWidth+(dashboard?132.f:120.f)*scale+16.f;
  ImGui::SetCursorPosX(std::max(6.f,(ImGui::GetWindowWidth()-headerWidth)*.5f));auto titlePos=ImGui::GetCursorScreenPos();
- ImGui::InvisibleButton("##drag-session",{titleWidth,43*scale});
+ ImGui::InvisibleButton("##drag-session",{titleWidth,(dashboard?28.f:43.f)*scale});
  if(ImGui::IsItemActive()&&ImGui::IsMouseDragging(0)){s.position.x+=ImGui::GetIO().MouseDelta.x;s.position.y+=ImGui::GetIO().MouseDelta.y;}
- ImGui::GetWindowDrawList()->AddText(titleFont?titleFont:ImGui::GetFont(),30*scale,titlePos,IM_COL32(39,53,59,255),"Session");
+ ImGui::GetWindowDrawList()->AddText(titleFace,titleSize,titlePos,ImGui::ColorConvertFloat4ToU32(foregroundText(s)),"Session");
  if(ImGui::IsItemHovered())ImGui::SetTooltip("Drag to move Session");
- ImGui::SameLine();if(ImGui::Button("Appearance",{92*scale,28*scale}))ImGui::OpenPopup("##session-appearance");
+ ImGui::SameLine();if(ImGui::Button("Appearance",{(dashboard?80.f:92.f)*scale,28*scale}))ImGui::OpenPopup("##session-appearance");
  if(ImGui::IsItemHovered())ImGui::SetTooltip("Cloud motion, background opacity and menu size");
- ImGui::SameLine();if(ImGui::Button("X##close-session",{28*scale,28*scale}))open=false;
+ ImGui::SameLine();if(ImGui::Button("X##close-session",{(dashboard?24.f:28.f)*scale,28*scale}))open=false;
  if(ImGui::IsItemHovered())ImGui::SetTooltip("Close menu");
+ ImGui::SetNextWindowSizeConstraints({320,0},{std::max(320.f,screen.x-24),std::max(200.f,screen.y-24)});
  if(ImGui::BeginPopup("##session-appearance")){
   ImGui::TextUnformatted("Appearance");ImGui::Separator();
+  const char* backgrounds[]={"Original clouds","Bright anime sky","Pastel anime clouds","Quiet twinkle stars","Retro sparkle stars"};
+  if(ImGui::Combo("Center background",&s.centerBackground,backgrounds,5)){s.centerAsset.clear();s.clock={};++s.contentRevision;}
+  ImGui::Checkbox("Animate center background",&s.centerAnimated);
+  ImGui::SliderFloat("Animation speed",&s.centerSpeed,.25f,2.f,"%.2fx");
+  ImGui::SliderFloat("Center opacity",&s.centerOpacity,0.f,1.f,"%.2f");
+  if(ImGui::SliderFloat("Text size",&s.textScale,.75f,1.6f,"%.2fx"))++s.contentRevision;
+  if(ImGui::Checkbox("Center menu options",&s.centered))++s.contentRevision;
+  ImGui::Checkbox("Automatic text contrast",&s.autoTextContrast);ImGui::ColorEdit3("Text color",&s.textColor.x,ImGuiColorEditFlags_NoInputs);
+  ImGui::Checkbox("Full controller gameplay with main menu",&s.fullControllerPassthrough);
+  ImGui::BeginDisabled(s.fullControllerPassthrough);
+  ImGui::Checkbox("Allow character movement with main menu",&s.allowMenuMovement);
+  ImGui::BeginDisabled(!s.allowMenuMovement);ImGui::Checkbox("Right-stick camera look with main menu",&s.allowMenuCamera);ImGui::EndDisabled();ImGui::EndDisabled();
+  ImGui::TextWrapped("Full gameplay passes both sticks, buttons and triggers to the game; mouse operates this UI. Keyboard/mouse gameplay stays blocked; text entry and popups temporarily suspend controller gameplay. Existing menu-toggle controls are reserved for Session. Your Save spot / Back to spot controller bindings also work with the menu open and are reserved from gameplay. Text entry, popups and active widgets suspend those actions. The radial binding is reserved: while held, the wheel owns right stick exclusively and other gameplay actions are suppressed. Recenter/release after closing. Verified XInput only; native DirectInput stays blocked. Passthrough/radial never acquire menu pause.");
+  ImGui::Separator();
   if(ImGui::RadioButton("Static clouds",!s.animateClouds))s.animateClouds=false;
   if(ImGui::RadioButton("Gentle motion",s.animateClouds))s.animateClouds=true;
   float opacity=s.backgroundOpacity*100.f;
@@ -276,21 +318,35 @@ void render(State& s,ImVec2 screen,bool inputs,bool& open,const std::function<vo
   }
   if(ImGui::Button("Refresh skins"))refreshSkins();
   if(!skinStatus.empty())ImGui::TextWrapped("%s",skinStatus.c_str());
+  if(centerFailed)ImGui::TextWrapped("Center artwork unavailable; using the quiet fallback.");
+  ImGui::Separator();ImGui::TextUnformatted("Saved Skins");
+  static char presetName[65]="My-Skin";ImGui::InputText("Preset name",presetName,sizeof presetName);
+  if(ImGui::Button("Save new"))savePreset(s,presetName);
+  ImGui::SameLine();if(ImGui::Button("Replace..."))ImGui::OpenPopup("Replace saved skin?");
+  if(ImGui::BeginPopupModal("Replace saved skin?",nullptr,ImGuiWindowFlags_AlwaysAutoResize)){ImGui::TextWrapped("Replace %s? The prior folder is kept as a backup.",presetName);if(ImGui::Button("Replace")){savePreset(s,presetName,true);ImGui::CloseCurrentPopup();}ImGui::SameLine();if(ImGui::Button("Cancel"))ImGui::CloseCurrentPopup();ImGui::EndPopup();}
+  if(ImGui::BeginCombo("Load saved skin","Choose preset")){for(auto& choice:savedPresets()){ImGui::PushID(choice.id.c_str());auto label=choice.name==choice.id?choice.name:choice.name+" ["+choice.id+"]";if(ImGui::Selectable(label.c_str())){pendingPresetState=&s;pendingPresetId=choice.id;}ImGui::PopID();}ImGui::EndCombo();}
+  if(!presetStatus.empty())ImGui::TextWrapped("%s",presetStatus.c_str());
+  if(appearance)appearance();
   ImGui::EndPopup();
  }
+ };
+ if(!dashboard)utilities();
+ ImGui::SetWindowFontScale(baseScale*s.textScale);
  const char* sections[]={"Practice","Control","Credits","Quick Menu"};
  const float headingWidth=ImGui::CalcTextSize(sections[s.tab]).x;
- ImGui::SetCursorPosX(std::max(6.f,(ImGui::GetWindowWidth()-headingWidth)*.5f));ImGui::TextDisabled("%s",sections[s.tab]);ImGui::Spacing();
+ if(!dashboard){ImGui::SetCursorPosX(std::max(6.f,(ImGui::GetWindowWidth()-headingWidth)*.5f));ImGui::TextDisabled("%s",sections[s.tab]);ImGui::Spacing();}
  ImGui::PushID(s.tab);ImGui::PushID(s.contentRevision);
- ImGui::BeginChild("##session-scroll",{0,-26*scale},false,ImGuiWindowFlags_HorizontalScrollbar);
+ ImGui::BeginChild("##session-scroll",{0,-(dashboard?40.f*baseScale:26*scale)},false,dashboard?ImGuiWindowFlags_None:ImGuiWindowFlags_HorizontalScrollbar);
+ if(dashboard&&ImGui::GetScrollMaxY()>0)ImGui::SetCursorPosX(ImGui::GetCursorPosX()+ImGui::GetStyle().ScrollbarSize);
  ImGui::PushItemWidth(120*scale);
  const float available=ImGui::GetContentRegionAvail().x;
- if(s.contentWidths[s.tab]>0&&s.contentWidths[s.tab]<available)ImGui::SetCursorPosX(ImGui::GetCursorPosX()+(available-s.contentWidths[s.tab])*.5f);
- ImGui::BeginGroup();contents(s.tab);ImGui::EndGroup();
+ if(s.centered&&s.contentWidths[s.tab]>0&&s.contentWidths[s.tab]<available)ImGui::SetCursorPosX(ImGui::GetCursorPosX()+(available-s.contentWidths[s.tab])*.5f);
+ ImGui::PushTextWrapPos(0);ImGui::BeginGroup();contents(s.tab);ImGui::EndGroup();ImGui::PopTextWrapPos();
  const auto contentSize=ImGui::GetItemRectSize();s.contentHeights[s.tab]=contentSize.y+8*scale;s.contentWidths[s.tab]=contentSize.x;
  ImGui::PopItemWidth();
  ImGui::EndChild();ImGui::PopID();ImGui::PopID();
- ImGui::SetCursorPosX(std::max(6.f,(ImGui::GetWindowWidth()-ImGui::CalcTextSize("Drag title to move").x)*.5f));ImGui::TextDisabled("Drag title to move");ImGui::SameLine(std::max(0.f,width-26*scale));
+ if(dashboard){scale=baseScale;ImGui::SetWindowFontScale(baseScale);utilities();ImGui::SameLine();}
+ else{ImGui::SetCursorPosX(std::max(6.f,(ImGui::GetWindowWidth()-ImGui::CalcTextSize("Drag title to move").x)*.5f));ImGui::TextDisabled("Drag title to move");ImGui::SameLine(std::max(0.f,width-26*scale));}
  ImGui::InvisibleButton("##resize-session",{24*scale,22*scale});auto q=ImGui::GetItemRectMin();auto e=ImGui::GetItemRectMax();ImGui::GetWindowDrawList()->AddLine({q.x,e.y},{e.x,q.y},IM_COL32(0,153,174,255),2);
  if(ImGui::IsItemActive()&&ImGui::IsMouseDragging(0)){const auto delta=ImGui::GetIO().MouseDelta;const float grow=(delta.x/.98f+delta.y/.72f)*.5f;const float diameter=l.diameter+grow;s.size={diameter*1.5f,diameter};}
  if(ImGui::IsItemHovered()){ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNWSE);ImGui::SetTooltip("Drag to resize");}
@@ -300,7 +356,7 @@ void backdrop(const State& s) {
  auto draw=ImGui::GetBackgroundDrawList();if(frameLayers)draw->ChannelsSetCurrent(0);
  const auto l=layout(s);
  draw->PushClipRect(l.artMin,l.artMax,true);
- // A stable 90% backing carries the text; cloud alpha adds texture, never contrast flicker.
+ // Stable user-selected backing; center effects are clipped to the measured opening.
  draw->AddCircleFilled(l.center,l.diameter*skinOpening().radius*(.34f/SessionRingOpening::radius),IM_COL32(240,247,248,int(std::clamp(s.backgroundOpacity,.50f,1.f)*255.f+.5f)),96);
  if(ready()){
   const double t=ImGui::GetTime()*SessionAppearanceDefaults::cloudSpeedMultiplier;
@@ -310,6 +366,7 @@ void backdrop(const State& s) {
   layer(x,y,IM_COL32(255,255,255,100),true);
   // Same two immutable texture draws in both modes; no shader, blur or per-frame upload.
   layer(-x*.65f,-y*.8f,IM_COL32(224,243,250,45));
+  centerBackdrop(draw,s,l);
   draw->AddImage((ImTextureID)ring.Get(),l.artMin,l.artMax);
  }else draw->AddCircle(l.center,l.diameter*.42f,IM_COL32(170,224,235,255),96,8.f);
  draw->PopClipRect();

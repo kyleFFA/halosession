@@ -61,3 +61,7 @@ out\sketch_ui_test.exe "C:\path\to\authored-skins" "garlands-clouds" "out\garlan
 This exports an offline production-renderer PNG with representative controls. It does not start Session or connect to MCC. A failed skin load produces the fallback image and a nonzero exit code. Check the exit code, balanced wheel inset, content centering, readable labels, node spacing and scrolling before accepting an asset set.
 
 The ignored `out/skin-fixtures` files belong to loader tests. They intentionally reuse mismatched artwork to exercise replacement and failure paths; they are **not production skins** and are not copied to the runtime skin directory.
+
+## Saved aesthetic presets in the combined preview
+
+Appearance > Saved Skins saves complete aesthetic folders, including copied artwork, under SavedSkins beside the DLL. This is separate from the authored skin format above and excludes gameplay/hotkeys. Copy the whole preset folder for portability; load/replace behavior and validation are in [COMBINED-PREVIEW.md](../docs/COMBINED-PREVIEW.md).

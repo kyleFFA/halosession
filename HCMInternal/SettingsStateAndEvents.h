@@ -63,6 +63,11 @@ public:
 	std::shared_ptr<ActionEvent> shieldInputPrinterHotkeyEvent = std::make_shared<ActionEvent>();
 	// Poorboys Checkpoint Manager: Halo 2 physics (Halo2Physics.cpp)
 	std::shared_ptr<ActionEvent> h2pKeepArmedHotkeyEvent = std::make_shared<ActionEvent>();
+    std::shared_ptr<ActionEvent> speedOverlayHotkeyEvent = std::make_shared<ActionEvent>();
+    std::shared_ptr<BinarySetting<bool>> speedOverlayVisible = std::make_shared<BinarySetting<bool>>(false,[](bool){return true;},"speedOverlayVisible");
+    std::shared_ptr<BinarySetting<float>> speedOverlayHeight = std::make_shared<BinarySetting<float>>(.045f,[](float v){return std::isfinite(v)&&v>=.015f&&v<=.50f;},"speedOverlayHeight");
+    std::shared_ptr<BinarySetting<SimpleMath::Vector4>> speedOverlayColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>(SimpleMath::Vector4(1,1,1,1),[](SimpleMath::Vector4 v){return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z)&&std::isfinite(v.w)&&v.x>=0&&v.x<=1&&v.y>=0&&v.y<=1&&v.z>=0&&v.z<=1&&v.w>=0&&v.w<=1;},"speedOverlayColor");
+    std::shared_ptr<BinarySetting<SimpleMath::Vector2>> speedOverlayPosition = std::make_shared<BinarySetting<SimpleMath::Vector2>>(SimpleMath::Vector2(.80f,.13f),[](SimpleMath::Vector2 v){return std::isfinite(v.x)&&std::isfinite(v.y)&&v.x>=0&&v.x<=1&&v.y>=0&&v.y<=1;},"speedOverlayPosition");
 	std::shared_ptr<ActionEvent> h2pPhysicsHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> h2pBarriersCycleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> h2pTick30HotkeyEvent = std::make_shared<ActionEvent>();
@@ -144,6 +149,11 @@ public:
 
     std::atomic<uint8_t> practiceCurrentGame{255};
     std::atomic<bool> quickMenuCapturing{false};
+    std::atomic<bool> mainMenuInputCapturing{false};
+    std::atomic<uint64_t> mainMenuWheelInputUntil{0};
+    std::atomic<uint32_t> mainMenuToggleControllerMask{0};
+    std::atomic<uint32_t> mainMenuSpotControllerMask{0};
+    std::shared_ptr<eventpp::CallbackList<void(bool)>> mainMenuSpotPress = std::make_shared<eventpp::CallbackList<void(bool)>>();
     std::atomic<bool> h2NativeDisconnecting{false};
     std::shared_ptr<BinarySetting<bool>> h2NativeInvulnerability = std::make_shared<BinarySetting<bool>>(false, [](bool){return true;}, "h2NativeInvulnerability");
     std::shared_ptr<BinarySetting<bool>> h2NativeClip = std::make_shared<BinarySetting<bool>>(false, [](bool){return true;}, "h2NativeClip");
@@ -2110,6 +2120,7 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+        speedOverlayVisible,speedOverlayHeight,speedOverlayColor,speedOverlayPosition,
 		changeOOBBackgroundColor,
 		soundClassGainDialog,
 			soundClassGainAmbience,

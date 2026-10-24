@@ -133,7 +133,8 @@ h2pJumpSpotsHotkey, \
 spotSaveHotkey, \
 spotBackHotkey, \
 autoCrouchHotkey, \
-h2pKeepArmedHotkey
+h2pKeepArmedHotkey, \
+speedOverlayHotkey
 
 #define ALL_REBINDABLE_HOTKEYS ALL_EVENTONPRESS_HOTKEYS, NOEVENT_HOTKEYS, SKULL_HOTKEYS, H2P_HOTKEYS
 

@@ -2,6 +2,8 @@
 #include "GameState.h"
 #include "SessionSketch.h"
 #include "QuickMenu.h"
+#include "MainMenuController.h"
+#include "SpeedOverlay.h"
 #include "IGUIElement.h"
 #include "IAnchorPoint.h"
 #include "GUIElementStore.h"
@@ -30,6 +32,10 @@ private:
 	void onGUIShowingBlocksGameInputChanged(bool& newval);
 	ScopedCallback<ToggleEvent> mGUIShowingBlocksGameInputCallbackHandle;
 	std::shared_ptr<SharedRequestToken> blockGameInputRequest;
+    std::shared_ptr<SharedRequestToken> menuMovementRequest;
+    void updateMenuInput();
+    bool menuReleaseGuard=false;
+    menumovement::PresentationState menuPresentation;
 
 	void onGUIShowingPausesGameChanged(bool& newval);
 	ScopedCallback<ToggleEvent> mGUIShowingPausesGameCallbackHandle;
@@ -64,6 +70,12 @@ private:
 	ImGuiWindowFlags windowFlags;
     SessionSketch::State sketchState;
     std::shared_ptr<QuickMenu> quickMenu;
+    speedoverlay::Display speedOverlay;
+    bool overlayEditing=false,overlayWasEditing=false,overlayReleaseGuard=false;
+    uint64_t overlayTransition=GetTickCount64();
+    std::shared_ptr<SharedRequestToken> overlayCursorRequest,overlayPointerRequest;
+    void renderSpeedOverlayControls();
+    void renderSpeedOverlay();
 	bool& m_WindowOpen;
 	bool m_windowOpenLastFrame = false;
 	SimpleMath::Vector2 mWindowSize{ 500, 500 };

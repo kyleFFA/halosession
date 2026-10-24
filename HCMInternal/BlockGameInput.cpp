@@ -19,7 +19,9 @@ private:
 
 
 public:
-	BlockGameInputImpl(std::shared_ptr<PointerDataStore> ptr)
+ struct MenuRequest : TokenSharedRequestProvider {BlockGameInputImpl* owner;explicit MenuRequest(BlockGameInputImpl* value):owner(value){}void updateService()override{owner->updateService();}};
+ MenuRequest menu{this};
+ BlockGameInputImpl(std::shared_ptr<PointerDataStore> ptr)
 	{
 
 		auto blockGameKeyboardInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameKeyboardInputFunction));
@@ -46,12 +48,13 @@ public:
 
 	virtual void updateService() override
 	{
-		bool requested = serviceIsRequested();
+		bool full = serviceIsRequested();
+        bool requested = full || menu.serviceIsRequested();
 		PLOG_INFO << "BlockGameInput service is turning " << (requested ? "ON!" : "OFF!");
 		blockGameKeyboardInputHook->setWantsToBeAttached(requested);
 		blockGameMouseMoveInputPatch->setWantsToBeAttached(requested);
 		blockGameMouseClickInputPatch->setWantsToBeAttached(requested);
-		blockGameControllerInputPatch->setWantsToBeAttached(requested);
+		blockGameControllerInputPatch->setWantsToBeAttached(full);
 		PLOG_DEBUG << "BlockGameInput hook state has been updated.";
 	}
 
@@ -69,3 +72,5 @@ BlockGameInput::BlockGameInput(std::shared_ptr<PointerDataStore> ptr)
 	: pimpl(std::make_shared< BlockGameInputImpl>(ptr)) {}
 
 BlockGameInput::~BlockGameInput() = default;
+
+std::shared_ptr<SharedRequestToken> BlockGameInput::makeMenuMovementRequest(){return std::static_pointer_cast<BlockGameInputImpl>(pimpl)->menu.makeScopedRequest();}

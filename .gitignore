@@ -69,3 +69,6 @@ OutputPath.vsmacro
 # No duplicate candidate/release trees in the developer repository
 /Session-*/
 /session-*-source/
+
+# Per-user portable appearance files stay outside source publication.
+/SavedSkins/

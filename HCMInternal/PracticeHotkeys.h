@@ -8,6 +8,7 @@ inline bool isPracticeHotkey(RebindableHotkeyEnum key)
     switch (key)
     {
     case RebindableHotkeyEnum::toggleGUI:
+    case RebindableHotkeyEnum::speedOverlayHotkey:
     case RebindableHotkeyEnum::togglePause:
     case RebindableHotkeyEnum::advanceTicks:
     case RebindableHotkeyEnum::invuln:
@@ -37,6 +38,7 @@ inline bool isPracticeHotkey(RebindableHotkeyEnum key)
 // H2 uses its own actions; movement uses H2NativeMovement; physics-mod keys cannot reach it.
 inline bool isPracticeHotkeyForGame(RebindableHotkeyEnum key, unsigned game)
 {
+    if(key==RebindableHotkeyEnum::speedOverlayHotkey)return true;
     if (game != 1 && game != 4) return isPracticeHotkey(key);
     if (key == RebindableHotkeyEnum::toggleGUI) return true;
     if (game == 4) return false;

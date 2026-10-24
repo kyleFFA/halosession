@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "MenuMovementPolicy.h"
+#include "MenuSpotPolicy.h"
 #include "HotkeyManager.h"
 #include "SettingsStateAndEvents.h"
 #include "IMessagesGUI.h"
@@ -123,11 +125,13 @@ void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen
 {
 	bool hotkeysShouldBeDisabled = mHotkeyDisabler->serviceIsRequested();
 	const auto& settings = mHotkeyDefinitions->settings();
+    if(settings){uint32_t mask=0,spotMask=0;const auto& definitions=mHotkeyDefinitions->getAllEventOnPressHotkeys();auto toggle=definitions.find(RebindableHotkeyEnum::toggleGUI);if(toggle!=definitions.end())for(const auto& chord:toggle->second->getBindings())for(auto key:chord)mask|=menumovement::menuToggleMask(key);for(auto id:{RebindableHotkeyEnum::spotSaveHotkey,RebindableHotkeyEnum::spotBackHotkey}){auto spot=definitions.find(id);if(spot!=definitions.end())for(const auto& chord:spot->second->getBindings())for(auto key:chord)spotMask|=menumovement::menuToggleMask(key);}settings->mainMenuToggleControllerMask=mask;settings->mainMenuSpotControllerMask=spotMask;}
 	if(settings && settings->h2NativeDisconnecting.load())return;
 	const bool flyHold = settings && settings->h2pFlyHoldToggle->GetValue();
-	pollFlyHold(hotkeysShouldBeDisabled || (settings && (settings->practiceCurrentGame.load()==1 || settings->practiceCurrentGame.load()==4)));
+	pollFlyHold(hotkeysShouldBeDisabled || (settings && settings->mainMenuInputCapturing.load()) || (settings && (settings->practiceCurrentGame.load()==1 || settings->practiceCurrentGame.load()==4)));
 
 
+    bool menuSpotQueued=false;
 	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllEventOnPressHotkeys())
 	{
 		if (!isPracticeHotkeyForGame(hotkeyEnum, settings ? settings->practiceCurrentGame.load() : 255)) continue;
@@ -139,10 +143,25 @@ void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen
 
 		for (auto& bindingSet : hotkey->getBindings())
 		{
-			if (hotkeyEnum!=RebindableHotkeyEnum::toggleGUI && settings && settings->quickMenuCapturing.load() && std::any_of(bindingSet.begin(),bindingSet.end(),[](ImGuiKey k){return k>=ImGuiKey_GamepadStart && k<=ImGuiKey_GamepadRStickDown;}))continue;
+            const bool controllerBinding=std::any_of(bindingSet.begin(),bindingSet.end(),[](ImGuiKey k){return k>=ImGuiKey_GamepadStart&&k<=ImGuiKey_GamepadRStickDown;});
+            const bool mouseBinding=std::any_of(bindingSet.begin(),bindingSet.end(),[](ImGuiKey k){return k>=ImGuiKey_MouseLeft&&k<=ImGuiKey_MouseWheelY;});
+            const bool toggle=hotkeyEnum==RebindableHotkeyEnum::toggleGUI;
+            const bool spot=hotkeyEnum==RebindableHotkeyEnum::spotSaveHotkey||hotkeyEnum==RebindableHotkeyEnum::spotBackHotkey;
+            bool toggleOverlap=false;if(settings)for(auto key:bindingSet)toggleOverlap|=(menumovement::menuToggleMask(key)&settings->mainMenuToggleControllerMask.load())!=0;
+            const bool wheelOwns=settings&&(settings->quickMenuCapturing.load()||GetTickCount64()<settings->mainMenuWheelInputUntil.load());
+            if(settings&&menumovement::menuSpotBinding(settings->mainMenuInputCapturing.load(),spot,controllerBinding,mouseBinding,ImGui::GetIO().WantTextInput,ImGui::IsPopupOpen(nullptr,ImGuiPopupFlags_AnyPopupId),ImGui::IsAnyItemActive(),wheelOwns,toggleOverlap)){
+                if(!menuSpotQueued&&HotkeyManagerImpl::shouldHotkeyActivate(bindingSet)){
+                    (*settings->mainMenuSpotPress)(hotkeyEnum==RebindableHotkeyEnum::spotBackHotkey);
+                    menuSpotQueued=true;
+                    break; // This press must never also invoke the ordinary hotkey callback.
+                }
+                continue;
+            }
+            if(!toggle&&settings&&settings->quickMenuCapturing.load()&&controllerBinding)continue;
+            if(settings&&menumovement::blocksHotkey(settings->mainMenuInputCapturing.load(),toggle,ImGui::GetIO().WantTextInput,controllerBinding,mouseBinding,GetTickCount64()<settings->mainMenuWheelInputUntil.load()))continue;
 			if (HotkeyManagerImpl::shouldHotkeyActivate(bindingSet))
 			{
-				auto& newThread = mFireEventThreads.emplace_back(std::thread([hk = hotkey, settings, expectedGame=settings->practiceCurrentGame.load()]() { if(!settings->h2NativeDisconnecting.load() && settings->practiceCurrentGame.load()==expectedGame) hk->invokeEvent(); }));
+				auto& newThread = mFireEventThreads.emplace_back(std::thread([hk = hotkey, settings, sensitive=!toggle&&(controllerBinding||mouseBinding), controller=controllerBinding, expectedGame=settings->practiceCurrentGame.load()]() { if(!settings->h2NativeDisconnecting.load() && !(sensitive&&settings->mainMenuInputCapturing.load()) && !(controller&&GetTickCount64()<settings->mainMenuWheelInputUntil.load()) && settings->practiceCurrentGame.load()==expectedGame) hk->invokeEvent(); }));
 				newThread.detach();
 				break; // continue to next hotkey, we don't need to check the rest of the bindingSets for this hotkey
 			}
@@ -184,17 +203,7 @@ void HotkeyManager::pollFlyHold(bool disabled)
 bool inline HotkeyManagerImpl::shouldHotkeyActivate(const BindingCombo& bindingSet)
 {
 
-	bool newPress = false;
-	for (auto key : bindingSet)
-	{
-		if (!ImGui::IsKeyDown(key)) return false;		// check if all keys are held down
-
-		// also check for a key being newly pressed. We need at least one key to be newly pressed to prevent continous firing.
-		if (ImGui::IsKeyPressed(key, false)) newPress = true;
-
-	}
-
-	return newPress;
+    return quickmenu::bindingNewPress(bindingSet,[](ImGuiKey key){return ImGui::IsKeyDown(key);},[](ImGuiKey key){return ImGui::IsKeyPressed(key,false);});
 }
 
 	

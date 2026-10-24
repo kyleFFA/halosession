@@ -18,6 +18,8 @@ protected:
 public:
 	float getCurrentHeight() { return this->currentHeight; }
 	virtual void render(HotkeyRenderer&) = 0;
+    virtual void renderControlPanel(HotkeyRenderer&) {}
+    virtual void renderAppearancePanel(HotkeyRenderer&) {}
 
 	IGUIElement(GameState implGame, std::optional<RebindableHotkeyEnum> hotkey, ToolTipCollection tooltip)
 		: mImplGame(implGame), mHotkey(hotkey), toolTipCollection(tooltip)

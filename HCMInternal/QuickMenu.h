@@ -10,8 +10,12 @@ public:
     ~QuickMenu();
     void frame(bool conflictingUI,const SessionSketch::State& geometry);
     void settings();
+    bool mainMenu(bool open,bool movement,bool conflict,bool camera=false,bool full=false,bool wheelConflict=false); // Updates render heartbeat; true only with a verified filter/route.
+    bool mainMenuWheelActive()const;
+    bool mainMenuWheelAvailable();
     void cancel();
     void pump(); // Application owner thread only; never install/retire from render or input callbacks.
     bool shutdown(); // Retry until callbacks AND their return stubs are quiescent.
     static bool verifiedSoloCampaign();
+    bool verifiedPlayer(unsigned game);
 };

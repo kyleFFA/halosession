@@ -34,6 +34,7 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mh2pBarriersCycleHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mh2pTick30HotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mh2pKeepArmedHotkeyCallbackHandle;
+    ScopedCallback<ActionEvent> mSpeedOverlayCallback;
 	ScopedCallback<ActionEvent> mh2pCombosHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mh2pNoFallDeathsHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mh2pFlyHotkeyCallbackHandle;
@@ -72,6 +73,7 @@ public:
 		mh2pBarriersCycleHotkeyCallbackHandle(settings->h2pBarriersCycleHotkeyEvent, [intsetting = settings->h2pBarriers]() { intsetting->GetValueDisplay() = (intsetting->GetValue() + 1) % 4; intsetting->UpdateValueWithInput(); }),
 		mh2pTick30HotkeyCallbackHandle(settings->h2pTick30HotkeyEvent, [settings]() { (settings->practiceCurrentGame.load()==1 ? settings->h2NativeTick30 : settings->h2pTick30Toggle)->flipBoolSetting(); }),
 		mh2pKeepArmedHotkeyCallbackHandle(settings->h2pKeepArmedHotkeyEvent, [boolsetting = settings->h2pKeepArmedToggle]() { boolsetting->flipBoolSetting(); }),
+        mSpeedOverlayCallback(settings->speedOverlayHotkeyEvent,[value=settings->speedOverlayVisible](){value->flipBoolSetting();}),
 		mh2pCombosHotkeyCallbackHandle(settings->h2pCombosHotkeyEvent, [boolsetting = settings->h2pCombosToggle]() { boolsetting->flipBoolSetting(); }),
 		mh2pNoFallDeathsHotkeyCallbackHandle(settings->h2pNoFallDeathsHotkeyEvent, [boolsetting = settings->h2pNoFallDeathsToggle]() { boolsetting->flipBoolSetting(); }),
 		mh2pFlyHotkeyCallbackHandle(settings->h2pFlyHotkeyEvent, [boolsetting = settings->h2pFlyToggle]() { boolsetting->flipBoolSetting(); }),

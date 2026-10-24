@@ -11,6 +11,9 @@
 #include "H2CV_Mem.h"
 #include "QuickMenuHook.h"
 #include "QuickMenuPause.h"
+#include "MenuMovementPolicy.h"
+#include "MainMenuController.h"
+#include "MenuSpotPolicy.h"
 #include "safetyhook.hpp"
 #include "pugixml.hpp"
 #include <dinput.h>
@@ -41,6 +44,7 @@ bool replaceAxes(uintptr_t at,int x,int y,const quickmenu::Axis& horizontal,cons
  __except(EXCEPTION_EXECUTE_HANDLER){return false;}
 }
 enum Action { Empty,Save,Back,Auto,Fly,Invulnerability,Tick30,Grid,HUD,Clip,KeepArmed,Arm,Physics,AI,Count };
+static_assert(Save==1&&Back==2);
 const char* names[]={"Empty","Save spot","Back to spot","Auto-crouch","Fly","Invulnerability","30 tick","Map grid","Hide HUD","Bottomless clip","Keep armed","Arm now","Halo 2 physics","Disable AI"};
 const char* xboxButtons[]={"Unbound","Start / Options","Back / Share / Create","LB / L1","RB / R1","LS / L3","RS / R3","A / Cross","B / Circle","X / Square","Y / Triangle","D-pad up","D-pad down","D-pad left","D-pad right","LT / L2","RT / R2"};
 struct Config {
@@ -61,6 +65,12 @@ public:
  Config config;
  quickmenu::Selection selection;
  std::atomic<bool> closing{false},blocked{true};
+ std::atomic<bool> mainOpen{false},mainMove{false},mainCamera{false},mainFull{false},mainWheelConflict{true},mainConflict{true},hookReady{false};
+ std::atomic<uint64_t> mainHeartbeat{0};
+ std::array<quickmenu::Axis,8> menuRanges{};uintptr_t menuRangeDevice=0;bool menuRangesValid=false;
+ menumovement::Gate movementGate;
+ menumovement::Controller menuController;
+ std::atomic<bool> menuWheelVisible{false};
  std::atomic<uint64_t> frameTime{0};
  std::atomic<bool> installWanted{true};
  std::atomic<bool> controllerLive{false};
@@ -73,6 +83,7 @@ public:
  std::shared_ptr<CallbackLife> callbackLife=std::make_shared<CallbackLife>();
  std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(const MCCState&)>>> stateSubscription;
  std::unique_ptr<ScopedCallback<ToggleEvent>> menuSubscription;
+ std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(bool)>>> spotSubscription;
  uint64_t nativeDevice=0,nativeSeen=0;
  std::array<int32_t,6> nativeAxes{};
  std::array<bool,32> nativeButtons{};
@@ -80,7 +91,7 @@ public:
  uintptr_t rangeDevice=0;int rangeAxisX=-1,rangeAxisY=-1;
  bool nativeRanges=false;
  std::condition_variable ready;
- struct Work {int action;quickmenu::Pick pick;uint64_t revision;};
+ struct Work {int action;quickmenu::Pick pick;uint64_t revision;bool fromMain=false,fromBinding=false;};
  std::optional<Work> work;
  std::thread worker;
  inline static std::atomic<Impl*> instance=nullptr;
@@ -90,12 +101,13 @@ public:
   auto encode=[](const MCCState& m){return uint32_t(m.currentGameState.operator GameState::Value()) | (uint32_t(m.currentPlayState)<<8) | (uint32_t(m.currentLevelID)<<16);};
   stateWord=encode(state->getCurrentMCCState());
   stateSubscription=std::make_unique<ScopedCallback<eventpp::CallbackList<void(const MCCState&)>>>(state->getMCCStateChangedEvent(),[this,encode,life=callbackLife](const MCCState& m){std::lock_guard lock(life->gate);if(life->closed)return;stateWord=encode(m);++stateEpoch;clear();});
-  menuSubscription=std::make_unique<ScopedCallback<ToggleEvent>>(settings->GUIWindowOpen->valueChangedEvent,[this,life=callbackLife](bool& open){std::lock_guard lock(life->gate);if(life->closed)return;if(open){blocked=true;clear();}});
+  menuSubscription=std::make_unique<ScopedCallback<ToggleEvent>>(settings->GUIWindowOpen->valueChangedEvent,[this,life=callbackLife](bool& open){std::lock_guard lock(life->gate);if(life->closed)return;mainOpen=open;mainConflict=true;mainHeartbeat=GetTickCount64();settings->mainMenuInputCapturing=open;blocked=true;clear();});
+  spotSubscription=std::make_unique<ScopedCallback<eventpp::CallbackList<void(bool)>>>(settings->mainMenuSpotPress,[this,life=callbackLife](bool back){std::lock_guard lock(life->gate);if(!life->closed)queueSpot(back);});
   load();instance=this;worker=std::thread([this]{run();});
  }
  ~Impl() {
   closing=true;{std::lock_guard lock(callbackLife->gate);callbackLife->closed=true;}
-  menuSubscription.reset();stateSubscription.reset();while(!shutdown())Sleep(10);instance=nullptr;
+  spotSubscription.reset();menuSubscription.reset();stateSubscription.reset();while(!shutdown())Sleep(10);instance=nullptr;
  }
  void load() {
   pugi::xml_document doc;if(!doc.load_file(path.c_str()))return;auto root=doc.child("QuickMenu");
@@ -142,18 +154,53 @@ public:
   return o;
  }
  bool eligible(uint64_t now) {return !closing && !blocked && now-frameTime.load()<200;}
- void cancelLocked() {selection.cancel();work.reset();++cancelRevision;controllerLive=false;settings->quickMenuCapturing=false;}
+ void cancelLocked(bool rearm=true) {if(rearm)menuController.cancel();else menuController.cancelWheelOnly(selection.active());menuWheelVisible=false;selection.cancel();work.reset();++cancelRevision;controllerLive=false;settings->quickMenuCapturing=false;}
  void clear() {std::lock_guard lock(mutex);cancelLocked();}
- void close() {closing=true;blocked=true;installWanted=false;clear();ready.notify_all();}
+ void close() {settings->mainMenuInputCapturing=false;mainOpen=false;hookReady=false;closing=true;blocked=true;installWanted=false;clear();ready.notify_all();}
  static void input(safetyhook::Context& context) {
   auto self=instance.load();if(!self||self->closing)return;
-  try {self->poll(context);}catch(...){self->clear();}
+  try {self->poll(context);}catch(...){if(self->mainOpen.load())context.rax=uint32_t(0x8007001E);self->clear();}
  }
  void poll(safetyhook::Context& context) {
   const auto object=uintptr_t(context.rbx);Reader r;
   const auto index=r.read<int32_t>(object+0x808);const bool direct=index<0;
   const auto now=GetTickCount64();
   std::lock_guard lock(mutex);auto& c=config;
+  const bool isMenu=mainOpen.load();
+  if(isMenu || movementGate.releaseGuard() || menuController.releaseGuard()){
+   const bool selected=direct==(c.route==1) && (direct || index==c.user);
+   const bool connected=int32_t(context.rax)>=0&&!r.read<uint8_t>(object+0xDAD)&&r.read<uint8_t>(object+(direct?0xDAC:8));
+   if(!selected){if(direct)context.rax=uint32_t(0x8007001E);else if(!replaceMenuXbox(object+0x91C,false))context.rax=uint32_t(0x8007001E);return;}
+   if(!direct){
+    auto observation=observe();const auto raw=r.read<quickmenu::XboxState>(object+0x91C);
+    const bool valid=!closing&&!mainConflict&&foreground()&&now-frameTime.load()<200&&now-mainHeartbeat.load()<200&&observation.valid&&!hotkeyDisabler->serviceIsRequested();
+    auto result=menuController.sample(selection,raw,connected,isMenu,mainMove,mainCamera,valid,observation.identity,object,now,{c.enabled&&!mainWheelConflict,c.button,c.deadzone,c.sensitivity,c.invertY,c.enabled},mainFull,settings->mainMenuToggleControllerMask.load()|settings->mainMenuSpotControllerMask.load());
+    controllerObject=object;controllerTime=now;controllerLive=connected&&valid&&isMenu;
+    menuWheelVisible=isMenu&&result.wheel;settings->quickMenuCapturing=result.wheel;
+    if(result.wheel||result.capture)settings->mainMenuWheelInputUntil=now+200;
+    if(!writeMenuXbox(object+0x91C,result.game)) {context.rax=uint32_t(0x8007001E);cancelLocked();}
+    return;
+   }
+
+   auto observation=observe();bool permit=selected&&connected&&mainMove&&!mainConflict&&foreground()&&now-mainHeartbeat.load()<200&&observation.valid;
+   bool centered=false,released=false,ok=true;
+   if(direct){
+    auto device=r.read<uintptr_t>(object+0x958);if(device!=menuRangeDevice||!menuRangesValid){menuRangeDevice=device;menuRangesValid=true;for(int i=0;i<8;++i)if(!range(device,i,menuRanges[i]))menuRangesValid=false;}
+    auto axes=r.read<std::array<int32_t,8>>(object+0x80C);auto buttons=r.read<std::array<uint8_t,128>>(object+0x80C+48);auto pov=r.read<std::array<uint32_t,4>>(object+0x80C+32);
+    if(!menuRangesValid)permit=false;else{centered=std::fabs(menuRanges[0].normalize(axes[0]))<.18f&&std::fabs(menuRanges[1].normalize(axes[1]))<.18f;released=std::all_of(buttons.begin(),buttons.end(),[](auto b){return !(b&0x80);})&&std::all_of(pov.begin(),pov.end(),[](auto v){return v>=36000;});for(int i=2;i<8;++i)released&=std::fabs(menuRanges[i].normalize(axes[i]))<.18f;}
+    const bool move=selected?movementGate.sample(isMenu,permit,object,observation.identity,centered,released):false;
+    ok=replaceMenuNative(object+0x80C,menuRanges,move);
+    if(!ok)context.rax=uint32_t(0x8007001E); // Refuse this poll when native neutral ranges cannot be verified.
+   }else{
+    auto input=r.read<quickmenu::XboxState>(object+0x91C);centered=std::abs(int(input.lx))<5898&&std::abs(int(input.ly))<5898;released=!input.buttons&&input.lt<16&&input.rt<16&&std::abs(int(input.rx))<5898&&std::abs(int(input.ry))<5898;
+    const bool move=selected?movementGate.sample(isMenu,permit,object,observation.identity,centered,released):false;
+    if(!replaceMenuXbox(object+0x91C,move))context.rax=uint32_t(0x8007001E);
+   }
+   if(isMenu){cancelLocked();return;}
+   if(movementGate.releaseGuard())return;
+   // One release poll remains sanitized before normal radial/game input resumes.
+   return;
+  }
   if(direct!=(c.route==1))return;
   if(!direct && index!=c.user)return;
   const bool connected=int32_t(context.rax)>=0 && !r.read<uint8_t>(object+0xDAD) && r.read<uint8_t>(object+(direct?0xDAC:8))!=0;
@@ -196,10 +243,18 @@ public:
    if(!ok)cancelLocked();
   }
  }
+ static bool writeMenuXbox(uintptr_t at,const quickmenu::XboxState& value){__try{*reinterpret_cast<quickmenu::XboxState*>(at)=value;return true;}__except(EXCEPTION_EXECUTE_HANDLER){return false;}}
+ static bool replaceMenuXbox(uintptr_t at,bool move){__try{menumovement::suppress(*reinterpret_cast<quickmenu::XboxState*>(at),move);return true;}__except(EXCEPTION_EXECUTE_HANDLER){return false;}}
+ static bool replaceMenuNative(uintptr_t at,const std::array<quickmenu::Axis,8>& ranges,bool move){__try{return menumovement::suppressNative(reinterpret_cast<int32_t*>(at),ranges,move);}__except(EXCEPTION_EXECUTE_HANDLER){return false;}}
+ bool mainMenu(bool open,bool movement,bool conflict,bool camera,bool full,bool wheelConflict){
+  std::lock_guard lock(mutex);if(mainOpen.load()!=open)cancelLocked();mainMove=movement;mainCamera=camera;mainFull=full;mainWheelConflict=wheelConflict;mainConflict=conflict;mainHeartbeat=GetTickCount64();mainOpen=open;settings->mainMenuInputCapturing=open;
+  return hookReady && config.route==0; // Native trigger neutral mapping is not verified for safe movement-only routing.
+ }
  static bool replaceXbox(uintptr_t at) {
   __try {auto state=reinterpret_cast<quickmenu::XboxState*>(at);quickmenu::suppress(*state);return true;}
   __except(EXCEPTION_EXECUTE_HANDLER){return false;}
  }
+ bool menuWheelAvailable(){std::lock_guard lock(mutex);return hookReady&&config.route==0&&config.enabled&&config.button>0;}
  bool available(int action,unsigned game) {
   if(action==Empty||game==255)return false;
   const bool h2=game==1;
@@ -247,17 +302,26 @@ public:
   return text;
  }
  void dispatch(const Work& item) {
-  auto o=observe();if(!o.valid || o.identity!=item.pick.identity || !eligible(GetTickCount64()) || GetTickCount64()-item.pick.time>100 || !available(item.action,o.game)
-   || item.revision!=cancelRevision.load() || !controllerLive || controllerObject.load()!=item.pick.device || GetTickCount64()-controllerTime.load()>100)return;
+  auto o=observe();const auto now=GetTickCount64();
+  const bool bindingConflict=item.fromBinding&&(mainWheelConflict.load()||settings->quickMenuCapturing.load()||now<settings->mainMenuWheelInputUntil.load()||hotkeyDisabler->serviceIsRequested());
+  if(!quickmenu::allowDispatch(item.pick,item.revision,item.fromMain,{o.valid,eligible(now),available(item.action,o.game),mainOpen.load(),mainConflict.load(),controllerLive.load(),bindingConflict,o.identity,cancelRevision.load(),controllerObject.load(),controllerTime.load()},now))return;
   // Existing service callbacks retain their own title, authority and write guards.
+  PLOG_INFO<<"[QuickMenu] Dispatch "<<names[item.action]<<" game="<<o.game<<" main="<<item.fromMain;
+  if(quickmenu::coordinateAction(item.action,[&]{(*settings->spotSaveEvent)();},[&]{(*settings->spotBackEvent)();}))return;
   switch(item.action) {
-  case Save:(*settings->spotSaveEvent)();break;
-  case Back:(*settings->spotBackEvent)();break;
   case Auto:(*settings->autoCrouchEvent)();break;
   case Arm:(*settings->h2pArmEvent)();break;
   default:
    if(auto t=toggle(item.action,o.game))t->flipBoolSetting();break;
   }
+ }
+ void queueSpot(bool back) {
+  const auto now=GetTickCount64();auto o=observe();std::lock_guard lock(mutex);
+  const int action=back?Back:Save;
+  if(!quickmenu::allowBoundSpot({mainOpen.load(),mainConflict.load(),mainWheelConflict.load(),hookReady.load(),config.route==0,eligible(now),o.valid,hotkeyDisabler->serviceIsRequested(),selection.active(),settings->quickMenuCapturing.load(),controllerLive.load(),work.has_value(),available(action,o.game),settings->mainMenuWheelInputUntil.load(),controllerTime.load()},now))return;
+  work=Work{action,quickmenu::Pick{0,o.identity,controllerObject.load(),now},cancelRevision.load(),true,true};
+  PLOG_INFO<<"[QuickMenu] Bound "<<names[action]<<" queued with main menu open";
+  ready.notify_one();
  }
  void run() {
   for(;;) {
@@ -275,9 +339,9 @@ public:
  void frame(bool conflict,const SessionSketch::State& geometry) {
   blocked=conflict || !foreground() || hotkeyDisabler->serviceIsRequested();frameTime=GetTickCount64();auto o=observe();
   std::lock_guard lock(mutex);const bool wasActive=selection.active();selection.expire(GetTickCount64());
-  if(blocked || !o.valid || (wasActive && !selection.active()))cancelLocked();
+  if(blocked || !o.valid || (wasActive && !selection.active()))cancelLocked(!(mainOpen&&mainFull&&!mainConflict&&o.valid&&foreground()));
   if(auto picked=selection.take(o.identity,GetTickCount64(),o.valid && eligible(GetTickCount64()))) {
-   int action=config.slots[picked->slot];if(available(action,o.game)){work=Work{action,*picked,cancelRevision.load()};ready.notify_one();}
+   int action=config.slots[picked->slot];if(available(action,o.game)){work=Work{action,*picked,cancelRevision.load(),mainOpen.load()};ready.notify_one();}
   }
   settings->quickMenuCapturing=selection.active();
   if(selection.active())draw(selection.slot,o,geometry);
@@ -321,7 +385,7 @@ public:
   }
   if(!o.valid)ImGui::TextWrapped("Actions require a verified living local player in a local/server session. Clients, unknown builds, loading and ambiguous player mappings are disabled.");
   ImGui::Separator();ImGui::TextWrapped("%s",hookStatus.c_str());
-  ImGui::TextWrapped("Your activation button keeps its normal game action. Choose an overlap you accept. Existing keyboard and full Menu bindings remain available. Fly is unavailable here while Hold Fly is enabled. Original H2 30 tick requires enabling tickrate control in Practice first. The ring follows your saved menu position and size; its practical minimum is 620 x 600 pixels.");
+  ImGui::TextWrapped("With the main menu closed, your activation button keeps its normal game action; choose an overlap you accept. With the main menu open, activation is reserved for the wheel. Save spot / Back to spot controller bindings work outside radial capture, text entry and popups; the menu-toggle binding has priority. Existing keyboard and full Menu bindings remain available. Fly is unavailable here while Hold Fly is enabled. Original H2 30 tick requires enabling tickrate control in Control > Controls first. The ring follows your saved menu position and size; its practical minimum is 620 x 600 pixels.");
   if(changed){cancelLocked();nativeRanges=false;save();}
  }
  void pump() {
@@ -333,7 +397,7 @@ public:
    const std::array<uint8_t,10> expected{0x48,0x8B,0x5C,0x24,0x30,0x48,0x8B,0x6C,0x24,0x38};
    if(bytes!=expected || r.read<uint32_t>(base+0x87D365)!=0x00000110)throw std::runtime_error("Controller filter unavailable: polling code differs");
    hook.install(reinterpret_cast<void*>(base+0x87D38A),input);
-   std::lock_guard lock(mutex);hookStatus=hook?"Xbox/XInput and native DirectInput filter ready; in-game controller validation pending":"Controller hook unavailable";
+   hookReady=bool(hook);std::lock_guard lock(mutex);hookStatus=hook?"Xbox/XInput and native DirectInput filter ready; in-game controller validation pending":"Controller hook unavailable";
   }catch(const std::exception& e){std::lock_guard lock(mutex);hookStatus=e.what();}
   installWanted=false;
  }
@@ -347,6 +411,10 @@ QuickMenu::QuickMenu(std::shared_ptr<SettingsStateAndEvents> s,std::shared_ptr<I
 QuickMenu::~QuickMenu()=default;
 void QuickMenu::frame(bool conflict,const SessionSketch::State& geometry){p->frame(conflict,geometry);}
 void QuickMenu::settings(){p->ui();}
+bool QuickMenu::mainMenu(bool open,bool movement,bool conflict,bool camera,bool full,bool wheelConflict){return p->mainMenu(open,movement,conflict,camera,full,wheelConflict);}
+bool QuickMenu::mainMenuWheelActive()const{return p->mainOpen.load()&&p->menuWheelVisible.load();}
+bool QuickMenu::mainMenuWheelAvailable(){return p->menuWheelAvailable();}
+bool QuickMenu::verifiedPlayer(unsigned game){auto observation=p->observe();return observation.valid&&observation.game==game;}
 void QuickMenu::cancel(){p->clear();}
 void QuickMenu::pump(){p->pump();}
 bool QuickMenu::shutdown(){return p->shutdown();}

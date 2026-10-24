@@ -25,6 +25,7 @@
 
 
 #include "GUIH2Physics.h"
+#include "GUIWorkshopGroups.h"
 #include "GUIH2Native.h"
 
 
@@ -128,7 +129,7 @@ private:
 			//      Manager's own sections (Halo2Physics.cpp, GUIH2Physics.h, BottomlessClip.cpp) ----
 			
             case GUIElementEnum::h2NativeHeadingGUI:
-                return std::make_shared<GUIHeading>(game, ToolTipCollection("Original Halo 2 engine: native HCM controls"), "Practice - Halo 2 preview", headerChildElements{
+                return std::make_shared<GUIWorkshopPractice>(game, std::nullopt, headerChildElements{
                     createNestedElement(GUIElementEnum::invulnGUI),
                     createNestedElement(GUIElementEnum::h2NativeClipGUI),
                     createNestedElement(GUIElementEnum::hideHUDToggle),
@@ -154,10 +155,10 @@ private:
                 return std::make_shared<GUISimpleToggle<true>>(game, ToolTipCollection("Freeze AI using HCM's Halo 2 implementation"), RebindableHotkeyEnum::aiFreeze, "AI Freeze", settings->h2NativeAI);
 
 			case GUIElementEnum::halo2PhysicsHeadingGUI:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, ToolTipCollection("Physics, movement and practice controls for Halo 3, ODST and Reach"), "Practice", headerChildElements
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWorkshopPractice>
+                    (game, createNestedElement(GUIElementEnum::h2pStatusGUI), headerChildElements
 						{
-						createNestedElement(GUIElementEnum::h2pStatusGUI),
+						std::make_shared<GUIH2ArmStatistics>(game),
 						createNestedElement(GUIElementEnum::h2pPhysicsToggleGUI),
 						createNestedElement(GUIElementEnum::h2pArmGUI),
                         createNestedElement(GUIElementEnum::h2pKeepArmedGUI),
@@ -234,7 +235,7 @@ private:
 
 				case GUIElementEnum::h2pStatusGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIH2PhysicsStatus>
-						(game, ToolTipCollection("ARMED: a fall onto the right edge bounces. Speed is the Halo 2 body's; a step has to pass 5.45 to sweep")));
+						(game, ToolTipCollection("Bounce State displays the existing armed flag only. Speed is the Halo 2 body's velocity magnitude in world units per second; pass threshold is a separate sweep diagnostic.")));
 
 				case GUIElementEnum::h2pPhysicsToggleGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
@@ -324,8 +325,8 @@ private:
 						(game, ToolTipCollection("Falls never kill or hurt you (campaign and Firefight). Other damage still counts"), RebindableHotkeyEnum::h2pNoFallDeathsHotkey, "No falling deaths", settings->h2pNoFallDeathsToggle));
 
 				case GUIElementEnum::controlHeadingGUI:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, ToolTipCollection("General HCM options"), "Control", headerChildElements
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWorkshopAppearance>
+					(game, headerChildElements
 						{
 						createNestedElement(GUIElementEnum::pcmThemeGUI),
 						createNestedElement(GUIElementEnum::toggleGUIHotkeyGUI),

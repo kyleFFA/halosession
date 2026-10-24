@@ -515,6 +515,7 @@ private:
 		vsk{}),
 
 		initEventOnPressHotkey(h2pKeepArmedHotkey, mSettings->h2pKeepArmedHotkeyEvent, vsk{}),
+        initEventOnPressHotkey(speedOverlayHotkey, mSettings->speedOverlayHotkeyEvent, vsk{}),
 
 		initEventOnPressHotkey(autoCrouchHotkey,
 		mSettings->autoCrouchEvent,

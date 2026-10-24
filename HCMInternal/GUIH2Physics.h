@@ -3,91 +3,34 @@
 #include "SettingsStateAndEvents.h"
 #include "Halo2Physics.h"
 #include "PCMTheme.h"
+#include "PracticeDashboard.h"
 
 // Poorboys Checkpoint Manager: the widgets HCM's own ones do not cover (the Poorboy's Mods section, the style picker).
 
 // The live line from the mod: armed or not, the body's speed against the 5.45 a step has to pass (bar), the map.
 class GUIH2PhysicsStatus : public IGUIElement
 {
-    std::string mArmStats;
 public:
-	GUIH2PhysicsStatus(GameState implGame, ToolTipCollection tooltip)
-		: IGUIElement(implGame, std::nullopt, tooltip)
-	{
-		this->currentHeight = GUIFrameHeightWithSpacing * 3;
-	}
-
-	void render(HotkeyRenderer&) override
-	{
-		H3sbStatus s{};
-		s.size = (int32_t)sizeof(H3sbStatus);
-		const bool have = Halo2Physics::readStatus(&s) == 1 && GetTickCount64() - s.updated_ms < 1500;
-		this->currentHeight = GUIFrameHeightWithSpacing * 3;
-		if (!Halo2Physics::isLoaded())
-		{
-			const std::string err = Halo2Physics::lastError();
-			if (!err.empty())
-				ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.35f, 1.0f), "%s", err.c_str());
-			else
-				ImGui::TextDisabled("Halo 2 physics is off");
-			this->currentHeight = GUIFrameHeightWithSpacing * 2;
-		}
-		else if (!have)
-		{
-			// HCM pauses the game while this window is open (Control > GUI settings), and the mod only hooks into a
-			// game whose clock runs: say so, or it looks like nothing is happening
-			ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.3f, 1.0f), "On - takes hold once the game runs.");
-			ImGui::TextDisabled("The game is paused while this window is open: close it with its toggle key.");
-		}
-		else if (s.flying)
-		{
-			ImGui::TextColored(ImVec4(0.35f, 0.8f, 1.0f, 1.0f), "FLYING");
-			ImGui::SameLine();
-			ImGui::Text("  speed %.2f", s.speed);
-			ImGui::SameLine();
-			ImGui::TextDisabled("  %s", s.map);
-			ImGui::Dummy(ImVec2(0, (float)GUIFrameHeight));
-		}
-		else if (s.mode == 0)
-		{
-			ImGui::TextDisabled("Halo 2 physics is off (fly is ready)");
-			ImGui::Dummy(ImVec2(0, (float)GUIFrameHeight));
-		}
-		else if (!s.have_body)
-		{
-			ImGui::TextDisabled("Waiting for the player (%s)", s.map);
-			ImGui::Dummy(ImVec2(0, (float)GUIFrameHeight));
-		}
-		else
-		{
-			if (s.armed)
-				ImGui::TextColored(ImVec4(0.25f, 1.0f, 0.35f, 1.0f), "ARMED");
-			else
-				ImGui::TextDisabled(s.asleep ? "asleep" : "not armed");
-			ImGui::SameLine();
-			ImGui::Text("  speed %.2f   pass %.2f", s.speed, s.sweep_speed);
-			ImGui::SameLine();
-			ImGui::TextDisabled("  %s", s.map);
-			const float fraction = s.sweep_speed > 0 ? std::clamp(s.speed / s.sweep_speed, 0.0f, 1.0f) : 0.0f;
-			ImGui::ProgressBar(fraction, ImVec2(-FLT_MIN, (float)GUIFrameHeight * 0.6f), "");
-		}
-		renderTooltip();
-		ImGui::TextDisabled("Halo 2 physics by Poorboy");
-        this->currentHeight += GUIFrameHeightWithSpacing;
-        if(ImGui::Button("Arm statistics")) {
-            mArmStats=Halo2Physics::keepArmedStats(mImplGame);
-            ImGui::OpenPopup("Keep armed statistics");
-        }
-        if(ImGui::BeginPopup("Keep armed statistics")) {
-            ImGui::TextUnformatted(mArmStats.c_str());
-            if(ImGui::Button("Refresh"))mArmStats=Halo2Physics::keepArmedStats(mImplGame);
-            ImGui::SameLine();
-            if(ImGui::Button("Reset counters")){Halo2Physics::resetKeepArmedStats(mImplGame);mArmStats=Halo2Physics::keepArmedStats(mImplGame);}
-            ImGui::EndPopup();
-        }
-	}
-
-	std::string_view getName() override { return "Halo 2 physics status"; }
+ GUIH2PhysicsStatus(GameState game,ToolTipCollection tooltip):IGUIElement(game,std::nullopt,tooltip){}
+ void render(HotkeyRenderer&)override{
+  H3sbStatus status{};status.size=sizeof status;const bool reported=Halo2Physics::readStatus(&status)==1;
+  const auto view=practiceui::describe(Halo2Physics::isLoaded(),reported,status,GetTickCount64(),Halo2Physics::lastError());
+  const float start=ImGui::GetCursorPosY();practiceui::render(view);currentHeight=ImGui::GetCursorPosY()-start;renderTooltip();
+ }
+ std::string_view getName()override{return "Halo 2 physics status";}
+};
+class GUIH2ArmStatistics : public IGUIElement
+{
+ std::string stats;
+public:
+ explicit GUIH2ArmStatistics(GameState game):IGUIElement(game,std::nullopt,ToolTipCollection("Keep armed statistics")){}
+ void render(HotkeyRenderer&)override{
+  const float start=ImGui::GetCursorPosY();
+  if(ImGui::Button("Arm statistics")){stats=Halo2Physics::keepArmedStats(mImplGame);ImGui::OpenPopup("Keep armed statistics");}
+  if(ImGui::BeginPopup("Keep armed statistics")){ImGui::TextUnformatted(stats.c_str());if(ImGui::Button("Refresh"))stats=Halo2Physics::keepArmedStats(mImplGame);ImGui::SameLine();if(ImGui::Button("Reset counters")){Halo2Physics::resetKeepArmedStats(mImplGame);stats=Halo2Physics::keepArmedStats(mImplGame);}ImGui::EndPopup();}
+  currentHeight=ImGui::GetCursorPosY()-start;
+ }
+ std::string_view getName()override{return "Arm statistics";}
 };
 
 // Barriers: the mod's four steps by name (HCM's GUIComboEnum shows enum identifiers), with the cycle hotkey in front.

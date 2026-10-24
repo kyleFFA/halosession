@@ -6,11 +6,13 @@ This is the **developer source tree** for [kyleFFA/halosession](https://github.c
 
 ## Current beta
 
-The accepted Quick Menu input/action baseline now has a circular ringworld, floating navigation, compact centered pages, configurable wheel colors/opacity, and replaceable artwork. Garden, Aurora and Autumn skins are included alongside embedded Session V1. See [skin authoring](skins/README.md).
+The user accepted the current build on October 23, 2026 and authorized committing its source. It includes the circular ringworld and seasonal skins, selectable animated or static center backgrounds, adjustable text and centered pages, and portable Saved Skins. See [skin authoring](skins/README.md).
 
-The user reports that the seasonal GUI is cohesive and the wheel works excellently. Startup appearance uses the captured live palette, placement and size, with the requested **50% background opacity** and **1.10x gentle cloud drift speed**. Travel amplitude is unchanged. Appearance edits and skin selection remain local to the loaded instance; see [defaults and validation](docs/APPEARANCE-DEFAULTS.md).
+Practice shows the prominent speed readout and bounce status. Control groups gameplay actions and Arm statistics, while Appearance groups menu and UI settings. The independent **Speed Overlay** has its own visibility hotkey, size, color, opacity and position, plus an explicit drag/lock mode. Its locked display remains visible with the menu closed without capturing input. See [Speed Overlay behavior and validation](docs/SPEED-OVERLAY-CANDIDATE.md).
 
-The user previously accepted PS5 operation through **XInput slot 0**. Xbox XInput and mapped PlayStation controllers use that input route; native DirectInput remains unverified. The separate controller-detection candidate is excluded. Gameplay actions, binding logic and session safeguards retain the accepted baseline. See [provenance](docs/BASELINE.md).
+Optional menu movement, camera and full controller gameplay share the guarded controller route; the radial wheel retains exclusive right-stick ownership. Separately bound Save Spot/Back to Spot controller presses work with the menu open through the existing guarded action worker. Xbox XInput and PlayStation controllers mapped to XInput use this route; native PlayStation/DirectInput coverage remains limited. Existing bindings and gameplay safeguards are retained.
+
+[Live test status](docs/USER-TEST-STATUS.md) distinguishes user-reported acceptance from automated fixtures. This source commit does not publish a compiled player release.
 
 ## Developers
 
