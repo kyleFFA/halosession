@@ -2,6 +2,7 @@
 #include "ModuleHook.h"
 #include "ModuleHookManager.h"
 #include "PointerDataStore.h"
+#include "SessionOBSBypass.h"
 
 // imgui
 #include "imgui.h"
@@ -54,7 +55,14 @@ private:
 	safetyhook::VmtHook DXGIHook;
 	safetyhook::VmHook presentHook; //  present hook
 	safetyhook::VmHook resizebuffersHook; // resizeBuffers hook
-	std::shared_ptr<ModuleInlineHook> OBSPresentHook; // obs hook for obs bypass
+	std::shared_ptr<ModuleInlineHook> OBSPresentHook; // render-thread owned, loader cleanup remains registered
+    std::atomic_bool obsRequested{false},obsMissed{false};
+    static inline std::atomic_uint obsCallbacks{0};
+    std::atomic_uint64_t obsLastCallback{0};
+    uintptr_t obsSlot=0,obsTarget=0;
+    uint64_t obsEarlyGridSeen=0;
+    HMODULE obsModule=nullptr,obsLease=nullptr;
+    bool serviceOBS(IDXGISwapChain* swap);
 
 
 	// D3D data

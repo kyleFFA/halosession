@@ -22,7 +22,7 @@ $taskPreviousVs = $env:VSDIR
 try {
     foreach ($taskProject in $taskProjects) {
         $taskArgs = @("$taskProject/$taskProject.vcxproj", $taskAction, '/m', '/p:Configuration=Release', '/p:Platform=x64',
-            "/p:SolutionDir=$taskRoot/", '/p:PracticeBuildId=speed-overlay', '/p:VcpkgManifestInstall=true',
+            "/p:SolutionDir=$taskRoot/", '/p:PracticeBuildId=obs-h3-grid', '/p:VcpkgManifestInstall=true',
             "/p:VcpkgRoot=$VcpkgRoot/", "/p:ForceImportBeforeCppTargets=$taskTargets", '/verbosity:minimal', '/nologo',
             '/fl', "/flp:logfile=build-$taskProject.log;verbosity=normal")
         if ($taskProject -eq 'HCMSpeedhack') { $taskArgs += '/p:TargetName=PCMSpeedhack' }

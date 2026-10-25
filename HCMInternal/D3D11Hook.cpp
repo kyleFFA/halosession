@@ -366,39 +366,41 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	// Invoke the callback
 
 
-    // The OBS hook renders through its own callback; otherwise render here.
-    // Neither path requires the retired watermark texture or audio helper.
-    if (!d3d->OBSPresentHook || !d3d->OBSPresentHook->isHookInstalled())
-        d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
-
+    auto frame=sessionobs::beginFrame(pSwapChain,d3d->obsEarlyGridSeen);
+    auto previousFrame=sessionobs::frame;
+    sessionobs::frame=&frame;
+    struct RestoreFrame { sessionobs::Frame* previous; ~RestoreFrame(){sessionobs::frame=previous;} } restoreFrame{previousFrame};
+    // Apply requests at a frame boundary, never by waiting from an ImGui setting callback.
+    frame.post=d3d->serviceOBS(pSwapChain);
+    if(frame.post&&frame.earlyGrid)sessionobs::status=sessionobs::Status::GridTransition;
+    if(frame.drawNormal() && !(Flags&DXGI_PRESENT_TEST)) {
+        frame.drawn=true;
+        d3d->presentHookEvent->operator()(d3d->m_pDevice,d3d->m_pDeviceContext,pSwapChain,d3d->m_pMainRenderTargetView);
+    }
 
 	LOG_ONCE(PLOG_VERBOSE << "calling original present function");
 	// Call original present
 
 	auto hr = d3d->presentHook.stdcall<HRESULT>(pSwapChain, SyncInterval, Flags);
+    if(frame.post&&!frame.drawn&&!(Flags&DXGI_PRESENT_TEST)){d3d->obsMissed=true;sessionobs::status=sessionobs::Status::Unsupported;}
 
+    if(!(Flags&DXGI_PRESENT_TEST))sessionobs::finishFrame(frame,GetTickCount64());
 	return hr;
 
 }
 
-HRESULT D3D11Hook::newDX11PresentOBSBypass(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+HRESULT D3D11Hook::newDX11PresentOBSBypass(IDXGISwapChain* swap, UINT interval, UINT flags)
 {
-	LOG_ONCE(PLOGV << "newDX11PresentOBSBypass");
-
-	// DON'T LOCK! already locked by present!
-	//ScopedAtomicBool lock(presentHookRunning);
-	auto d3d = instance;
-	if (!d3d)
-	{
-		PLOG_FATAL << "d3d instance was null at newDX11PresentOBSBypass";
-		return 0;
-	}
-
-	LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via inline obs bypass");
-	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
-	auto hr = d3d->OBSPresentHook->getInlineHook().stdcall<HRESULT>(pSwapChain, SyncInterval, Flags);
-
-	return hr;
+    auto d3d=instance;
+    if(!d3d||!d3d->OBSPresentHook)return E_FAIL;
+    struct Running {Running(){++obsCallbacks;}~Running(){--obsCallbacks;obsCallbacks.notify_all();}} running;
+    auto frame=sessionobs::frame;
+    if(!(flags&DXGI_PRESENT_TEST)&&frame&&frame->drawPost(swap,d3d->obsRequested.load())) {
+        d3d->presentHookEvent->operator()(d3d->m_pDevice,d3d->m_pDeviceContext,swap,d3d->m_pMainRenderTargetView);
+        d3d->obsLastCallback=GetTickCount64();
+        sessionobs::status=frame->earlyGrid?sessionobs::Status::GridTransition:sessionobs::Status::Active;
+    }
+    return d3d->OBSPresentHook->getInlineHook().stdcall<HRESULT>(swap,interval,flags);
 }
 
 // static
@@ -481,8 +483,15 @@ D3D11Hook::~D3D11Hook()
 		presentHookRunning.wait(true);
 	}
 
+    obsRequested=false;sessionobs::request(false);
+    if(OBSPresentHook){
+        OBSPresentHook->setWantsToBeAttached(false);
+        while(!OBSPresentHook->detach())Sleep(1);
+    }
+    sessionobs::status=sessionobs::Status::Off;
 	DXGIHook = {};
 	OBSPresentHook = {};
+    if(obsLease){auto lease=obsLease;obsLease=nullptr;FreeLibrary(lease);}
 
 	instance = nullptr;
 
@@ -537,43 +546,53 @@ void D3D11Hook::beginHook()
 
 
 
-void D3D11Hook::setOBSBypass(bool enabled)
-{
-	PLOGV << "D3D11Hook::setOBSBypass called with value: " << enabled;
-	try
-	{
-		if (enabled)
-		{
-			if (presentHookRunning)
-			{
-				PLOG_INFO << "Waiting for presentHook to finish execution A";
-				presentHookRunning.wait(true);
-			}
-
-
-			lockOrThrow(pointerDataStoreWeak, ptr);
-			auto dxgiInternalPresentFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(dxgiInternalPresentFunction));
-
-			// starts attached
-			OBSPresentHook = ModuleInlineHook::make(L"graphics-hook64.dll", dxgiInternalPresentFunction, newDX11PresentOBSBypass, true);
-		}
-		else
-		{
-			if (!OBSPresentHook) return; // don't need to reset if it's already reset
-
-			if (presentHookRunning)
-			{
-				PLOG_INFO << "Waiting for presentHook to finish execution B";
-				presentHookRunning.wait(true);
-			}
-
-
-			OBSPresentHook.reset();
-		}
-
-	}
-	catch (HCMInitException ex)
-	{
-		throw HCMRuntimeException(ex);
-	}
+namespace {
+class SessionOBSTarget final : public MultilevelPointer {
+ uintptr_t entry,window;
+public:
+ SessionOBSTarget(uintptr_t e,uintptr_t w):MultilevelPointer(0),entry(e),window(w){}
+ bool resolve(uintptr_t* out)const override {
+  auto found=sessionobs::probe(entry,window);
+  if(found.result!=sessionobs::Status::Ready)return false;
+  *out=found.target;return true;
+ }
+};
+}
+void D3D11Hook::setOBSBypass(bool enabled){sessionobs::request(enabled);if(obsRequested.exchange(enabled)!=enabled)obsMissed=false;}
+bool D3D11Hook::serviceOBS(IDXGISwapChain* swap){
+ using sessionobs::Status;
+ auto retire=[&](){
+  if(!OBSPresentHook)return true;
+  // setWants false also disables the hook. Failed drain keeps ownership for retry.
+  OBSPresentHook->setWantsToBeAttached(false);
+  if(!OBSPresentHook->detach())return false;
+  OBSPresentHook.reset();obsSlot=obsTarget=0;obsModule=nullptr;obsLastCallback=0;
+  if(obsLease){auto lease=obsLease;obsLease=nullptr;FreeLibrary(lease);}return true;
+ };
+ if(!obsRequested){sessionobs::status=retire()?Status::Off:Status::Restoring;return false;}
+ if(obsMissed){retire();sessionobs::status=Status::Unsupported;return false;}
+ DXGI_SWAP_CHAIN_DESC desc{};if(FAILED(swap->GetDesc(&desc))){sessionobs::status=Status::Unsupported;retire();return false;}
+ auto entry=reinterpret_cast<uintptr_t>(presentHook.original<DX11Present*>());
+ auto gate=sessionobs::probe(entry,reinterpret_cast<uintptr_t>(desc.OutputWindow),false);
+ uintptr_t now=0;
+ if(OBSPresentHook){
+  if(gate.result==Status::Ready&&gate.module==obsModule&&OBSPresentHook->isHookInstalled()&&sessionobs::read(obsSlot,now)&&now==obsTarget){
+   const auto last=obsLastCallback.load();sessionobs::status=last&&GetTickCount64()-last<1500?Status::Active:Status::Ready;return true;
+  }
+  if(!retire()){sessionobs::status=Status::Restoring;return false;}
+ }
+ if(gate.result!=Status::Ready){sessionobs::status=gate.result;return false;}
+ auto target=sessionobs::probe(entry,reinterpret_cast<uintptr_t>(desc.OutputWindow));
+ if(target.result!=Status::Ready){sessionobs::status=target.result;return false;}
+ // Keep the observed module resident until its hook and callback returns are retired.
+ if(!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,reinterpret_cast<LPCWSTR>(target.module),&obsLease)||obsLease!=target.module){
+  if(obsLease){FreeLibrary(obsLease);obsLease=nullptr;}sessionobs::status=Status::Waiting;return false;
+ }
+ auto pointer=std::make_shared<SessionOBSTarget>(entry,reinterpret_cast<uintptr_t>(desc.OutputWindow));
+ OBSPresentHook=ModuleInlineHook::make(L"graphics-hook64.dll",pointer,newDX11PresentOBSBypass,false);
+ OBSPresentHook->setCallbackDrain([](){return obsCallbacks.load()==0;});
+ // Keep wants=false so LoadLibrary callbacks never install graphics hooks. Only this render owner does.
+ OBSPresentHook->attach();
+ if(!OBSPresentHook->isHookInstalled()){sessionobs::status=Status::Unsupported;retire();return false;}
+ obsModule=target.module;obsSlot=target.slot;obsTarget=target.target;sessionobs::status=Status::Ready;return true;
 }

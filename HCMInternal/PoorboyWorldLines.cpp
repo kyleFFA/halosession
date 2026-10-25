@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "SessionOBSBypass.h"
+#include <limits>
 #include "PoorboyWorldLines.h"
 #include "MCCState.h"
 #include "SettingsStateAndEvents.h"
@@ -461,9 +463,10 @@ void PoorboyWorldLines::unhookView()
 // the game's render thread, after it rendered a player view (Halo 3)
 void PoorboyWorldLines::onViewRendered(void* view)
 {
+    std::unique_lock<std::mutex> lock(mDestructionGuard);
 	if (!mEngineReady || gViewFaults.load() > 0) return;
 	// "Grid without bloom": the game's drawer stands aside, the frame path below draws (after the game's bloom)
-	if (mSettings->wireViewToggle->GetValue() || mSettings->h2pGridNoBloomToggle->GetValue() || mSettings->h2pGridXray->GetValue()) return;
+	if (!worldlines::CaptureRoute::engineAllowed(mSettings->wireViewToggle->GetValue(), mSettings->h2pGridNoBloomToggle->GetValue(), mSettings->h2pGridXray->GetValue(), (sessionobs::lateGridLease(GetTickCount64())&&mLateGridReady))) return;
 	const int game = mGame.load();
 	if (game < 0 || game != mEngineGame.load()) return;
 	const bool grid = mSettings->h2pWorldLinesToggle->GetValue(), spots = mSettings->h2pJumpSpotsToggle->GetValue();
@@ -504,6 +507,8 @@ void PoorboyWorldLines::onViewRendered(void* view)
 	opt.gridOpacity = mSettings->h2pGridOpacity->GetValue();
 	if (mEngine.draw(ctx, mFns, scene, cells, cam, opt))
 	{
+		mCaptureRoute.engineDrew();
+        ++sessionobs::earlyGridSequence;
 		mEngineDrawnMs = GetTickCount64();
 		mEngineDraws++;
 	}
@@ -523,6 +528,8 @@ void PoorboyWorldLines::publish(Published p)
 void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* context, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* target)
 {
 	std::unique_lock<std::mutex> lock(mDestructionGuard);
+    const bool engineDrewThisFrame=mCaptureRoute.consumeEarlyDraw();
+    if(sessionobs::frame&&engineDrewThisFrame)sessionobs::frame->earlyGrid=true;
 	if (context) mContext = context;                     // the game's own view render (Halo 3) draws with it
 	const bool wireView = mSettings->wireViewToggle->GetValue();
 	const bool grid = wireView || mSettings->h2pWorldLinesToggle->GetValue(), spots = !wireView && mSettings->h2pJumpSpotsToggle->GetValue();
@@ -535,15 +542,21 @@ void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* cont
 			for (int i = 0; i < (int)std::size(kGames); i++)
 				if (kGames[i].game == now) game = i;
 	}
-	mGame = game;
+    const int previousGame=mGame.exchange(game);
+    if(previousGame!=game||mDepthDevice!=device){
+        if(mGameDepth)mGameDepth->Release();mGameDepth=nullptr;mGameDepthRefresh=true;
+        mDepthDevice=device;mDepthFrameW=mDepthFrameH=0;mGameDepthNote.clear();mLateGridReady=false;
+    }
 	mWantSpots = spots;
-	if (game < 0 || mGpuFailed || !device || !context || !target) return;
+	if (game < 0 || mGpuFailed || !device || !context || !target){mLateGridReady=false;return;}
 	UINT frameW = 0, frameH = 0;
 	if (!targetSize(target, frameW, frameH) || frameW < 64 || frameH < 64)
 	{
+		mLateGridReady=false;
 		mFrameSkip = kBadTarget;
 		return;
 	}
+    if(frameW!=mDepthFrameW||frameH!=mDepthFrameH){mDepthFrameW=frameW;mDepthFrameH=frameH;mGameDepthRefresh=true;mLateGridReady=false;}
 	// the labels go through ImGui, in its own display size (HCM's screen size can be stale, see targetSize)
 	const ImVec2 display = ImGui::GetIO().DisplaySize;
 	const float labelW = display.x >= 64 ? display.x : screenSize.x >= 64 ? screenSize.x : (float)frameW;
@@ -556,20 +569,24 @@ void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* cont
 	Camera cam;
 	if (!p.scene || !readCamera(p.camera, cam))      // the newest camera: the lines stay put while you turn
 	{
+		mLateGridReady=false;
 		mFrameSkip = p.scene ? kNoCamera : kNoScene;
 		return;
 	}
 
 	// Halo 3 with the view render hooked: the game's drawer drew the lines this frame; only the labels are left
-	const bool engineLive = !wireView && !mSettings->h2pGridNoBloomToggle->GetValue() && !mSettings->h2pGridXray->GetValue()
-		&& mEngineReady && GetTickCount64() - mEngineDrawnMs.load() < 300;
-	if (!engineLive && !mGpu.init(device))
+    // Actual successful draws since the last Present, never a stale 300 ms timestamp.
+    // This also prevents a duplicate on mode, bypass and title transitions.
+    const bool engineLive=engineDrewThisFrame;
+	const bool warmLate=game==0&&sessionobs::postCapturePass();
+	if ((!engineLive||warmLate) && !mGpu.init(device))
 	{
-		mGpuFailed = true;                                   // logged once; the rest of the overlay carries on
+		mLateGridReady=false;
+		if(!engineLive)mGpuFailed = true;                       // logged once; the rest of the overlay carries on
 		PLOG_ERROR << "Map grid: " << mGpu.lastError();
 		return;
 	}
-	if (!engineLive && mGpu.scene() != p.scene) mGpu.setScene(p.scene);
+	if ((!engineLive||warmLate) && mGpu.scene() != p.scene){mGpu.setScene(p.scene);mLateGridReady=false;}
 	DrawOptions opt;
 	opt.blackBackground = wireView;
 	const auto background = mSettings->wireViewBackgroundColor->GetValue();
@@ -586,6 +603,13 @@ void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* cont
 	opt.lineScale = (float)frameH / 1080.f;
 	opt.gridWidth = (wireView ? mSettings->wireViewWidth->GetValue() : mSettings->h2pGridWidth->GetValue());
 	opt.gridOpacity = (wireView ? mSettings->wireViewOpacity->GetValue() : mSettings->h2pGridOpacity->GetValue());
+    // H3's engine path normally tests the full game depth, not only nearby gun/arms.
+    if(warmLate&&!wireView)opt.sceneRange=(std::numeric_limits<float>::max)();
+    if(warmLate&&engineLive){
+        if(!wireView)gameDepth(game,device,p.camera,opt);
+        // Allocate/validate the late path without drawing a second visible grid.
+        mLateGridReady=mGpu.prepareLate(context,target,(UINT)frameW,(UINT)frameH,opt);
+    }
 	if (!engineLive)
 	{
 		if (!wireView) players(cam);
@@ -593,9 +617,11 @@ void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* cont
 		const char* depthMissing = wireView ? "masked by grid-only view" : gameDepth(game, device, p.camera, opt);
 		if (!mGpu.draw(context, target, (float)frameW, (float)frameH, cam, opt))
 		{
+			mLateGridReady=false;
 			mFrameSkip = kDrawFailed;
 			return;
 		}
+		mLateGridReady=warmLate&&(opt.xray||mGpu.sceneUsed());
 		mFrameDraws++;
 		mFrameSkip = kDrew;
 		// how the gun and arms are kept clear (logged when it changes)
@@ -633,8 +659,9 @@ void PoorboyWorldLines::onRender(ID3D11Device* device, ID3D11DeviceContext* cont
 const char* PoorboyWorldLines::gameDepth(int game, ID3D11Device* device, uintptr_t camera, DrawOptions& opt)
 {
 	const uint64_t now = GetTickCount64();
-	if (now - mGameDepthMs >= 500)
+	if (mGameDepthRefresh || now - mGameDepthMs >= 500)
 	{
+		mGameDepthRefresh=false;
 		mGameDepthMs = now;
 		if (mGameDepth) mGameDepth->Release();
 		mGameDepth = nullptr;

@@ -15,9 +15,8 @@ private:
 public:
 	OBSBypassCheck(GameState gameImpl, IDIContainer& dicon)
 	{
-		auto ptr = dicon.Resolve<PointerDataStore>().lock();
-		auto dxgiInternalPresentFunction = ptr->getData < std::shared_ptr<MultilevelPointer>>(nameof(dxgiInternalPresentFunction));
-		assert(dxgiInternalPresentFunction);
+		// Compatibility is checked dynamically on the graphics owner thread.
+		(void)gameImpl;(void)dicon;
 	}
 	
 

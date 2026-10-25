@@ -7,6 +7,7 @@
 #include "WorldLinesGpu.h"
 #include "WorldLinesEmit.h"
 #include "WorldLinesEngine.h"
+#include "WorldLinesCaptureRoute.h"
 
 class SettingsStateAndEvents;
 
@@ -31,12 +32,17 @@ class PoorboyWorldLines
 	std::filesystem::path mDir;                     // <PCM folder>\h3sb
 	ScopedCallback<DirectXRenderEvent> mRenderCallback;
 	std::mutex mDestructionGuard;
+	worldlines::CaptureRoute mCaptureRoute; // protected by mDestructionGuard across view/Present callbacks
 	worldlines::Gpu mGpu;                           // render thread only
 	bool mGpuFailed = false;
+    bool mLateGridReady=false;
 	// render thread: the game's own depth buffer, which keeps the frame path's lines off its first-person gun and arms
 	// (found in the game's surface table every half second, one reference held between) and what was last logged of it
 	ID3D11Texture2D* mGameDepth = nullptr;
 	uint64_t mGameDepthMs = 0;
+    bool mGameDepthRefresh=true;
+    ID3D11Device* mDepthDevice=nullptr;
+    UINT mDepthFrameW=0,mDepthFrameH=0;
 	std::string mGameDepthNote;
 	const char* gameDepth(int game, ID3D11Device* device, uintptr_t camera, worldlines::DrawOptions& opt);    // "" = given
 

@@ -337,7 +337,7 @@ private:
 						createNestedElement(GUIElementEnum::togglePauseGUI),
 						createNestedElement(GUIElementEnum::togglePauseSettingsSubheading),
 						createNestedElement(GUIElementEnum::showGUIFailuresGUI),
-						createNestedElement(GUIElementEnum::OBSBypassToggleGUI),
+
 						}));
 
 				case GUIElementEnum::pcmThemeGUI:

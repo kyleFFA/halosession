@@ -1,6 +1,6 @@
 # Developer setup
 
-The current source includes the accepted menu/controller follow-ups and independent Speed Overlay. The native overlay and launcher passed Release x64 compilation using the installed pinned dependency cache. The repository build wrapper restores declared dependencies; fresh-machine reproduction remains a contributor check.
+The current source includes the accepted menu/controller follow-ups, independent Speed Overlay and OBS capture/grid routing. The native overlay and launcher passed Release x64 compilation using the installed pinned dependency cache. The repository build wrapper restores declared dependencies; fresh-machine reproduction remains a contributor check.
 
 ## Prerequisites
 
@@ -93,3 +93,16 @@ cmd /c tools\test-speed-overlay-settings.cmd
 ```
 
 The render fixtures use software WARP and write generated output to ignored `out/`. The Speed Overlay fixture writes its sizes/timings to `out/speed-overlay-validation.json`. Its settings fixture uses the production settings and event registrations. Local snapshot-comparison audits also passed before acceptance; those require private sibling candidate trees and are not part of the portable test suite. No script above launches or injects Session.
+
+## OBS capture fixtures
+
+After a native build, with `VSDIR` configured:
+
+```powershell
+cmd /c tools\test-obs-capture.cmd
+cmd /c tools\test-obs-controls.cmd
+cmd /c tools\test-obs-h3-grid-route.cmd
+cmd /c tools\test-obs-grid-render.cmd
+```
+
+These use synthetic detours, frame accounting, production ImGui controls and WARP rendering. They do not access OBS or MCC and cannot establish what an actual recording contains. See [OBS-CAPTURE.md](docs/OBS-CAPTURE.md) for the separate user-reported live results and supported capture configuration.

@@ -49,5 +49,6 @@ public:
 		runtimeExceptions(exp),
 		OBSBypassToggleEventCallback(toggle->valueChangedEvent, [this](bool& n) { onOBSBypassToggleEvent(n); })
 	{}
+	~OBSBypassManager(){if(auto hook=d3d11HookWeak.lock())hook->setOBSBypass(false);}
 
 };

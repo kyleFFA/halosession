@@ -431,6 +431,14 @@ namespace worldlines
 		return true;
 	}
 
+    bool Gpu::prepareLate(ID3D11DeviceContext* ctx,ID3D11RenderTargetView* rtv,UINT width,UINT height,const DrawOptions& opt)
+    {
+        if(!mDevice||!mVsLine||!mScene||!ctx||!rtv||width<16||height<16)return false;
+        if(mUploaded!=mScene&&!upload())return false;
+        if(!depthFor(rtv,width,height))return false;
+        return opt.xray||(opt.sceneDepth&&opt.sceneNear>0.f&&sceneFor(ctx,opt.sceneDepth));
+    }
+
 	bool Gpu::draw(ID3D11DeviceContext* ctx, ID3D11RenderTargetView* rtv, float width, float height, const Camera& cam, const DrawOptions& opt)
 	{
 		if (!mDevice || !mVsLine || !mScene || !ctx || !rtv || width < 16 || height < 16 || (!opt.grid && !opt.spots)) return false;

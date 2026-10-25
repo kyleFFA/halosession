@@ -26,6 +26,7 @@ forbidden={'.exe','.dll','.pyd','.lib','.obj','.o','.a','.pdb','.exp','.idb','.i
 runtime_names={'HCMInternalConfig.xml','HCMHotkeyConfig.xml','SessionQuickMenu.xml','h3sb_helpers.stop'}
 assets={'HCMInternal/Assets/session-ring.png','HCMInternal/Assets/session-clouds.png',
         'HCMInternal/Assets/session-ring-circular.png','HCMInternal/Assets/session-ringworld-round.png',
+        'backgrounds/bright-sky.png','backgrounds/pastel-clouds.png',
         *{f'skins/{skin}/{layer}.png' for skin in ['garden','aurora','autumn'] for layer in ['ring','clouds']}}
 patterns={
     'personal_path':re.compile(rb'(?i)[a-z]:[\\/](?:users|steamlibrary)[\\/]|/(?:Users|home)/[^\s"\']+'),

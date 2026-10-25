@@ -1,6 +1,8 @@
 # Live acceptance and follow-up status
 
-On October 23, 2026, after testing the independent Speed Overlay candidate, the user reported: ìEverything is working flawlesslyî and authorized committing the source.
+On October 25, 2026, the user reported successful OBS exclusion in Halo 3, ODST and Reach, then confirmed everything was working flawlessly and authorized committing the accepted OBS capture/grid source. [OBS capture details](OBS-CAPTURE.md) describe the supported configuration, rendering differences and separate offline checks. Physics and invulnerability are unchanged by this commit.
+
+On October 23, 2026, after testing the independent Speed Overlay candidate, the user reported: ‚ÄúEverything is working flawlessly‚Äù and authorized committing the source.
 
 Earlier user reports confirmed fonts, animated backgrounds, centering, menu movement and its toggle, tested hotkeys/mods, Saved Skins round-trip, full controller gameplay, and the speed/spot follow-up. In Reach, the radial Save/Back path worked; the separate bound-controller menu hotkey issue was addressed through the guarded action worker.
 

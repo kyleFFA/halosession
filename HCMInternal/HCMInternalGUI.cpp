@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "SessionOBSControls.h"
 #include "HCMInternalGUI.h"
 #include "PCMTheme.h"
 #include "GlobalKill.h"
@@ -201,7 +202,9 @@ void HCMInternalGUI::primaryRender()
             return;
         }
         bool any=false;
-        if(tab==1){mGUIMCCState.render();renderSpeedOverlayControls();for(auto& element:*p_currentGameGUIElements){element->renderControlPanel(*mHotkeyRenderer);if(element->getName()=="Practice dashboard")any=true;}}
+        if(tab==1){mGUIMCCState.render();
+            if(sessionobs::controls(mSettings->OBSBypassToggle->GetValueDisplay()))mSettings->OBSBypassToggle->UpdateValueWithInput();
+            renderSpeedOverlayControls();for(auto& element:*p_currentGameGUIElements){element->renderControlPanel(*mHotkeyRenderer);if(element->getName()=="Practice dashboard")any=true;}}
         else for(auto& element:*p_currentGameGUIElements){if(element->getName()!="Control"){element->render(*mHotkeyRenderer);if(element->getName()=="Practice dashboard")any=true;}}
         if(!any)ImGui::TextWrapped("Live telemetry is unavailable for this title.");
     },[&]{for(auto& element:*p_currentGameGUIElements)element->renderAppearancePanel(*mHotkeyRenderer);});

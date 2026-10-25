@@ -60,6 +60,8 @@ namespace worldlines
 		const std::shared_ptr<const Scene>& scene() const { return mScene; }
 		// draws into rtv (width x height); restores the context's state afterwards. false = nothing drawn (no scene,
 		// a buffer could not be made)
+		// Warm the post-capture path without emitting any pixels or changing context state.
+		bool prepareLate(ID3D11DeviceContext* ctx, ID3D11RenderTargetView* rtv, UINT width, UINT height, const DrawOptions& opt);
 		bool draw(ID3D11DeviceContext* ctx, ID3D11RenderTargetView* rtv, float width, float height, const Camera& cam, const DrawOptions& opt);
 		const char* lastError() const { return mError; }
 		// whether the last draw kept the lines off the game's depth (opt.sceneDepth), and why not

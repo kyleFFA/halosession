@@ -9,10 +9,9 @@ namespace PoorboySharedConfig
 	// where the copy of fileName is kept; empty when %LOCALAPPDATA% can't be read
 	inline std::filesystem::path copyPath(std::string_view fileName)
 	{
-		wchar_t local[MAX_PATH];
-		const DWORD n = GetEnvironmentVariableW(L"LOCALAPPDATA", local, MAX_PATH);
-		if (n == 0 || n >= MAX_PATH) return {};
-		return std::filesystem::path(local) / L"HaloPractice" / std::filesystem::path(fileName);
+		// This separate portable package must never read or update the dev shared settings.
+		(void)fileName;
+		return {};
 	}
 
 	// the copy, when there is one to start from

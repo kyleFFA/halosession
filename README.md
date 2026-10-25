@@ -6,13 +6,15 @@ This is the **developer source tree** for [kyleFFA/halosession](https://github.c
 
 ## Current beta
 
-The user accepted the current build on October 23, 2026 and authorized committing its source. It includes the circular ringworld and seasonal skins, selectable animated or static center backgrounds, adjustable text and centered pages, and portable Saved Skins. See [skin authoring](skins/README.md).
+The user accepted the current build on October 25, 2026 and authorized committing its source. It includes the circular ringworld and seasonal skins, selectable animated or static center backgrounds, adjustable text and centered pages, and portable Saved Skins. See [skin authoring](skins/README.md).
 
 Practice shows the prominent speed readout and bounce status. Control groups gameplay actions and Arm statistics, while Appearance groups menu and UI settings. The independent **Speed Overlay** has its own visibility hotkey, size, color, opacity and position, plus an explicit drag/lock mode. Its locked display remains visible with the menu closed without capturing input. See [Speed Overlay behavior and validation](docs/SPEED-OVERLAY-CANDIDATE.md).
 
 Optional menu movement, camera and full controller gameplay share the guarded controller route; the radial wheel retains exclusive right-stick ownership. Separately bound Save Spot/Back to Spot controller presses work with the menu open through the existing guarded action worker. Xbox XInput and PlayStation controllers mapped to XInput use this route; native PlayStation/DirectInput coverage remains limited. Existing bindings and gameplay safeguards are retained.
 
 [Live test status](docs/USER-TEST-STATUS.md) distinguishes user-reported acceptance from automated fixtures. This source commit does not publish a compiled player release.
+
+Control includes **Bypass OBS Capture**, with dynamic compatibility checks and capture-route status. The verified route draws Session after OBS Game Capture, including Halo 3's map grid. The user reported successful exclusion in Halo 3, ODST and Reach. Halo 3's excluded grid uses the post-bloom frame renderer, so its glow can differ. See [capture behavior and validation](docs/OBS-CAPTURE.md). Settings persist beside each package without a shared settings fallback.
 
 ## Developers
 
