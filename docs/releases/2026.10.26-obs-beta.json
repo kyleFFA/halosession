@@ -1,0 +1,17 @@
+{
+  "archive": "Session-2026.10.26-obs-beta-win-x64.zip",
+  "sha256": "23CDE896B824154BD94FDFEFC343D9BBF6BC447262EC6291754B9C38375E4681",
+  "archive_bytes": 56516928,
+  "files": 1187,
+  "crc_and_safe_paths": "passed",
+  "extracted_hashes_and_exact_file_set": "passed",
+  "extracted_defaults_and_production_render_fixture": "passed",
+  "native_x64_images": 98,
+  "static_runtime_matches": 1071,
+  "no_app_or_helper_launched": true,
+  "no_game_or_injection": true,
+  "known_explosive_push_fix_included": false,
+  "product_source_commit": "f8f06918655847f437db6f5ffcd861e5e0006f7f",
+  "release_tag": "v2026.10.26-obs-beta",
+  "live_test_scope": "User-reported accepted build in Halo 3, ODST and Reach; cleaned ZIP tested offline only."
+}

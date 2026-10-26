@@ -1,5 +1,7 @@
 # Live acceptance and follow-up status
 
+On October 26, 2026, the owner authorized a separate compiled Release of the accepted OBS build and its release documentation/source/tag updates. Packaging checks are recorded in [RELEASE-2026.10.26.md](RELEASE-2026.10.26.md). They are offline extraction/defaults/render checks, distinct from the earlier user-reported live acceptance. The unfinished explosive-push correction is excluded.
+
 On October 25, 2026, the user reported successful OBS exclusion in Halo 3, ODST and Reach, then confirmed everything was working flawlessly and authorized committing the accepted OBS capture/grid source. [OBS capture details](OBS-CAPTURE.md) describe the supported configuration, rendering differences and separate offline checks. Physics and invulnerability are unchanged by this commit.
 
 On October 23, 2026, after testing the independent Speed Overlay candidate, the user reported: “Everything is working flawlessly” and authorized committing the source.

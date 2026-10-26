@@ -1,36 +1,21 @@
-# Separate player release plan
+# Separate player release
 
-Release remains held until the contributor has time to change/commit and provide feedback, followed by explicit owner approval. Local test candidates are not public player releases.
+The owner authorized packaging and uploading the accepted OBS beta on October 26, 2026, and explicitly authorized committing its release documentation and pushing the accurate source/tag. This supersedes the earlier release hold for this build. Repository visibility remains public; no visibility change is part of the release.
 
-Developers need source, tests and build instructions. Players need a complete runnable download. Keep those deliverables separate.
+The compiled download has its own [GitHub Release](https://github.com/kyleFFA/halosession/releases/tag/v2026.10.26-obs-beta) and [README download section](../README.md#download-the-compiled-beta). Compiled binaries remain Release assets, separate from source history.
 
-## Complete runtime package
+## Complete package
 
-A later reviewed `Session-<version>-win-x64.zip` should contain:
+`Session-2026.10.26-obs-beta-win-x64.zip` contains the accepted launcher and overlay, injector/bridge, speedhack, compatible pointer XML, all 1,071 required unchanged physics/helper/static-data files, packaged skins/backgrounds, original notices and the supplementary runtime licenses. Physics is retained. No personal configuration, Saved Skins, films, logs, crash dumps or debug symbols are bundled. First run uses compiled defaults with folder-local persistence.
 
-- `Session.exe`, `PCMInternal.dll`, `HCMInterproc.dll`, `PCMSpeedhack.dll` and the compatible pointer XML.
-- **The required h3sb physics DLL, packed helper, its complete dependency subtree and necessary static data.** Preserve the physics functionality; never call a package complete when these dependencies are missing.
-- Authored static spot data needed by retained features, after its distribution status is checked.
-- Original manager license, third-party/runtime notices, credits and concise player instructions.
+## Source identity and verification
 
-The accepted working distribution currently provides these dependencies. Its core hashes are documented for compatibility. Session's injector/bridge source remains in this repository; the h3sb implementation is the component not available here as buildable source.
+The product binaries match accepted source commit `f8f06918655847f437db6f5ffcd861e5e0006f7f` after line-ending/whitespace normalization of tracked build inputs. The release tag `v2026.10.26-obs-beta` identifies that product plus the release documentation commit; no native product code is changed for packaging. [The release record](RELEASE-2026.10.26.md) and its JSON manifest provide checksums and actual validation scope.
 
-## Binary redistribution review
+The runtime review now identifies the official upstream asset and matching helper libraries, and supplies their notices; see [LICENSE-AUDIT.md](LICENSE-AUDIT.md). Preserve those terms with downstream distributions.
 
-The manager MIT notice includes Poorboy's changes and physics mod, which is relevant evidence; it is not a complete inventory of every component in the opaque runtime/helper bundle. Unknown provenance is **not** a determination that redistribution is prohibited.
+The cleaned, extracted package passed static dependency/PE checks and an offline production defaults/artwork fixture. It was not automatically launched, injected or tested on a machine without developer tools. Live acceptance applies to the identical product binaries in the earlier working candidate, as reported by the user for Halo 3, ODST and Reach. Do not describe these checks as a fresh live game or OBS recording test of the cleaned ZIP.
 
-Before public upload, establish the actual terms/source for the h3sb DLL/helper, any extracted or externally supplied physics/game payloads and the helper's Python/Tcl/Tk/PyInstaller/native dependencies. Retain the applicable notices and satisfy their terms. If redistribution is allowed, keep the compatible binaries in the player release assets. If some component cannot lawfully be bundled, document an authorized upstream prerequisite and validate the assembled app; do not provide a misleading physics-less ZIP.
+## Known limitation
 
-A private developer repository, if later chosen, does not automatically provide a public player download destination. Decide the download location and visibility explicitly at publication time. No visibility changes or release creation have been made here.
-
-## Omit development and personal data
-
-Do not package source folders, build intermediates, debug symbols, installer caches, logs, crash dumps, memory/tick captures, personal settings, generated stop flags or recorded `h3sb/films/*.trk` sessions. The current local runtime must not be copied wholesale without classification. Keep debug symbols separately for maintainers.
-
-Use reviewed defaults rather than the developer's active switch files. Required static helper/data dependencies must be retained even if they are compiled files. Embedded Session artwork does not require distributing art-review PNGs separately unless a runtime path actually reads them.
-
-## Release validation
-
-Assemble into a new empty staging directory without touching the working/default/rollback packages. Check the complete dependency inventory, hashes, licenses and absence of personal data. Then, with explicit authorization, smoke-test on a fresh session: connect/injector startup, physics/helper startup, retained physics controls, controller wheel/movement/camera release, native H2 0.2 vs H3/ODST/Reach 0.4 movement, title transitions, no co-op/multiplayer menu pause and normal shutdown. Test on a machine without the developer toolchain.
-
-No new ZIP is declared runnable until these checks pass. No release has been assembled, published or promoted during source preparation.
+Halo 3 Invulnerability with H2-style physics can suppress explosive push. The unfinished damage-safe rocket/grenade knockback correction is not included. The supported capture route is OBS Game Capture with Capture third-party overlays disabled; Display/Window Capture are outside its scope. Halo 3's excluded grid can have different bloom/raster appearance. See the release record for setup and controller coverage.
